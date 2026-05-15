@@ -1,65 +1,161 @@
-import Image from "next/image";
+const collections = [
+  {
+    title: "Industrial & Blue Collar",
+    text: "Blue Collar Bling, Union Pride, Blackout Series, shop tags, patches, tumblers, and trade-inspired gear.",
+  },
+  {
+    title: "Home & Kitchen",
+    text: "Cutting boards, charcuterie boards, serving boards, recipe boards, and custom kitchen gifts.",
+  },
+  {
+    title: "Custom Gifts",
+    text: "Family gifts, wedding pieces, holiday items, name signs, and memorial work.",
+  },
+  {
+    title: "Business & Commercial",
+    text: "Business logos, shop signs, equipment tags, industrial labels, and promotional products.",
+  },
+  {
+    title: "Custom Works",
+    text: "One-off projects, customer uploads, prototypes, and special requests.",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen bg-[#05070a] text-white">
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
+
+        <div className="relative mx-auto max-w-7xl px-6 py-6">
+          <nav className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-5 py-4 backdrop-blur">
+            <div>
+              <div className="text-xl font-black tracking-[0.18em]">
+                GRADELINE
+              </div>
+              <div className="text-xs tracking-[0.35em] text-blue-300">
+                SUPPLY CO.
+              </div>
+            </div>
+
+            <div className="hidden gap-6 text-sm text-zinc-300 md:flex">
+              <span>Home</span>
+              <span>Collections</span>
+              <span>Custom Orders</span>
+              <span>Gallery</span>
+              <span>Contact</span>
+            </div>
+
+            <button className="rounded-xl bg-blue-400 px-4 py-2 text-sm font-bold text-black">
+              Start Order
+            </button>
+          </nav>
+
+          <div className="grid gap-10 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+            <div>
+              <p className="mb-4 inline-flex rounded-full border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-blue-200">
+                Custom Laser Engraving • Shop Built Goods
+              </p>
+
+              <h1 className="max-w-4xl text-5xl font-black leading-tight md:text-7xl">
+                Built To Be Different.
+              </h1>
+
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-300">
+                Custom laser engraving, leatherwork, slate, acrylic,
+                industrial-inspired products, cutting boards, business branding,
+                and one-off custom fabrication.
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-4">
+                <button className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black">
+                  Shop Collections
+                </button>
+                <button className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white">
+                  Start Custom Order
+                </button>
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 to-black p-6 shadow-2xl">
+              <div className="rounded-2xl border border-blue-300/20 bg-blue-400/10 p-5">
+                <p className="text-sm font-bold uppercase tracking-widest text-blue-200">
+                  Gradeline Operating System
+                </p>
+                <h2 className="mt-3 text-3xl font-black">
+                  Public site + shop backend.
+                </h2>
+                <p className="mt-4 text-zinc-300">
+                  Orders, production, inventory, laser settings, pricing, and
+                  customer records all in one place.
+                </p>
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                {["Orders", "Production", "Inventory", "Laser Settings"].map(
+                  (item) => (
+                    <div
+                      key={item}
+                      className="rounded-xl border border-white/10 bg-black/40 p-4 font-bold text-zinc-200"
+                    >
+                      {item}
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 py-14">
+        <div className="mb-8">
+          <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
+            Collections
           </p>
+          <h2 className="mt-2 text-4xl font-black">
+            Built for more than one lane.
+          </h2>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {collections.map((collection) => (
+            <div
+              key={collection.title}
+              className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+            >
+              <h3 className="text-xl font-black">{collection.title}</h3>
+              <p className="mt-3 leading-7 text-zinc-400">
+                {collection.text}
+              </p>
+            </div>
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pb-16">
+        <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-zinc-950 via-zinc-900 to-blue-950/40 p-8 md:p-10">
+          <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
+            Custom Orders
+          </p>
+
+          <h2 className="mt-3 text-4xl font-black">Have an idea?</h2>
+
+          <p className="mt-4 max-w-2xl text-zinc-300">
+            Send the idea, photo, logo, name, phrase, or rough sketch.
+            Gradeline can turn it into a real product, gift, sign, tag, or
+            shop-built piece.
+          </p>
+
+          <button className="mt-7 rounded-xl bg-blue-400 px-6 py-3 font-bold text-black">
+            Start Your Custom Order
+          </button>
+        </div>
+      </section>
+
+      <footer className="border-t border-white/10 px-6 py-8 text-center text-sm text-zinc-500">
+        Gradeline Supply Co. • Built To Be Different.
+      </footer>
+    </main>
   );
 }
