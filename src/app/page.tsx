@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const collections = [
   {
     title: "Industrial & Blue Collar",
@@ -39,16 +41,19 @@ export default function Home() {
             </div>
 
             <div className="hidden gap-6 text-sm text-zinc-300 md:flex">
-              <span>Home</span>
-              <span>Collections</span>
-              <span>Custom Orders</span>
-              <span>Gallery</span>
-              <span>Contact</span>
+              <Link href="/">Home</Link>
+              <Link href="/collections">Collections</Link>
+              <Link href="/custom-order">Custom Orders</Link>
+              <Link href="/gallery">Gallery</Link>
+              <Link href="/contact">Contact</Link>
             </div>
 
-            <button className="rounded-xl bg-blue-400 px-4 py-2 text-sm font-bold text-black">
+            <Link
+              href="/custom-order"
+              className="rounded-xl bg-blue-400 px-4 py-2 text-sm font-bold text-black"
+            >
               Start Order
-            </button>
+            </Link>
           </nav>
 
           <div className="grid gap-10 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
