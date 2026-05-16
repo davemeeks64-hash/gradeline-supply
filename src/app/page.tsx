@@ -43,9 +43,11 @@ export default function Home() {
             <div className="hidden gap-6 text-sm text-zinc-300 md:flex">
               <Link href="/">Home</Link>
               <Link href="/collections">Collections</Link>
+              <Link href="/shop">Shop</Link>
               <Link href="/custom-order">Custom Orders</Link>
               <Link href="/gallery">Gallery</Link>
               <Link href="/contact">Contact</Link>
+              <Link href="/admin">Admin</Link>
             </div>
 
             <Link
@@ -73,9 +75,12 @@ export default function Home() {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
-                <button className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black">
+                <Link
+                  href="/shop"
+                  className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black"
+                >
                   Shop Collections
-                </button>
+                </Link>
                 <button className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white">
                   Start Custom Order
                 </button>
