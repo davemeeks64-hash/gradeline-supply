@@ -62,6 +62,13 @@ const workflowSteps = [
   },
 ];
 
+const systemLinks = [
+  { label: "Shop", href: "/shop" },
+  { label: "Custom Orders", href: "/custom-order" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Admin", href: "/admin" },
+];
+
 export default function Home() {
   return (
     <>
@@ -102,7 +109,7 @@ export default function Home() {
                     href="/shop"
                     className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
                   >
-                    Shop Ready-Made Products
+                    Shop Collections
                   </Link>
                   <Link
                     href="/custom-order"
@@ -141,13 +148,14 @@ export default function Home() {
                 </div>
 
                 <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                  {["Shop", "Custom Orders", "Gallery", "Admin"].map((item) => (
-                    <div
-                      key={item}
+                  {systemLinks.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
                       className="rounded-xl border border-white/10 bg-black/40 p-4 font-bold text-zinc-200"
                     >
-                      {item}
-                    </div>
+                      {item.label}
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -169,7 +177,7 @@ export default function Home() {
               href="/collections"
               className="w-fit rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
             >
-              View All Collections
+              View Collections
             </Link>
           </div>
 
@@ -275,6 +283,20 @@ export default function Home() {
                 mockup, approve the direction, and get a finished piece built
                 for the job.
               </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/gallery"
+                  className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                >
+                  View Gallery
+                </Link>
+                <Link
+                  href="/contact"
+                  className="rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300"
+                >
+                  Contact Gradeline
+                </Link>
+              </div>
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-black/30 p-8">
