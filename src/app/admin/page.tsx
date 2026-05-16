@@ -3,15 +3,15 @@ import AdminLayout from "@/components/AdminLayout";
 
 const dashboardCards = [
   { label: "Active Orders", value: "24", detail: "Open shop tickets" },
-  { label: "Pending Design", value: "7", detail: "Awaiting artwork review" },
-  { label: "In Production", value: "12", detail: "Running or queued" },
-  { label: "Low Inventory", value: "5", detail: "Materials need attention" },
-  { label: "Finished Orders", value: "31", detail: "Ready for pickup or ship" },
-  { label: "Saved Laser Settings", value: "18", detail: "Material presets stored" },
+  { label: "Projects This Week", value: "18", detail: "Custom and stock runs" },
+  { label: "Inventory Items", value: "128", detail: "Materials and supplies" },
+  { label: "Completed Orders", value: "31", detail: "Finished this month" },
+  { label: "Ready-Made Stock", value: "72", detail: "Available stock products" },
+  { label: "Estimated Revenue", value: "$12.8K", detail: "Demo monthly view" },
 ];
 
 const cardClassName =
-  "rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]";
+  "rounded-2xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.82),rgba(8,10,12,0.96))] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07] hover:shadow-[0_0_34px_rgba(96,165,250,0.12)]";
 
 export default function AdminPage() {
   return (
@@ -45,7 +45,8 @@ export default function AdminPage() {
               <article key={card.label} className={cardClassName}>
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
+                    <div className="h-2 w-10 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
+                    <p className="mt-4 text-sm font-bold uppercase tracking-widest text-blue-300">
                       {card.label}
                     </p>
                     <p className="mt-4 text-4xl font-black text-white">

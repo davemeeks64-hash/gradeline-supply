@@ -69,6 +69,15 @@ const systemLinks = [
   { label: "Admin", href: "/admin" },
 ];
 
+const quickStats = [
+  { label: "Active Orders", value: "24", detail: "In the shop queue" },
+  { label: "Projects This Week", value: "18", detail: "Custom and stock runs" },
+  { label: "Inventory Items", value: "128", detail: "Materials tracked" },
+  { label: "Completed Orders", value: "31", detail: "Finished this month" },
+  { label: "Ready-Made Stock", value: "72", detail: "Available to request" },
+  { label: "Estimated Revenue", value: "$12.8K", detail: "Demo monthly view" },
+];
+
 export default function Home() {
   return (
     <>
@@ -160,6 +169,37 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-6 py-10">
+          <div className="mb-6">
+            <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
+              Quick Stats
+            </p>
+            <h2 className="mt-2 text-3xl font-black md:text-4xl">
+              Shop momentum at a glance.
+            </h2>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+            {quickStats.map((stat) => (
+              <article
+                key={stat.label}
+                className="rounded-2xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.82),rgba(8,10,12,0.96))] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:shadow-[0_0_34px_rgba(96,165,250,0.12)]"
+              >
+                <div className="h-2 w-10 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
+                <p className="mt-4 text-xs font-bold uppercase tracking-widest text-blue-300">
+                  {stat.label}
+                </p>
+                <p className="mt-3 text-3xl font-black text-white">
+                  {stat.value}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-zinc-400">
+                  {stat.detail}
+                </p>
+              </article>
+            ))}
           </div>
         </section>
 
