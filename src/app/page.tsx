@@ -88,8 +88,8 @@ export default function Home() {
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/50 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-[linear-gradient(to_top,rgba(5,7,10,1),transparent)]" />
 
-          <div className="relative mx-auto max-w-7xl px-6 py-16 md:py-20">
-            <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+          <div className="relative mx-auto max-w-7xl px-6 py-12 md:py-14 lg:py-16">
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center xl:grid-cols-[minmax(0,1fr)_460px]">
               <div>
                 <Image
                   src="/gradeline-logo.png"
@@ -97,23 +97,23 @@ export default function Home() {
                   width={1730}
                   height={1870}
                   priority
-                  className="mb-6 h-24 w-auto object-contain md:h-32"
+                  className="mb-5 h-20 w-auto object-contain md:h-24"
                 />
                 <p className="mb-4 inline-flex rounded-full border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-blue-200">
                   Custom Laser Engraving / Shop Built Goods
                 </p>
 
-                <h1 className="max-w-4xl text-5xl font-black leading-tight md:text-7xl">
+                <h1 className="max-w-3xl text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
                   Built To Be Different.
                 </h1>
 
-                <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-300">
+                <p className="mt-5 max-w-2xl text-base leading-8 text-zinc-300 md:text-lg">
                   Custom laser engraving, leatherwork, slate, acrylic,
                   industrial-inspired products, cutting boards, business
                   branding, and one-off custom fabrication.
                 </p>
 
-                <div className="mt-8 flex flex-wrap gap-4">
+                <div className="mt-7 flex flex-wrap gap-4">
                   <Link
                     href="/shop"
                     className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
@@ -128,7 +128,7 @@ export default function Home() {
                   </Link>
                 </div>
 
-                <div className="mt-8 grid gap-3 text-sm sm:grid-cols-3">
+                <div className="mt-7 grid max-w-2xl gap-3 text-sm sm:grid-cols-3">
                   {["Custom work", "Ready-made goods", "Business branding"].map(
                     (item) => (
                       <div
@@ -142,12 +142,12 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 to-black p-6 shadow-2xl">
+              <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 to-black p-5 shadow-2xl md:p-6">
                 <div className="rounded-2xl border border-blue-300/20 bg-blue-400/10 p-5">
                   <p className="text-sm font-bold uppercase tracking-widest text-blue-200">
                     Gradeline Operating System
                   </p>
-                  <h2 className="mt-3 text-3xl font-black">
+                  <h2 className="mt-3 text-2xl font-black md:text-3xl">
                     Public shop + custom order workflow.
                   </h2>
                   <p className="mt-4 text-zinc-300">
@@ -172,7 +172,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-10">
+        <section className="mx-auto max-w-7xl px-6 py-8 md:py-10">
           <div className="mb-6">
             <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
               Quick Stats
@@ -182,11 +182,11 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             {quickStats.map((stat) => (
               <article
                 key={stat.label}
-                className="rounded-2xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.82),rgba(8,10,12,0.96))] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:shadow-[0_0_34px_rgba(96,165,250,0.12)]"
+                className="flex h-full flex-col rounded-2xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.82),rgba(8,10,12,0.96))] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:shadow-[0_0_34px_rgba(96,165,250,0.12)]"
               >
                 <div className="h-2 w-10 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
                 <p className="mt-4 text-xs font-bold uppercase tracking-widest text-blue-300">
@@ -203,13 +203,13 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-14">
-          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <section className="mx-auto max-w-7xl px-6 py-10 md:py-12">
+          <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                 Featured Collections
               </p>
-              <h2 className="mt-2 text-4xl font-black">
+              <h2 className="mt-2 text-3xl font-black md:text-4xl">
                 Built for more than one lane.
               </h2>
             </div>
@@ -221,11 +221,11 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
             {collections.map((collection) => (
               <article
                 key={collection.title}
-                className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+                className="flex h-full flex-col rounded-3xl border border-white/10 bg-white/[0.04] p-6 transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
                 <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
                 <h3 className="mt-5 text-xl font-black">
@@ -239,21 +239,21 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-14">
-          <div className="mb-8">
+        <section className="mx-auto max-w-7xl px-6 py-10 md:py-12">
+          <div className="mb-6">
             <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
               Featured Products
             </p>
-            <h2 className="mt-2 text-4xl font-black">
+            <h2 className="mt-2 text-3xl font-black md:text-4xl">
               Ready-made products, built ahead.
             </h2>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid items-stretch gap-5 md:grid-cols-3">
             {featuredProducts.map((product) => (
               <article
                 key={product.name}
-                className="flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+                className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
                 <div className="grid aspect-[4/3] place-items-center border-b border-white/10 bg-[linear-gradient(145deg,rgba(17,24,31,0.96),rgba(8,10,12,1)_58%,rgba(15,23,30,0.98))]">
                   <div className="grid h-20 w-20 place-items-center border border-blue-300/50 bg-blue-400/10 shadow-[0_0_28px_rgba(96,165,250,0.24)]">
@@ -283,20 +283,20 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-14">
-          <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-zinc-950 via-zinc-900 to-blue-950/40 p-8 md:p-10">
+        <section className="mx-auto max-w-7xl px-6 py-10 md:py-12">
+          <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-zinc-950 via-zinc-900 to-blue-950/40 p-6 md:p-8">
             <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
               How It Works
             </p>
-            <h2 className="mt-3 text-4xl font-black">
+            <h2 className="mt-3 max-w-3xl text-3xl font-black md:text-4xl">
               A clear path from idea to finished piece.
             </h2>
 
-            <div className="mt-8 grid gap-5 md:grid-cols-3">
+            <div className="mt-6 grid items-stretch gap-5 md:grid-cols-3">
               {workflowSteps.map((step, index) => (
                 <article
                   key={step.title}
-                  className="rounded-2xl border border-white/10 bg-black/30 p-5"
+                  className="h-full rounded-2xl border border-white/10 bg-black/30 p-5"
                 >
                   <p className="text-sm font-black text-blue-300">
                     Step {index + 1}
@@ -309,13 +309,13 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-14">
-          <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-8 shadow-[0_18px_45px_rgba(0,0,0,0.28)]">
+        <section className="mx-auto max-w-7xl px-6 py-10 md:py-12">
+          <div className="grid items-stretch gap-6 lg:grid-cols-2">
+            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.28)] md:p-8">
               <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                 Customer Workflow
               </p>
-              <h2 className="mt-3 text-4xl font-black">
+              <h2 className="mt-3 text-3xl font-black md:text-4xl">
                 Custom orders stay practical.
               </h2>
               <p className="mt-4 leading-8 text-zinc-300">
@@ -339,11 +339,11 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-black/30 p-8">
+            <div className="flex h-full flex-col justify-center rounded-3xl border border-white/10 bg-black/30 p-6 md:p-8">
               <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                 Review Placeholder
               </p>
-              <blockquote className="mt-4 text-2xl font-black leading-10 text-white">
+              <blockquote className="mt-4 text-xl font-black leading-8 text-white md:text-2xl md:leading-10">
                 &ldquo;The finished piece looked professional, rugged, and exactly
                 like the idea we had in mind.&rdquo;
               </blockquote>
@@ -354,13 +354,15 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 pb-16">
-          <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-zinc-950 via-zinc-900 to-blue-950/40 p-8 md:p-10">
+        <section className="mx-auto max-w-7xl px-6 py-10 pb-14 md:py-12 md:pb-16">
+          <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-zinc-950 via-zinc-900 to-blue-950/40 p-6 md:p-8">
             <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
               Custom Orders
             </p>
 
-            <h2 className="mt-3 text-4xl font-black">Have an idea?</h2>
+            <h2 className="mt-3 text-3xl font-black md:text-4xl">
+              Have an idea?
+            </h2>
 
             <p className="mt-4 max-w-2xl text-zinc-300">
               Send the idea, photo, logo, name, phrase, or rough sketch.
