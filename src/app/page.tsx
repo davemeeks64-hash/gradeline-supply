@@ -110,48 +110,39 @@ export default function Home() {
             fill
             preload
             sizes="100vw"
-            className="object-cover object-center"
+            className="object-cover object-[58%_center] md:object-center"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,10,0.95)_0%,rgba(5,7,10,0.8)_44%,rgba(5,7,10,0.52)_100%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(5,7,10,0.4),rgba(5,7,10,0.12)_42%,rgba(5,7,10,0.92)_100%)]" />
-          <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(to_bottom,rgba(96,165,250,0.16),transparent)]" />
-          <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-blue-300/30 to-transparent" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,10,0.88)_0%,rgba(5,7,10,0.62)_44%,rgba(5,7,10,0.2)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(5,7,10,0.26),rgba(5,7,10,0.06)_42%,rgba(5,7,10,0.74)_100%)]" />
+          <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(to_bottom,rgba(96,165,250,0.18),transparent)]" />
+          <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-blue-300/25 to-transparent" />
 
-          <div className="relative mx-auto flex min-h-[560px] max-w-7xl items-center px-6 py-12 md:min-h-[620px] md:py-16 lg:py-20">
-            <div className="max-w-3xl">
-              <Image
-                src="/gradeline-logo.png"
-                alt="Gradeline Supply Co. logo"
-                width={1730}
-                height={1870}
-                loading="eager"
-                className="mb-5 h-20 w-auto object-contain md:h-24"
-              />
-
-              <p className="mb-5 inline-flex rounded-full border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-blue-200">
+          <div className="relative mx-auto flex min-h-[520px] max-w-7xl items-center px-6 py-12 md:min-h-[580px] md:py-16 lg:py-20">
+            <div className="max-w-2xl rounded-3xl border border-white/10 bg-black/30 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-[2px] md:p-6 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none">
+              <p className="mb-4 inline-flex rounded-full border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-blue-200">
                 Custom Laser Engraving / Shop Built Goods
               </p>
 
-              <h1 className="text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
+              <h1 className="max-w-xl text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
                 Built To Be Different.
               </h1>
 
-              <p className="mt-5 max-w-2xl text-base leading-8 text-zinc-300 md:text-lg">
+              <p className="mt-5 max-w-xl text-base leading-8 text-zinc-200 md:text-lg">
                 Premium laser engraving and small-batch shop-built products
                 with industrial roots, clean finishes, and work-ready
                 character.
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-4">
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/shop"
-                  className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black shadow-[0_0_28px_rgba(96,165,250,0.22)] transition hover:bg-blue-300"
+                  className="rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black shadow-[0_0_28px_rgba(96,165,250,0.22)] transition hover:bg-blue-300"
                 >
                   Shop Collections
                 </Link>
                 <Link
                   href="/custom-order"
-                  className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                  className="rounded-xl border border-white/15 bg-white/10 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
                 >
                   Start Custom Order
                 </Link>
