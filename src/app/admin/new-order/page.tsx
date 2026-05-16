@@ -100,7 +100,6 @@ export default function AdminNewOrderPage() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsCreated(true);
-    event.currentTarget.reset();
   }
 
   return (
@@ -275,7 +274,7 @@ export default function AdminNewOrderPage() {
                 onClick={() => setIsCreated(false)}
                 className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
               >
-                Clear Form
+                Reset Form
               </button>
             </div>
 
