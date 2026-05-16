@@ -1,3 +1,6 @@
+"use client";
+
+import { type FormEvent, useState } from "react";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
@@ -14,16 +17,23 @@ const inputClassName =
 function TextField({
   label,
   placeholder,
+  required = false,
   type = "text",
 }: {
   label: string;
   placeholder: string;
+  required?: boolean;
   type?: string;
 }) {
   return (
     <label className="block">
       <span className={labelClassName}>{label}</span>
-      <input className={inputClassName} type={type} placeholder={placeholder} />
+      <input
+        className={inputClassName}
+        required={required}
+        type={type}
+        placeholder={placeholder}
+      />
     </label>
   );
 }
@@ -31,14 +41,16 @@ function TextField({
 function SelectField({
   label,
   options,
+  required = false,
 }: {
   label: string;
   options: string[];
+  required?: boolean;
 }) {
   return (
     <label className="block">
       <span className={labelClassName}>{label}</span>
-      <select className={inputClassName} defaultValue="">
+      <select className={inputClassName} defaultValue="" required={required}>
         <option value="" disabled>
           Select {label.toLowerCase()}
         </option>
@@ -53,9 +65,11 @@ function SelectField({
 function TextAreaField({
   label,
   placeholder,
+  required = false,
 }: {
   label: string;
   placeholder: string;
+  required?: boolean;
 }) {
   return (
     <label className="block">
@@ -63,12 +77,21 @@ function TextAreaField({
       <textarea
         className={`${inputClassName} min-h-36 resize-y`}
         placeholder={placeholder}
+        required={required}
       />
     </label>
   );
 }
 
 export default function CustomOrderPage() {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsSubmitted(true);
+    event.currentTarget.reset();
+  }
+
   return (
     <>
       <PublicHeader />
@@ -96,7 +119,7 @@ export default function CustomOrderPage() {
             </Link>
           </div>
 
-          <form className="mt-8 grid gap-6">
+          <form className="mt-8 grid gap-6" onSubmit={handleSubmit}>
             <section className={sectionClassName}>
               <h2 className="text-2xl font-black">Customer Info</h2>
               <p className="mt-2 text-sm leading-6 text-zinc-400">
@@ -104,11 +127,12 @@ export default function CustomOrderPage() {
                 mockups, or a quote.
               </p>
               <div className="mt-5 grid gap-4 md:grid-cols-2">
-                <TextField label="Name" placeholder="Your name" />
+                <TextField label="Name" placeholder="Your name" required />
                 <TextField label="Phone" placeholder="(555) 000-0000" />
                 <TextField
                   label="Email"
                   placeholder="you@example.com"
+                  required
                   type="email"
                 />
                 <TextField
@@ -123,6 +147,7 @@ export default function CustomOrderPage() {
               <div className="mt-5 grid gap-4 md:grid-cols-2">
                 <SelectField
                   label="Collection"
+                  required
                   options={[
                     "Industrial & Blue Collar",
                     "Home & Kitchen",
@@ -133,6 +158,7 @@ export default function CustomOrderPage() {
                 />
                 <SelectField
                   label="Product Type"
+                  required
                   options={[
                     "Cutting board",
                     "Slate piece",
@@ -153,7 +179,12 @@ export default function CustomOrderPage() {
                   label="Material"
                   placeholder="Walnut, slate, acrylic, leather"
                 />
-                <TextField label="Quantity" placeholder="1" type="number" />
+                <TextField
+                  label="Quantity"
+                  placeholder="1"
+                  required
+                  type="number"
+                />
                 <TextField
                   label="Size/Color"
                   placeholder="12 x 18, black, natural"
@@ -177,6 +208,7 @@ export default function CustomOrderPage() {
                 <TextAreaField
                   label="Design Notes"
                   placeholder="Names, dates, phrases, logo placement, inspiration, finish preferences, or anything else that matters"
+                  required
                 />
                 <div className="rounded-2xl border border-dashed border-blue-300/40 bg-black/30 p-6 text-center">
                   <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
@@ -213,6 +245,7 @@ export default function CustomOrderPage() {
                 <div className="mt-5 grid gap-4">
                   <SelectField
                     label="Preferred Contact"
+                    required
                     options={["Email", "Text", "Phone call"]}
                   />
                   <TextAreaField
@@ -225,18 +258,29 @@ export default function CustomOrderPage() {
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <button
-                type="button"
+                type="submit"
                 className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
               >
                 Submit Demo Request
               </button>
               <button
-                type="button"
+                type="reset"
+                onClick={() => setIsSubmitted(false)}
                 className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
               >
                 Clear Form
               </button>
             </div>
+
+            {isSubmitted && (
+              <p
+                role="status"
+                className="rounded-2xl border border-blue-300/40 bg-blue-400/10 px-5 py-4 font-bold text-blue-100"
+              >
+                Request received. Gradeline will review your project and follow
+                up.
+              </p>
+            )}
           </form>
         </div>
       </section>
