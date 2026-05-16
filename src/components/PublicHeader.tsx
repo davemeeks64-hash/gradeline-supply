@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const publicLinks = [
   { label: "Home", href: "/" },
@@ -14,10 +15,21 @@ export function PublicHeader() {
   return (
     <header className="bg-[#05070a] px-6 py-6 text-white">
       <nav className="mx-auto flex max-w-7xl flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 px-5 py-4 shadow-[0_18px_45px_rgba(0,0,0,0.28)] backdrop-blur md:flex-row md:items-center md:justify-between">
-        <Link href="/" className="w-fit">
-          <div className="text-xl font-black tracking-[0.18em]">GRADELINE</div>
-          <div className="text-xs tracking-[0.35em] text-blue-300">
-            SUPPLY CO.
+        <Link href="/" className="flex w-fit items-center gap-3">
+          <Image
+            src="/gradeline-logo.png.png"
+            alt="Gradeline Supply Co. logo"
+            width={1730}
+            height={1870}
+            className="h-12 w-auto object-contain"
+          />
+          <div>
+            <div className="text-xl font-black tracking-[0.18em]">
+              GRADELINE
+            </div>
+            <div className="text-xs tracking-[0.35em] text-blue-300">
+              SUPPLY CO.
+            </div>
           </div>
         </Link>
 

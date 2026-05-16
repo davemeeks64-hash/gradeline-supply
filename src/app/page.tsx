@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
 
@@ -36,6 +37,14 @@ export default function Home() {
         <div className="relative mx-auto max-w-7xl px-6 py-6">
           <div className="grid gap-10 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
+              <Image
+                src="/gradeline-logo.png.png"
+                alt="Gradeline Supply Co. logo"
+                width={1730}
+                height={1870}
+                priority
+                className="mb-6 h-24 w-auto object-contain md:h-32"
+              />
               <p className="mb-4 inline-flex rounded-full border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-blue-200">
                 Custom Laser Engraving • Shop Built Goods
               </p>

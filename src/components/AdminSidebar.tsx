@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 type AdminSidebarLink = {
   label: string;
@@ -44,8 +45,14 @@ export function AdminSidebar({
       <div className="flex h-full flex-col bg-[linear-gradient(145deg,rgba(18,25,31,0.98),rgba(8,10,12,1)_58%,rgba(14,21,27,0.98))]">
         <div className="border-b border-slate-700/60 px-4 py-4 sm:px-5 md:px-6 md:py-7">
           <div className="flex items-center gap-3">
-            <div className="grid size-10 place-items-center border border-[#5f8eaa]/70 bg-[#101820] text-sm font-black tracking-[0.16em] text-[#8fc1df] shadow-[inset_0_0_18px_rgba(143,193,223,0.08)]">
-              GS
+            <div className="grid size-12 place-items-center border border-[#5f8eaa]/70 bg-[#101820] p-1 shadow-[inset_0_0_18px_rgba(143,193,223,0.08)]">
+              <Image
+                src="/gradeline-logo.png.png"
+                alt="Gradeline Supply Co. logo"
+                width={1730}
+                height={1870}
+                className="h-full w-auto object-contain"
+              />
             </div>
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold uppercase tracking-[0.24em] text-slate-100">
