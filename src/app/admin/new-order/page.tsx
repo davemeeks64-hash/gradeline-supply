@@ -1,5 +1,5 @@
 import Link from "next/link";
-import AdminPageShell from "@/components/AdminPageShell";
+import AdminLayout from "@/components/AdminLayout";
 
 const sectionClassName =
   "rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)] md:p-6";
@@ -81,7 +81,7 @@ function CheckboxField({ label }: { label: string }) {
 
 export default function AdminNewOrderPage() {
   return (
-    <AdminPageShell activeHref="/admin/new-order">
+    <AdminLayout activeHref="/admin/new-order">
           <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-8">
             <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
               <div>
@@ -246,7 +246,8 @@ export default function AdminNewOrderPage() {
               </button>
             </div>
           </form>
-    </AdminPageShell>
+    </AdminLayout>
   );
 }
+
 

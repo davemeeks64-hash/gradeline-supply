@@ -1,5 +1,5 @@
 import Link from "next/link";
-import AdminPageShell from "@/components/AdminPageShell";
+import AdminLayout from "@/components/AdminLayout";
 
 type WorkflowStep =
   | "Design Approval"
@@ -112,7 +112,7 @@ function StepBadge({ step }: { step: WorkflowStep }) {
 
 export default function AdminProductionPage() {
   return (
-    <AdminPageShell activeHref="/admin/production">
+    <AdminLayout activeHref="/admin/production">
           <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-8">
             <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
               <div>
@@ -190,7 +190,8 @@ export default function AdminProductionPage() {
               </article>
             ))}
           </div>
-    </AdminPageShell>
+    </AdminLayout>
   );
 }
+
 

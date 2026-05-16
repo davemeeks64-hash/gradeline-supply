@@ -1,5 +1,5 @@
 import Link from "next/link";
-import AdminPageShell from "@/components/AdminPageShell";
+import AdminLayout from "@/components/AdminLayout";
 
 type LaserSetting = {
   material: string;
@@ -110,7 +110,7 @@ function CategoryBadge({ category }: { category: string }) {
 
 export default function AdminLaserSettingsPage() {
   return (
-    <AdminPageShell activeHref="/admin/laser-settings">
+    <AdminLayout activeHref="/admin/laser-settings">
           <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-8">
             <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
               <div>
@@ -259,7 +259,8 @@ export default function AdminLaserSettingsPage() {
               ))}
             </div>
           </div>
-    </AdminPageShell>
+    </AdminLayout>
   );
 }
+
 

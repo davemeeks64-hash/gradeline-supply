@@ -1,5 +1,5 @@
 import Link from "next/link";
-import AdminPageShell from "@/components/AdminPageShell";
+import AdminLayout from "@/components/AdminLayout";
 
 type InventoryCategory =
   | "Leather"
@@ -121,7 +121,7 @@ function CategoryBadge({ category }: { category: InventoryCategory }) {
 
 export default function AdminInventoryReceivingPage() {
   return (
-    <AdminPageShell activeHref="/admin/inventory-receiving">
+    <AdminLayout activeHref="/admin/inventory-receiving">
       <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
@@ -331,6 +331,7 @@ export default function AdminInventoryReceivingPage() {
           ))}
         </div>
       </div>
-    </AdminPageShell>
+    </AdminLayout>
   );
 }
+

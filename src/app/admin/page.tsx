@@ -1,5 +1,5 @@
 import Link from "next/link";
-import AdminPageShell from "@/components/AdminPageShell";
+import AdminLayout from "@/components/AdminLayout";
 
 const dashboardCards = [
   { label: "Active Orders", value: "24", detail: "Open shop tickets" },
@@ -15,7 +15,7 @@ const cardClassName =
 
 export default function AdminPage() {
   return (
-    <AdminPageShell activeHref="/admin">
+    <AdminLayout activeHref="/admin">
           <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-8">
             <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
               <div>
@@ -60,7 +60,8 @@ export default function AdminPage() {
               </article>
             ))}
           </div>
-    </AdminPageShell>
+    </AdminLayout>
   );
 }
+
 
