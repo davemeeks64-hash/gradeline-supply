@@ -88,33 +88,41 @@ export default function CollectionsPage() {
             {collections.map((collection) => (
               <article
                 key={collection.title}
-                className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+                className="flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
-                <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
-                <h2 className="mt-5 text-2xl font-black">
-                  {collection.title}
-                </h2>
-                <p className="mt-3 leading-7 text-zinc-400">
-                  {collection.description}
-                </p>
-
-                <div className="mt-5 rounded-2xl border border-white/10 bg-black/30 p-4">
-                  <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
-                    Example Products
-                  </p>
-                  <ul className="mt-3 grid gap-2 text-sm text-zinc-300">
-                    {collection.examples.map((example) => (
-                      <li key={example} className="flex items-center gap-3">
-                        <span className="h-2 w-2 border border-blue-300 bg-blue-400" />
-                        {example}
-                      </li>
-                    ))}
-                  </ul>
+                <div className="grid aspect-[4/3] place-items-center border-b border-white/10 bg-[linear-gradient(145deg,rgba(17,24,31,0.96),rgba(8,10,12,1)_58%,rgba(15,23,30,0.98))]">
+                  <div className="grid h-20 w-20 place-items-center border border-blue-300/50 bg-blue-400/10 shadow-[0_0_28px_rgba(96,165,250,0.24)]">
+                    <span className="h-8 w-8 border border-blue-300/70 bg-black/40" />
+                  </div>
                 </div>
 
-                <button className="mt-6 rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300">
-                  View Products
-                </button>
+                <div className="flex flex-1 flex-col p-6">
+                  <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
+                  <h2 className="mt-5 text-2xl font-black">
+                    {collection.title}
+                  </h2>
+                  <p className="mt-3 leading-7 text-zinc-400">
+                    {collection.description}
+                  </p>
+
+                  <div className="mt-5 rounded-2xl border border-white/10 bg-black/30 p-4">
+                    <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
+                      Example Products
+                    </p>
+                    <ul className="mt-3 grid gap-2 text-sm text-zinc-300">
+                      {collection.examples.map((example) => (
+                        <li key={example} className="flex items-center gap-3">
+                          <span className="h-2 w-2 border border-blue-300 bg-blue-400" />
+                          {example}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <button className="mt-auto rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300">
+                    View Products
+                  </button>
+                </div>
               </article>
             ))}
           </div>
