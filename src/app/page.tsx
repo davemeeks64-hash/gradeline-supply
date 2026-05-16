@@ -1,4 +1,6 @@
 import Link from "next/link";
+import PublicFooter from "@/components/PublicFooter";
+import PublicHeader from "@/components/PublicHeader";
 
 const collections = [
   {
@@ -25,7 +27,9 @@ const collections = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#05070a] text-white">
+    <>
+      <PublicHeader />
+      <main className="min-h-screen bg-[#05070a] text-white">
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
 
