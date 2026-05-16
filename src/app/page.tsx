@@ -6,23 +6,33 @@ import PublicHeader from "@/components/PublicHeader";
 const collections = [
   {
     title: "Industrial & Blue Collar",
-    text: "Blue Collar Bling, Union Pride, Blackout Series, shop tags, patches, tumblers, and trade-inspired gear.",
+    href: "/shop?collection=industrial-blue-collar",
+    text: "Trade-inspired goods, shop tags, patches, tumblers, cow tags, and rugged everyday pieces.",
+    examples: "Cow tags / leather patches / blackout gear",
   },
   {
     title: "Home & Kitchen",
-    text: "Cutting boards, charcuterie boards, serving boards, recipe boards, and custom kitchen gifts.",
+    href: "/shop?collection=home-kitchen",
+    text: "Cutting boards, charcuterie boards, serving boards, recipe boards, and kitchen gifts.",
+    examples: "Boards / trays / engraved keepsakes",
   },
   {
     title: "Custom Gifts",
-    text: "Family gifts, wedding pieces, holiday items, name signs, and memorial work.",
+    href: "/shop?collection=custom-gifts",
+    text: "Personal pieces for weddings, holidays, families, memorials, birthdays, and one-off ideas.",
+    examples: "Name signs / photo gifts / keepsakes",
   },
   {
     title: "Business & Commercial",
-    text: "Business logos, shop signs, equipment tags, industrial labels, and promotional products.",
+    href: "/shop?collection=business-commercial",
+    text: "Logo engraving, shop signage, equipment tags, promotional products, and branded goods.",
+    examples: "Logo signs / tags / client gifts",
   },
   {
     title: "Custom Works",
-    text: "One-off projects, customer uploads, prototypes, and special requests.",
+    href: "/shop?collection=custom-works",
+    text: "Customer uploads, special requests, prototypes, and pieces built around a specific idea.",
+    examples: "Uploads / prototypes / special builds",
   },
 ];
 
@@ -50,11 +60,11 @@ const featuredProducts = [
 const workflowSteps = [
   {
     title: "Send The Idea",
-    text: "Share the product type, logo, photo, name, phrase, or rough sketch.",
+    text: "Share the product type, logo, photo, name, phrase, material direction, or rough sketch.",
   },
   {
     title: "Review & Mockup",
-    text: "Gradeline checks the material, design path, pricing, and production fit.",
+    text: "Gradeline checks the material, design path, pricing, and production fit before the work begins.",
   },
   {
     title: "Build & Finish",
@@ -62,190 +72,117 @@ const workflowSteps = [
   },
 ];
 
-const systemLinks = [
-  { label: "Shop", href: "/shop" },
-  { label: "Custom Orders", href: "/custom-order" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "Admin", href: "/admin" },
-];
-
-const featuredCategories = [
+const galleryPreview = [
   {
-    title: "Custom Work",
-    text: "One-off builds, customer uploads, personal gifts, shop pieces, and special requests.",
+    name: "Union Pride Patch Set",
+    category: "Industrial & Blue Collar",
+    material: "Leather",
   },
   {
-    title: "Ready-Made Goods",
-    text: "Small-batch products built ahead, ready for customers to browse and request.",
+    name: "Engraved Serving Board",
+    category: "Home & Kitchen",
+    material: "Walnut",
   },
   {
-    title: "Business Branding",
-    text: "Logo engraving, shop signs, equipment tags, promotional pieces, and branded gear.",
+    name: "Business Counter Sign",
+    category: "Business & Commercial",
+    material: "Acrylic",
   },
-];
-
-const quickStats = [
-  { label: "Active Orders", value: "24", detail: "In the shop queue" },
-  { label: "Projects This Week", value: "18", detail: "Custom and stock runs" },
-  { label: "Inventory Items", value: "128", detail: "Materials tracked" },
-  { label: "Completed Orders", value: "31", detail: "Finished this month" },
-  { label: "Ready-Made Stock", value: "72", detail: "Available to request" },
-  { label: "Estimated Revenue", value: "$12.8K", detail: "Demo monthly view" },
+  {
+    name: "Custom Memorial Keepsake",
+    category: "Custom Gifts",
+    material: "Slate",
+  },
 ];
 
 export default function Home() {
   return (
     <>
       <PublicHeader />
-      <main className="min-h-screen bg-[#05070a] text-white">
-        <section className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/50 to-transparent" />
+      <main className="min-h-screen overflow-hidden bg-[#05070a] text-white">
+        <section
+          aria-label="Hero Banner"
+          className="relative overflow-hidden border-b border-white/10"
+        >
+          <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(5,7,10,1)_0%,rgba(10,14,18,0.98)_42%,rgba(14,28,40,0.82)_100%)]" />
+          <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(to_bottom,rgba(96,165,250,0.14),transparent)]" />
+          <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-blue-300/30 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-[linear-gradient(to_top,rgba(5,7,10,1),transparent)]" />
 
-          <div className="relative mx-auto max-w-7xl px-6 py-12 md:py-14 lg:py-16">
-            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center xl:grid-cols-[minmax(0,1fr)_460px]">
-              <div>
-                <Image
-                  src="/gradeline-logo.png"
-                  alt="Gradeline Supply Co. logo"
-                  width={1730}
-                  height={1870}
-                  priority
-                  className="mb-5 h-20 w-auto object-contain md:h-24"
-                />
-                <p className="mb-4 inline-flex rounded-full border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-blue-200">
-                  Custom Laser Engraving / Shop Built Goods
-                </p>
+          <div className="relative mx-auto grid min-h-[560px] max-w-7xl items-center gap-8 px-6 py-12 md:py-14 lg:grid-cols-[minmax(0,1fr)_420px] lg:py-16 xl:grid-cols-[minmax(0,1fr)_460px]">
+            <div className="max-w-3xl">
+              <Image
+                src="/gradeline-logo.png"
+                alt="Gradeline Supply Co. logo"
+                width={1730}
+                height={1870}
+                priority
+                className="mb-5 h-20 w-auto object-contain md:h-24"
+              />
 
-                <h1 className="max-w-3xl text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
-                  Built To Be Different.
-                </h1>
-
-                <p className="mt-5 max-w-2xl text-base leading-8 text-zinc-300 md:text-lg">
-                  Custom laser engraving, leatherwork, slate, acrylic,
-                  industrial-inspired products, cutting boards, business
-                  branding, and one-off custom fabrication.
-                </p>
-
-                <div className="mt-7 flex flex-wrap gap-4">
-                  <Link
-                    href="/shop"
-                    className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
-                  >
-                    Shop Collections
-                  </Link>
-                  <Link
-                    href="/custom-order"
-                    className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-                  >
-                    Start Custom Order
-                  </Link>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 to-black p-5 shadow-2xl md:p-6">
-                <div className="rounded-2xl border border-blue-300/20 bg-blue-400/10 p-5">
-                  <p className="text-sm font-bold uppercase tracking-widest text-blue-200">
-                    Gradeline Operating System
-                  </p>
-                  <h2 className="mt-3 text-2xl font-black md:text-3xl">
-                    Public shop + custom order workflow.
-                  </h2>
-                  <p className="mt-4 text-zinc-300">
-                    Browse ready-made products, request custom work, and keep
-                    orders moving from idea to finished piece.
-                  </p>
-                </div>
-
-                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                  {systemLinks.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="rounded-xl border border-white/10 bg-black/40 p-4 font-bold text-zinc-200"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-7xl px-6 py-8 md:py-10">
-          <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
-                Featured Categories
+              <p className="mb-5 inline-flex rounded-full border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-blue-200">
+                Custom Laser Engraving / Shop Built Goods
               </p>
-              <h2 className="mt-2 text-3xl font-black md:text-4xl">
-                Three ways to build with Gradeline.
-              </h2>
+
+              <h1 className="text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
+                Built To Be Different.
+              </h1>
+
+              <p className="mt-5 max-w-2xl text-base leading-8 text-zinc-300 md:text-lg">
+                Premium laser engraving and small-batch shop-built products
+                with industrial roots, clean finishes, and work-ready
+                character.
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Link
+                  href="/shop"
+                  className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
+                >
+                  Shop Collections
+                </Link>
+                <Link
+                  href="/custom-order"
+                  className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                >
+                  Start Custom Order
+                </Link>
+              </div>
             </div>
-            <p className="max-w-xl text-sm leading-6 text-zinc-400 md:text-right">
-              From one-off custom pieces to ready-made stock and business
-              branding, the shop is organized around the work customers ask for
-              most.
-            </p>
-          </div>
 
-          <div className="grid items-stretch gap-5 md:grid-cols-3">
-            {featuredCategories.map((category) => (
-              <article
-                key={category.title}
-                className="flex h-full flex-col rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.78),rgba(7,9,12,0.96))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.22)] transition hover:border-blue-300/40 hover:bg-white/[0.06]"
-              >
-                <div className="h-2 w-12 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
-                <h3 className="mt-5 text-2xl font-black">{category.title}</h3>
-                <p className="mt-3 flex-1 leading-7 text-zinc-400">
-                  {category.text}
-                </p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-7xl px-6 py-8 md:py-10">
-          <div className="mb-6">
-            <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
-              Quick Stats
-            </p>
-            <h2 className="mt-2 text-3xl font-black md:text-4xl">
-              Shop momentum at a glance.
-            </h2>
-          </div>
-
-          <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            {quickStats.map((stat) => (
-              <article
-                key={stat.label}
-                className="flex h-full flex-col rounded-2xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.82),rgba(8,10,12,0.96))] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:shadow-[0_0_34px_rgba(96,165,250,0.12)]"
-              >
-                <div className="h-2 w-10 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
-                <p className="mt-4 text-xs font-bold uppercase tracking-widest text-blue-300">
-                  {stat.label}
-                </p>
-                <p className="mt-3 text-3xl font-black text-white">
-                  {stat.value}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-zinc-400">
-                  {stat.detail}
-                </p>
-              </article>
-            ))}
+              <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+                <div className="absolute -inset-4 bg-[linear-gradient(135deg,rgba(96,165,250,0.16),transparent_48%,rgba(148,163,184,0.1))] blur-2xl" />
+                <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.88),rgba(4,6,8,0.98))] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
+                <div className="grid aspect-[4/5] place-items-center border border-white/10 bg-[linear-gradient(145deg,rgba(11,15,20,1),rgba(24,36,46,0.82)_48%,rgba(5,7,10,1))]">
+                  <div className="w-full px-8">
+                    <div className="h-px bg-gradient-to-r from-transparent via-blue-300/70 to-transparent" />
+                    <div className="my-8 border-y border-white/10 py-8 text-center">
+                      <p className="text-xs font-bold uppercase tracking-[0.35em] text-blue-200">
+                        Gradeline Supply Co.
+                      </p>
+                      <p className="mt-4 text-3xl font-black uppercase tracking-wide text-white">
+                        Laser Engraved
+                      </p>
+                      <p className="mt-3 text-sm font-bold uppercase tracking-widest text-zinc-400">
+                        Leather / Slate / Wood / Acrylic
+                      </p>
+                    </div>
+                    <div className="h-px bg-gradient-to-r from-transparent via-blue-300/70 to-transparent" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-10 md:py-12">
-          <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <section className="mx-auto max-w-7xl px-6 py-10 md:py-14">
+          <div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                 Featured Collections
               </p>
               <h2 className="mt-2 text-3xl font-black md:text-4xl">
-                Built for more than one lane.
+                Made for work, home, gifts, and brands.
               </h2>
             </div>
             <Link
@@ -258,30 +195,42 @@ export default function Home() {
 
           <div className="grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
             {collections.map((collection) => (
-              <article
+              <Link
                 key={collection.title}
-                className="flex h-full flex-col rounded-3xl border border-white/10 bg-white/[0.04] p-6 transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+                href={collection.href}
+                className="group flex h-full flex-col rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.74),rgba(7,9,12,0.96))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.2)] transition hover:border-blue-300/40 hover:bg-white/[0.06]"
               >
                 <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
                 <h3 className="mt-5 text-xl font-black">
                   {collection.title}
                 </h3>
-                <p className="mt-3 leading-7 text-zinc-400">
+                <p className="mt-3 flex-1 leading-7 text-zinc-400">
                   {collection.text}
                 </p>
-              </article>
+                <p className="mt-5 text-xs font-bold uppercase tracking-widest text-blue-200">
+                  {collection.examples}
+                </p>
+              </Link>
             ))}
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-10 md:py-12">
-          <div className="mb-6">
-            <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
-              Featured Products
-            </p>
-            <h2 className="mt-2 text-3xl font-black md:text-4xl">
-              Ready-made products, built ahead.
-            </h2>
+        <section className="mx-auto max-w-7xl px-6 py-10 md:py-14">
+          <div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
+                Featured Products
+              </p>
+              <h2 className="mt-2 text-3xl font-black md:text-4xl">
+                Ready-made pieces with a custom-shop feel.
+              </h2>
+            </div>
+            <Link
+              href="/shop"
+              className="w-fit rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300"
+            >
+              Shop Products
+            </Link>
           </div>
 
           <div className="grid items-stretch gap-5 md:grid-cols-3">
@@ -308,9 +257,9 @@ export default function Home() {
                   </p>
                   <Link
                     href="/shop"
-                    className="mt-6 rounded-xl bg-blue-400 px-5 py-3 text-center font-bold text-black transition hover:bg-blue-300"
+                    className="mt-auto rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
                   >
-                    View Product
+                    Request This
                   </Link>
                 </div>
               </article>
@@ -318,99 +267,108 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-10 md:py-12">
-          <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-zinc-950 via-zinc-900 to-blue-950/40 p-6 md:p-8">
-            <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
-              How It Works
-            </p>
-            <h2 className="mt-3 max-w-3xl text-3xl font-black md:text-4xl">
-              A clear path from idea to finished piece.
-            </h2>
+        <section className="mx-auto max-w-7xl px-6 py-10 md:py-14">
+          <div className="overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(120deg,rgba(7,10,13,1),rgba(18,27,35,0.96),rgba(8,17,27,0.92))] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.36)] md:p-8">
+            <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
+              <div>
+                <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
+                  How It Works
+                </p>
+                <h2 className="mt-3 text-3xl font-black md:text-4xl">
+                  A clear path from rough idea to finished piece.
+                </h2>
+                <p className="mt-4 leading-8 text-zinc-300">
+                  Custom work stays simple and practical. Send the idea,
+                  approve the direction, and Gradeline handles the build with a
+                  clean shop-ready process.
+                </p>
+              </div>
 
-            <div className="mt-6 grid items-stretch gap-5 md:grid-cols-3">
-              {workflowSteps.map((step, index) => (
-                <article
-                  key={step.title}
-                  className="h-full rounded-2xl border border-white/10 bg-black/30 p-5"
-                >
-                  <p className="text-sm font-black text-blue-300">
-                    Step {index + 1}
-                  </p>
-                  <h3 className="mt-3 text-2xl font-black">{step.title}</h3>
-                  <p className="mt-3 leading-7 text-zinc-400">{step.text}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-7xl px-6 py-10 md:py-12">
-          <div className="grid items-stretch gap-6 lg:grid-cols-2">
-            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.28)] md:p-8">
-              <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
-                Customer Workflow
-              </p>
-              <h2 className="mt-3 text-3xl font-black md:text-4xl">
-                Custom orders stay practical.
-              </h2>
-              <p className="mt-4 leading-8 text-zinc-300">
-                Gradeline keeps the process simple: send the request, review the
-                mockup, approve the direction, and get a finished piece built
-                for the job.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link
-                  href="/gallery"
-                  className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-                >
-                  View Gallery
-                </Link>
-                <Link
-                  href="/contact"
-                  className="rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300"
-                >
-                  Contact Gradeline
-                </Link>
+              <div className="grid items-stretch gap-5 md:grid-cols-3">
+                {workflowSteps.map((step, index) => (
+                  <article
+                    key={step.title}
+                    className="h-full rounded-2xl border border-white/10 bg-black/30 p-5"
+                  >
+                    <p className="text-sm font-black text-blue-300">
+                      Step {index + 1}
+                    </p>
+                    <h3 className="mt-3 text-xl font-black">{step.title}</h3>
+                    <p className="mt-3 leading-7 text-zinc-400">{step.text}</p>
+                  </article>
+                ))}
               </div>
             </div>
-
-            <div className="flex h-full flex-col justify-center rounded-3xl border border-white/10 bg-black/30 p-6 md:p-8">
-              <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
-                Review Placeholder
-              </p>
-              <blockquote className="mt-4 text-xl font-black leading-8 text-white md:text-2xl md:leading-10">
-                &ldquo;The finished piece looked professional, rugged, and exactly
-                like the idea we had in mind.&rdquo;
-              </blockquote>
-              <p className="mt-5 text-sm font-bold uppercase tracking-widest text-zinc-500">
-                Future customer review
-              </p>
-            </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-10 pb-14 md:py-12 md:pb-16">
-          <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-zinc-950 via-zinc-900 to-blue-950/40 p-6 md:p-8">
-            <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
-              Custom Orders
-            </p>
-
-            <h2 className="mt-3 text-3xl font-black md:text-4xl">
-              Have an idea?
-            </h2>
-
-            <p className="mt-4 max-w-2xl text-zinc-300">
-              Send the idea, photo, logo, name, phrase, or rough sketch.
-              Gradeline can turn it into a real product, gift, sign, tag, or
-              shop-built piece.
-            </p>
-
+        <section className="mx-auto max-w-7xl px-6 py-10 md:py-14">
+          <div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
+                Gallery Preview
+              </p>
+              <h2 className="mt-2 text-3xl font-black md:text-4xl">
+                A look at the kind of work Gradeline builds.
+              </h2>
+            </div>
             <Link
-              href="/custom-order"
-              className="mt-7 inline-flex rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
+              href="/gallery"
+              className="w-fit rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
             >
-              Start Your Custom Order
+              View Gallery
             </Link>
+          </div>
+
+          <div className="grid items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {galleryPreview.map((item) => (
+              <article
+                key={item.name}
+                className="h-full overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+              >
+                <div className="grid aspect-square place-items-center border-b border-white/10 bg-[linear-gradient(145deg,rgba(17,24,31,0.96),rgba(5,7,10,1))]">
+                  <div className="h-16 w-16 border border-blue-300/50 bg-blue-400/10 shadow-[0_0_28px_rgba(96,165,250,0.22)]" />
+                </div>
+                <div className="p-5">
+                  <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
+                    {item.category}
+                  </p>
+                  <h3 className="mt-3 text-lg font-black">{item.name}</h3>
+                  <p className="mt-2 text-sm font-bold uppercase tracking-widest text-zinc-500">
+                    {item.material}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-6 py-10 pb-16 md:py-14 md:pb-20">
+          <div className="relative overflow-hidden rounded-3xl border border-blue-300/20 bg-[linear-gradient(135deg,rgba(12,19,26,1),rgba(7,9,12,1)_58%,rgba(20,43,61,0.72))] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.4)] md:p-10">
+            <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/70 to-transparent" />
+            <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-blue-400/10 blur-3xl" />
+            <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+              <div>
+                <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
+                  Custom Orders
+                </p>
+                <h2 className="mt-3 max-w-3xl text-3xl font-black md:text-5xl">
+                  Have an idea that does not fit a shelf?
+                </h2>
+                <p className="mt-4 max-w-2xl leading-8 text-zinc-300">
+                  Send the idea, photo, logo, name, phrase, or rough sketch.
+                  Gradeline can turn it into a product, gift, sign, tag, or
+                  shop-built piece.
+                </p>
+              </div>
+
+              <Link
+                href="/custom-order"
+                className="inline-flex w-fit rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
+              >
+                Start Custom Order
+              </Link>
+            </div>
           </div>
         </section>
       </main>
