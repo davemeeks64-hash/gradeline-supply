@@ -5,6 +5,7 @@ import PublicHeader from "@/components/PublicHeader";
 const collections = [
   {
     title: "Industrial & Blue Collar",
+    href: "/shop?collection=industrial-blue-collar",
     description:
       "Rugged shop-built goods for trades, unions, crews, garages, and hard-working brands.",
     examples: [
@@ -16,6 +17,7 @@ const collections = [
   },
   {
     title: "Home & Kitchen",
+    href: "/shop?collection=home-kitchen",
     description:
       "Warm, functional pieces built for kitchens, gifting, hosting, and daily use.",
     examples: [
@@ -27,6 +29,7 @@ const collections = [
   },
   {
     title: "Custom Gifts",
+    href: "/shop?collection=custom-gifts",
     description:
       "Personalized keepsakes for milestones, families, holidays, weddings, and memorials.",
     examples: [
@@ -38,6 +41,7 @@ const collections = [
   },
   {
     title: "Business & Commercial",
+    href: "/shop?collection=business-commercial",
     description:
       "Branded products and signage for shops, crews, small businesses, and events.",
     examples: [
@@ -49,6 +53,7 @@ const collections = [
   },
   {
     title: "Custom Works",
+    href: "/shop?collection=custom-works",
     description:
       "One-off requests, prototypes, uploaded designs, and special builds that need a custom path.",
     examples: [
@@ -123,9 +128,12 @@ export default function CollectionsPage() {
                     </ul>
                   </div>
 
-                  <button className="mt-auto rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300">
+                  <Link
+                    href={collection.href}
+                    className="mt-auto rounded-xl bg-blue-400 px-5 py-3 text-center font-bold text-black transition hover:bg-blue-300"
+                  >
                     View Products
-                  </button>
+                  </Link>
                 </div>
               </article>
             ))}
