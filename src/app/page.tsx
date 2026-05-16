@@ -104,10 +104,18 @@ export default function Home() {
           aria-label="Hero Banner"
           className="relative overflow-hidden border-b border-white/10"
         >
-          <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(5,7,10,1)_0%,rgba(10,14,18,0.98)_42%,rgba(14,28,40,0.82)_100%)]" />
-          <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(to_bottom,rgba(96,165,250,0.14),transparent)]" />
+          <Image
+            src="/hero-banner.png"
+            alt=""
+            fill
+            preload
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,10,0.94)_0%,rgba(5,7,10,0.78)_46%,rgba(5,7,10,0.45)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(5,7,10,0.4),rgba(5,7,10,0.12)_42%,rgba(5,7,10,0.92)_100%)]" />
+          <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(to_bottom,rgba(96,165,250,0.16),transparent)]" />
           <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-blue-300/30 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-[linear-gradient(to_top,rgba(5,7,10,1),transparent)]" />
 
           <div className="relative mx-auto grid min-h-[560px] max-w-7xl items-center gap-8 px-6 py-12 md:py-14 lg:grid-cols-[minmax(0,1fr)_420px] lg:py-16 xl:grid-cols-[minmax(0,1fr)_460px]">
             <div className="max-w-3xl">
@@ -116,7 +124,7 @@ export default function Home() {
                 alt="Gradeline Supply Co. logo"
                 width={1730}
                 height={1870}
-                priority
+                loading="eager"
                 className="mb-5 h-20 w-auto object-contain md:h-24"
               />
 
