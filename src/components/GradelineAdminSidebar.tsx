@@ -12,16 +12,20 @@ type GradelineAdminSidebarProps = {
 };
 
 const defaultLinks: SidebarLink[] = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Orders", href: "/orders" },
-  { label: "Production", href: "/production" },
-  { label: "Inventory", href: "/inventory" },
-  { label: "Laser Settings", href: "/laser-settings" },
-  { label: "Customers", href: "/customers" },
+  { label: "Dashboard", href: "/admin" },
+  { label: "Orders", href: "/admin/orders" },
+  { label: "New Order", href: "/admin/new-order" },
+  { label: "Production", href: "/admin/production" },
+  { label: "Inventory", href: "/admin/inventory" },
+  { label: "Laser Settings", href: "/admin/laser-settings" },
+  { label: "Customers", href: "/admin/customers" },
+  { label: "Designs", href: "/admin/designs" },
+  { label: "Reports", href: "/admin/reports" },
+  { label: "Settings", href: "/admin/settings" },
 ];
 
 export function GradelineAdminSidebar({
-  activeHref = "/dashboard",
+  activeHref = "/admin",
   className = "",
   links = defaultLinks,
 }: GradelineAdminSidebarProps) {
