@@ -83,24 +83,48 @@ export default function AdminCustomersPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
+  async function readCustomers() {
+    const { data, error } = await supabase.from("customers").select("*");
+    return { data: (data ?? []) as Customer[], error };
+  }
+
   async function loadCustomers() {
     setIsLoading(true);
     setErrorMessage("");
 
-    const { data, error } = await supabase.from("customers").select("*");
+    const { data, error } = await readCustomers();
 
     if (error) {
       setErrorMessage(error.message);
       setCustomers([]);
     } else {
-      setCustomers((data ?? []) as Customer[]);
+      setCustomers(data);
     }
 
     setIsLoading(false);
   }
 
   useEffect(() => {
-    void loadCustomers();
+    let isMounted = true;
+
+    readCustomers().then(({ data, error }) => {
+      if (!isMounted) {
+        return;
+      }
+
+      if (error) {
+        setErrorMessage(error.message);
+        setCustomers([]);
+      } else {
+        setCustomers(data);
+      }
+
+      setIsLoading(false);
+    });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   function updateFormField(name: keyof CustomerFormState, value: string) {
