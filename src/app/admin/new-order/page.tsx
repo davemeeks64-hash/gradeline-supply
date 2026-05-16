@@ -1,3 +1,6 @@
+"use client";
+
+import { type FormEvent, useState } from "react";
 import Link from "next/link";
 import AdminLayout from "@/components/AdminLayout";
 
@@ -13,16 +16,23 @@ const inputClassName =
 function TextField({
   label,
   placeholder,
+  required = false,
   type = "text",
 }: {
   label: string;
   placeholder: string;
+  required?: boolean;
   type?: string;
 }) {
   return (
     <label className="block">
       <span className={labelClassName}>{label}</span>
-      <input className={inputClassName} type={type} placeholder={placeholder} />
+      <input
+        className={inputClassName}
+        placeholder={placeholder}
+        required={required}
+        type={type}
+      />
     </label>
   );
 }
@@ -30,9 +40,11 @@ function TextField({
 function TextAreaField({
   label,
   placeholder,
+  required = false,
 }: {
   label: string;
   placeholder: string;
+  required?: boolean;
 }) {
   return (
     <label className="block">
@@ -40,6 +52,7 @@ function TextAreaField({
       <textarea
         className={`${inputClassName} min-h-32 resize-y`}
         placeholder={placeholder}
+        required={required}
       />
     </label>
   );
@@ -48,14 +61,16 @@ function TextAreaField({
 function SelectField({
   label,
   options,
+  required = false,
 }: {
   label: string;
   options: string[];
+  required?: boolean;
 }) {
   return (
     <label className="block">
       <span className={labelClassName}>{label}</span>
-      <select className={inputClassName} defaultValue="">
+      <select className={inputClassName} defaultValue="" required={required}>
         <option value="" disabled>
           Select {label.toLowerCase()}
         </option>
@@ -80,6 +95,14 @@ function CheckboxField({ label }: { label: string }) {
 }
 
 export default function AdminNewOrderPage() {
+  const [isCreated, setIsCreated] = useState(false);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsCreated(true);
+    event.currentTarget.reset();
+  }
+
   return (
     <AdminLayout activeHref="/admin/new-order">
           <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-8">
@@ -106,15 +129,16 @@ export default function AdminNewOrderPage() {
             </div>
           </div>
 
-          <form className="mt-6 grid gap-6">
+          <form className="mt-6 grid gap-6" onSubmit={handleSubmit}>
             <section className={sectionClassName}>
               <h2 className="text-2xl font-black">Customer Info</h2>
               <div className="mt-5 grid gap-4 md:grid-cols-2">
-                <TextField label="Name" placeholder="Customer name" />
+                <TextField label="Name" placeholder="Customer name" required />
                 <TextField label="Phone" placeholder="(555) 000-0000" />
                 <TextField
                   label="Email"
                   placeholder="customer@example.com"
+                  required
                   type="email"
                 />
                 <TextField label="Company" placeholder="Company or shop name" />
@@ -153,6 +177,7 @@ export default function AdminNewOrderPage() {
               <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <SelectField
                   label="Product Type"
+                  required
                   options={[
                     "Cutting board",
                     "Slate award",
@@ -164,6 +189,7 @@ export default function AdminNewOrderPage() {
                 />
                 <SelectField
                   label="Collection"
+                  required
                   options={[
                     "Industrial & Blue Collar",
                     "Home & Kitchen",
@@ -173,7 +199,12 @@ export default function AdminNewOrderPage() {
                   ]}
                 />
                 <TextField label="Material" placeholder="Walnut, slate, acrylic" />
-                <TextField label="Quantity" placeholder="1" type="number" />
+                <TextField
+                  label="Quantity"
+                  placeholder="1"
+                  required
+                  type="number"
+                />
                 <TextField label="Size/Color" placeholder="12 x 18, black" />
               </div>
             </section>
@@ -184,6 +215,7 @@ export default function AdminNewOrderPage() {
                 <TextAreaField
                   label="Design Notes"
                   placeholder="Logo placement, names, dates, engraving text, finish details"
+                  required
                 />
                 <div className="grid gap-4">
                   <div className="rounded-2xl border border-dashed border-blue-300/40 bg-black/30 p-6 text-center">
@@ -233,18 +265,28 @@ export default function AdminNewOrderPage() {
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <button
-                type="button"
+                type="submit"
                 className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
               >
                 Save Demo Order
               </button>
               <button
-                type="button"
+                type="reset"
+                onClick={() => setIsCreated(false)}
                 className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
               >
                 Clear Form
               </button>
             </div>
+
+            {isCreated && (
+              <p
+                role="status"
+                className="rounded-2xl border border-blue-300/40 bg-blue-400/10 px-5 py-4 font-bold text-blue-100"
+              >
+                Order created successfully.
+              </p>
+            )}
           </form>
     </AdminLayout>
   );
