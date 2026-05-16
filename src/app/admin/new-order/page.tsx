@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AdminSidebar from "@/components/AdminSidebar";
 
 const sectionClassName =
   "rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)] md:p-6";
@@ -80,8 +81,10 @@ function CheckboxField({ label }: { label: string }) {
 
 export default function AdminNewOrderPage() {
   return (
-    <main className="min-h-screen bg-[#05070a] text-white">
-      <section className="relative overflow-hidden px-6 py-8 md:py-12">
+    <main className="min-h-screen bg-[#05070a] text-white md:flex">
+      <AdminSidebar activeHref="/admin/new-order" />
+
+      <section className="relative flex-1 overflow-hidden px-6 py-8 md:py-12">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.24),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.22),_transparent_36%)]" />
 
         <div className="relative mx-auto max-w-7xl">

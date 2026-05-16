@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AdminSidebar from "@/components/AdminSidebar";
 
 type LaserSetting = {
   material: string;
@@ -109,8 +110,10 @@ function CategoryBadge({ category }: { category: string }) {
 
 export default function AdminLaserSettingsPage() {
   return (
-    <main className="min-h-screen bg-[#05070a] text-white">
-      <section className="relative overflow-hidden px-6 py-8 md:py-12">
+    <main className="min-h-screen bg-[#05070a] text-white md:flex">
+      <AdminSidebar activeHref="/admin/laser-settings" />
+
+      <section className="relative flex-1 overflow-hidden px-6 py-8 md:py-12">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.24),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.22),_transparent_36%)]" />
 
         <div className="relative mx-auto max-w-7xl">
