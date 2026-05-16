@@ -1,4 +1,6 @@
 import Link from "next/link";
+import PublicFooter from "@/components/PublicFooter";
+import PublicHeader from "@/components/PublicHeader";
 
 const sectionClassName =
   "rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)] md:p-6";
@@ -68,7 +70,9 @@ function TextAreaField({
 
 export default function CustomOrderPage() {
   return (
-    <main className="min-h-screen bg-[#05070a] text-white">
+    <>
+      <PublicHeader />
+      <main className="min-h-screen bg-[#05070a] text-white">
       <section className="relative overflow-hidden px-6 py-16">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
 
@@ -236,6 +240,8 @@ export default function CustomOrderPage() {
           </form>
         </div>
       </section>
-    </main>
+      </main>
+      <PublicFooter />
+    </>
   );
 }

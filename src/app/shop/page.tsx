@@ -1,4 +1,6 @@
 import Link from "next/link";
+import PublicFooter from "@/components/PublicFooter";
+import PublicHeader from "@/components/PublicHeader";
 
 const collections = [
   "Industrial & Blue Collar",
@@ -61,7 +63,9 @@ const products = [
 
 export default function ShopPage() {
   return (
-    <main className="min-h-screen bg-[#05070a] text-white">
+    <>
+      <PublicHeader />
+      <main className="min-h-screen bg-[#05070a] text-white">
       <section className="relative overflow-hidden px-6 py-16">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
 
@@ -144,6 +148,8 @@ export default function ShopPage() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+      <PublicFooter />
+    </>
   );
 }
