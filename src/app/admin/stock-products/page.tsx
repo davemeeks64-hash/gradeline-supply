@@ -4,84 +4,116 @@ import AdminPageShell from "@/components/AdminPageShell";
 type StockProduct = {
   productName: string;
   collection: string;
+  productType: string;
   material: string;
   quantityMade: number;
   quantitySold: number;
   quantityOnHand: number;
-  cost: string;
+  unitCost: string;
   salePrice: string;
-  profit: string;
+  estimatedProfit: string;
   fileLocation: string;
 };
 
 const stockProducts: StockProduct[] = [
   {
-    productName: "Blue Collar Bling Key Tags",
+    productName: "Cow Tags - Blackout Set",
     collection: "Industrial & Blue Collar",
+    productType: "Cow tags",
     material: "Brushed aluminum",
     quantityMade: 40,
     quantitySold: 24,
     quantityOnHand: 16,
-    cost: "$3.25",
+    unitCost: "$3.25",
     salePrice: "$12.00",
-    profit: "$210.00",
-    fileLocation: "/stock/blue-collar-bling/key-tags.svg",
+    estimatedProfit: "$210.00",
+    fileLocation: "/stock/industrial/cow-tags-blackout.svg",
+  },
+  {
+    productName: "Blue Collar Keychains",
+    collection: "Industrial & Blue Collar",
+    productType: "Keychains",
+    material: "Leatherette",
+    quantityMade: 60,
+    quantitySold: 41,
+    quantityOnHand: 19,
+    unitCost: "$2.10",
+    salePrice: "$10.00",
+    estimatedProfit: "$323.90",
+    fileLocation: "/stock/industrial/blue-collar-keychains.svg",
   },
   {
     productName: "Walnut Recipe Board Blank",
     collection: "Home & Kitchen",
+    productType: "Cutting boards",
     material: "Walnut",
     quantityMade: 12,
     quantitySold: 7,
     quantityOnHand: 5,
-    cost: "$18.50",
+    unitCost: "$18.50",
     salePrice: "$64.00",
-    profit: "$318.50",
+    estimatedProfit: "$318.50",
     fileLocation: "/stock/home-kitchen/recipe-board.lbrn2",
   },
   {
-    productName: "Slate Coaster Set",
+    productName: "Leather Patch Batch",
     collection: "Custom Gifts",
-    material: "Black slate",
+    productType: "Leather patches",
+    material: "Leatherette",
     quantityMade: 30,
     quantitySold: 18,
     quantityOnHand: 12,
-    cost: "$7.60",
+    unitCost: "$7.60",
     salePrice: "$28.00",
-    profit: "$367.20",
-    fileLocation: "/stock/custom-gifts/slate-coasters.svg",
+    estimatedProfit: "$367.20",
+    fileLocation: "/stock/custom-gifts/leather-patches.svg",
+  },
+  {
+    productName: "Ready-Made Tumbler Set",
+    collection: "Business & Commercial",
+    productType: "Tumblers",
+    material: "Powder-coated steel",
+    quantityMade: 24,
+    quantitySold: 15,
+    quantityOnHand: 9,
+    unitCost: "$7.40",
+    salePrice: "$28.00",
+    estimatedProfit: "$309.00",
+    fileLocation: "/stock/business-commercial/tumbler-set.lbrn2",
   },
   {
     productName: "Shop Logo Display Sign",
     collection: "Business & Commercial",
+    productType: "Shop signs",
     material: "Clear acrylic",
     quantityMade: 8,
     quantitySold: 3,
     quantityOnHand: 5,
-    cost: "$22.00",
+    unitCost: "$22.00",
     salePrice: "$85.00",
-    profit: "$189.00",
+    estimatedProfit: "$189.00",
     fileLocation: "/stock/business-commercial/logo-display.lbrn2",
   },
   {
     productName: "Trade Motto Wall Plate",
     collection: "Custom Works",
+    productType: "Shop signs",
     material: "Walnut plywood",
     quantityMade: 15,
     quantitySold: 9,
     quantityOnHand: 6,
-    cost: "$9.75",
+    unitCost: "$9.75",
     salePrice: "$38.00",
-    profit: "$254.25",
+    estimatedProfit: "$254.25",
     fileLocation: "/stock/custom-works/trade-motto.svg",
   },
 ];
 
 const summaryCards = [
-  { label: "Stock SKUs", value: "42", detail: "Ready-made product designs" },
-  { label: "Made Ahead", value: "105", detail: "Demo finished units" },
-  { label: "On Hand", value: "44", detail: "Available stock products" },
-  { label: "Demo Profit", value: "$1,338", detail: "Estimated sold profit" },
+  { label: "Stock SKUs", value: "48", detail: "Ready-made product designs" },
+  { label: "Made Ahead", value: "189", detail: "Demo finished units" },
+  { label: "On Hand", value: "72", detail: "Available stock products" },
+  { label: "Demo Profit", value: "$1,972", detail: "Estimated sold profit" },
 ];
 
 const panelClassName =
@@ -157,6 +189,7 @@ export default function AdminStockProductsPage() {
               <tr>
                 <th className="px-5 py-4">Product</th>
                 <th className="px-5 py-4">Collection</th>
+                <th className="px-5 py-4">Type</th>
                 <th className="px-5 py-4">Material</th>
                 <th className="px-5 py-4">Made</th>
                 <th className="px-5 py-4">Sold</th>
@@ -180,6 +213,9 @@ export default function AdminStockProductsPage() {
                     {product.collection}
                   </td>
                   <td className="px-5 py-4 text-zinc-300">
+                    {product.productType}
+                  </td>
+                  <td className="px-5 py-4 text-zinc-300">
                     {product.material}
                   </td>
                   <td className="px-5 py-4 text-zinc-300">
@@ -191,12 +227,14 @@ export default function AdminStockProductsPage() {
                   <td className="px-5 py-4">
                     <StockLevelBadge quantityOnHand={product.quantityOnHand} />
                   </td>
-                  <td className="px-5 py-4 text-zinc-300">{product.cost}</td>
+                  <td className="px-5 py-4 text-zinc-300">
+                    {product.unitCost}
+                  </td>
                   <td className="px-5 py-4 font-black text-white">
                     {product.salePrice}
                   </td>
                   <td className="px-5 py-4 font-black text-blue-200">
-                    {product.profit}
+                    {product.estimatedProfit}
                   </td>
                   <td className="px-5 py-4 text-zinc-500">
                     {product.fileLocation}
@@ -221,7 +259,9 @@ export default function AdminStockProductsPage() {
                   <h2 className="mt-2 text-xl font-black text-white">
                     {product.productName}
                   </h2>
-                  <p className="mt-2 text-zinc-300">{product.material}</p>
+                  <p className="mt-2 text-zinc-300">
+                    {product.productType} / {product.material}
+                  </p>
                 </div>
                 <StockLevelBadge quantityOnHand={product.quantityOnHand} />
               </div>
@@ -236,16 +276,18 @@ export default function AdminStockProductsPage() {
                   {product.quantitySold}
                 </p>
                 <p>
-                  <span className="font-bold text-zinc-500">Cost: </span>
-                  {product.cost}
+                  <span className="font-bold text-zinc-500">Unit Cost: </span>
+                  {product.unitCost}
                 </p>
                 <p>
                   <span className="font-bold text-zinc-500">Sale Price: </span>
                   {product.salePrice}
                 </p>
                 <p>
-                  <span className="font-bold text-zinc-500">Profit: </span>
-                  {product.profit}
+                  <span className="font-bold text-zinc-500">
+                    Estimated Profit:{" "}
+                  </span>
+                  {product.estimatedProfit}
                 </p>
               </div>
 
