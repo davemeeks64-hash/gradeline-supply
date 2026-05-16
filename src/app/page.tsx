@@ -151,8 +151,11 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 pt-12 pb-10 md:pt-16 md:pb-14">
-          <div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <section className="relative mx-auto max-w-7xl px-6 pt-10 pb-10 md:pt-14 md:pb-14">
+          <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/35 to-transparent" />
+          <div className="absolute left-1/2 top-0 h-32 w-2/3 -translate-x-1/2 bg-blue-400/5 blur-3xl" />
+
+          <div className="relative mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                 Featured Collections
@@ -169,23 +172,27 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="relative grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
             {collections.map((collection) => (
               <Link
                 key={collection.title}
                 href={collection.href}
-                className="group flex h-full flex-col rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.74),rgba(7,9,12,0.96))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.2)] transition hover:border-blue-300/40 hover:bg-white/[0.06]"
+                className="group relative flex h-full min-h-64 overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(27,36,45,0.78),rgba(6,8,11,0.98))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.24)] transition hover:-translate-y-1 hover:border-blue-300/40 hover:shadow-[0_24px_60px_rgba(0,0,0,0.36)]"
               >
-                <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
-                <h3 className="mt-5 text-xl font-black">
-                  {collection.title}
-                </h3>
-                <p className="mt-3 flex-1 leading-7 text-zinc-400">
-                  {collection.text}
-                </p>
-                <p className="mt-5 text-xs font-bold uppercase tracking-widest text-blue-200">
-                  {collection.examples}
-                </p>
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/50 to-transparent opacity-0 transition group-hover:opacity-100" />
+                <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-blue-400/10 blur-3xl transition group-hover:bg-blue-400/15" />
+                <div className="relative flex h-full flex-col">
+                  <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
+                  <h3 className="mt-5 text-xl font-black">
+                    {collection.title}
+                  </h3>
+                  <p className="mt-3 flex-1 leading-7 text-zinc-400">
+                    {collection.text}
+                  </p>
+                  <p className="mt-6 border-t border-white/10 pt-4 text-xs font-bold uppercase tracking-widest text-blue-200">
+                    {collection.examples}
+                  </p>
+                </div>
               </Link>
             ))}
           </div>
