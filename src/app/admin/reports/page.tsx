@@ -1,5 +1,5 @@
 import Link from "next/link";
-import AdminSidebar from "@/components/AdminSidebar";
+import AdminPageShell from "@/components/AdminPageShell";
 
 const reportSections = [
   {
@@ -69,13 +69,7 @@ const cardClassName =
 
 export default function AdminReportsPage() {
   return (
-    <main className="min-h-screen bg-[#05070a] text-white md:flex">
-      <AdminSidebar activeHref="/admin/reports" />
-
-      <section className="relative flex-1 overflow-hidden px-6 py-8 md:py-12">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.24),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.22),_transparent_36%)]" />
-
-        <div className="relative mx-auto max-w-7xl">
+    <AdminPageShell activeHref="/admin/reports">
           <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-8">
             <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
               <div>
@@ -135,8 +129,7 @@ export default function AdminReportsPage() {
               </article>
             ))}
           </div>
-        </div>
-      </section>
-    </main>
+    </AdminPageShell>
   );
 }
+
