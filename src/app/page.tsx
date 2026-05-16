@@ -69,6 +69,21 @@ const systemLinks = [
   { label: "Admin", href: "/admin" },
 ];
 
+const featuredCategories = [
+  {
+    title: "Custom Work",
+    text: "One-off builds, customer uploads, personal gifts, shop pieces, and special requests.",
+  },
+  {
+    title: "Ready-Made Goods",
+    text: "Small-batch products built ahead, ready for customers to browse and request.",
+  },
+  {
+    title: "Business Branding",
+    text: "Logo engraving, shop signs, equipment tags, promotional pieces, and branded gear.",
+  },
+];
+
 const quickStats = [
   { label: "Active Orders", value: "24", detail: "In the shop queue" },
   { label: "Projects This Week", value: "18", detail: "Custom and stock runs" },
@@ -127,19 +142,6 @@ export default function Home() {
                     Start Custom Order
                   </Link>
                 </div>
-
-                <div className="mt-7 grid max-w-2xl gap-3 text-sm sm:grid-cols-3">
-                  {["Custom work", "Ready-made goods", "Business branding"].map(
-                    (item) => (
-                      <div
-                        key={item}
-                        className="border border-white/10 bg-black/30 px-4 py-3 font-bold uppercase tracking-widest text-zinc-300"
-                      >
-                        {item}
-                      </div>
-                    )
-                  )}
-                </div>
               </div>
 
               <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 to-black p-5 shadow-2xl md:p-6">
@@ -169,6 +171,39 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-6 py-8 md:py-10">
+          <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
+                Featured Categories
+              </p>
+              <h2 className="mt-2 text-3xl font-black md:text-4xl">
+                Three ways to build with Gradeline.
+              </h2>
+            </div>
+            <p className="max-w-xl text-sm leading-6 text-zinc-400 md:text-right">
+              From one-off custom pieces to ready-made stock and business
+              branding, the shop is organized around the work customers ask for
+              most.
+            </p>
+          </div>
+
+          <div className="grid items-stretch gap-5 md:grid-cols-3">
+            {featuredCategories.map((category) => (
+              <article
+                key={category.title}
+                className="flex h-full flex-col rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.78),rgba(7,9,12,0.96))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.22)] transition hover:border-blue-300/40 hover:bg-white/[0.06]"
+              >
+                <div className="h-2 w-12 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
+                <h3 className="mt-5 text-2xl font-black">{category.title}</h3>
+                <p className="mt-3 flex-1 leading-7 text-zinc-400">
+                  {category.text}
+                </p>
+              </article>
+            ))}
           </div>
         </section>
 
