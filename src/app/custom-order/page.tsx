@@ -95,12 +95,12 @@ export default function CustomOrderPage() {
   return (
     <>
       <PublicHeader />
-      <main className="min-h-screen bg-[#05070a] text-white">
-      <section className="relative overflow-hidden px-6 py-16">
+      <main className="min-h-screen overflow-hidden bg-[#05070a] text-white">
+      <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
 
         <div className="relative mx-auto max-w-7xl">
-          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-8 shadow-2xl md:p-12">
+          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-10">
             <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
               Gradeline Supply Co.
             </p>

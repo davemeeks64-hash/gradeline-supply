@@ -1,9 +1,18 @@
 import Link from "next/link";
 
+const footerLinks = [
+  { label: "Collections", href: "/collections" },
+  { label: "Shop", href: "/shop" },
+  { label: "Custom Orders", href: "/custom-order" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
+
 export function PublicFooter() {
   return (
-    <footer className="border-t border-white/10 bg-[#05070a] px-6 py-8 text-white">
-      <div className="mx-auto flex max-w-7xl flex-col gap-5 text-sm text-zinc-500 md:flex-row md:items-center md:justify-between">
+    <footer className="border-t border-white/10 bg-[#05070a] px-4 py-8 text-white sm:px-6">
+      <div className="mx-auto grid max-w-7xl gap-6 text-sm text-zinc-500 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
           <p className="font-black uppercase tracking-[0.18em] text-zinc-300">
             Gradeline Supply Co.
@@ -11,19 +20,16 @@ export function PublicFooter() {
           <p className="mt-2">Built To Be Different.</p>
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href="/shop"
-            className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 font-bold text-zinc-300 transition hover:border-blue-300/40 hover:bg-blue-400/10 hover:text-white"
-          >
-            Shop
-          </Link>
-          <Link
-            href="/custom-order"
-            className="rounded-xl bg-blue-400 px-4 py-2 font-bold text-black transition hover:bg-blue-300"
-          >
-            Start Order
-          </Link>
+        <div className="flex flex-wrap gap-2">
+          {footerLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 font-bold text-zinc-300 transition hover:border-blue-300/40 hover:bg-blue-400/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300/70"
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
       </div>
     </footer>
