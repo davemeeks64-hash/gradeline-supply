@@ -112,12 +112,12 @@ export default function Home() {
             sizes="100vw"
             className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,10,0.94)_0%,rgba(5,7,10,0.78)_46%,rgba(5,7,10,0.45)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,10,0.95)_0%,rgba(5,7,10,0.8)_44%,rgba(5,7,10,0.52)_100%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(5,7,10,0.4),rgba(5,7,10,0.12)_42%,rgba(5,7,10,0.92)_100%)]" />
           <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(to_bottom,rgba(96,165,250,0.16),transparent)]" />
           <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-blue-300/30 to-transparent" />
 
-          <div className="relative mx-auto grid min-h-[560px] max-w-7xl items-center gap-8 px-6 py-12 md:py-14 lg:grid-cols-[minmax(0,1fr)_420px] lg:py-16 xl:grid-cols-[minmax(0,1fr)_460px]">
+          <div className="relative mx-auto flex min-h-[560px] max-w-7xl items-center px-6 py-12 md:min-h-[620px] md:py-16 lg:py-20">
             <div className="max-w-3xl">
               <Image
                 src="/gradeline-logo.png"
@@ -145,7 +145,7 @@ export default function Home() {
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
                   href="/shop"
-                  className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
+                  className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black shadow-[0_0_28px_rgba(96,165,250,0.22)] transition hover:bg-blue-300"
                 >
                   Shop Collections
                 </Link>
@@ -157,33 +157,10 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-
-              <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-                <div className="absolute -inset-4 bg-[linear-gradient(135deg,rgba(96,165,250,0.16),transparent_48%,rgba(148,163,184,0.1))] blur-2xl" />
-                <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.88),rgba(4,6,8,0.98))] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
-                <div className="grid aspect-[4/5] place-items-center border border-white/10 bg-[linear-gradient(145deg,rgba(11,15,20,1),rgba(24,36,46,0.82)_48%,rgba(5,7,10,1))]">
-                  <div className="w-full px-8">
-                    <div className="h-px bg-gradient-to-r from-transparent via-blue-300/70 to-transparent" />
-                    <div className="my-8 border-y border-white/10 py-8 text-center">
-                      <p className="text-xs font-bold uppercase tracking-[0.35em] text-blue-200">
-                        Gradeline Supply Co.
-                      </p>
-                      <p className="mt-4 text-3xl font-black uppercase tracking-wide text-white">
-                        Laser Engraved
-                      </p>
-                      <p className="mt-3 text-sm font-bold uppercase tracking-widest text-zinc-400">
-                        Leather / Slate / Wood / Acrylic
-                      </p>
-                    </div>
-                    <div className="h-px bg-gradient-to-r from-transparent via-blue-300/70 to-transparent" />
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-10 md:py-14">
+        <section className="mx-auto max-w-7xl px-6 pt-12 pb-10 md:pt-16 md:pb-14">
           <div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
