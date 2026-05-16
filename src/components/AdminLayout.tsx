@@ -46,7 +46,7 @@ export function AdminLayout({
               <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                 <div className="flex items-start gap-4">
                   <Image
-                    src="/gradeline-logo.png.png"
+                    src="/gradeline-logo.png"
                     alt="Gradeline Supply Co. logo"
                     width={1730}
                     height={1870}

@@ -17,7 +17,7 @@ export function PublicHeader() {
       <nav className="mx-auto flex max-w-7xl flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 px-5 py-4 shadow-[0_18px_45px_rgba(0,0,0,0.28)] backdrop-blur md:flex-row md:items-center md:justify-between">
         <Link href="/" className="flex w-fit items-center gap-3">
           <Image
-            src="/gradeline-logo.png.png"
+            src="/gradeline-logo.png"
             alt="Gradeline Supply Co. logo"
             width={1730}
             height={1870}

@@ -38,7 +38,7 @@ export default function Home() {
           <div className="grid gap-10 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <Image
-                src="/gradeline-logo.png.png"
+                src="/gradeline-logo.png"
                 alt="Gradeline Supply Co. logo"
                 width={1730}
                 height={1870}

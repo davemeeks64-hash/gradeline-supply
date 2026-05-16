@@ -47,7 +47,7 @@ export function AdminSidebar({
           <div className="flex items-center gap-3">
             <div className="grid size-12 place-items-center border border-[#5f8eaa]/70 bg-[#101820] p-1 shadow-[inset_0_0_18px_rgba(143,193,223,0.08)]">
               <Image
-                src="/gradeline-logo.png.png"
+                src="/gradeline-logo.png"
                 alt="Gradeline Supply Co. logo"
                 width={1730}
                 height={1870}
