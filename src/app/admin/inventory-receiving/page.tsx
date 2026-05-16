@@ -1,3 +1,6 @@
+"use client";
+
+import { type FormEvent, useState } from "react";
 import Link from "next/link";
 import AdminLayout from "@/components/AdminLayout";
 
@@ -120,6 +123,14 @@ function CategoryBadge({ category }: { category: InventoryCategory }) {
 }
 
 export default function AdminInventoryReceivingPage() {
+  const [isLogged, setIsLogged] = useState(false);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsLogged(true);
+    event.currentTarget.reset();
+  }
+
   return (
     <AdminLayout activeHref="/admin/inventory-receiving">
       <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-8">
@@ -162,27 +173,35 @@ export default function AdminInventoryReceivingPage() {
         ))}
       </div>
 
-      <section className={`${panelClassName} mt-6 p-5 md:p-6`}>
+      <form
+        className={`${panelClassName} mt-6 p-5 md:p-6`}
+        onSubmit={handleSubmit}
+      >
         <h2 className="text-2xl font-black">Receive Inventory</h2>
         <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <label className="block">
             <span className={labelClassName}>Receive Date</span>
-            <input className={inputClassName} type="date" />
+            <input className={inputClassName} required type="date" />
           </label>
           <label className="block">
             <span className={labelClassName}>Supplier</span>
             <input
               className={inputClassName}
               placeholder="Supplier or vendor"
+              required
             />
           </label>
           <label className="block">
             <span className={labelClassName}>Item Name</span>
-            <input className={inputClassName} placeholder="Material or supply" />
+            <input
+              className={inputClassName}
+              placeholder="Material or supply"
+              required
+            />
           </label>
           <label className="block">
             <span className={labelClassName}>Category</span>
-            <select className={inputClassName} defaultValue="">
+            <select className={inputClassName} defaultValue="" required>
               <option value="" disabled>
                 Select category
               </option>
@@ -193,19 +212,28 @@ export default function AdminInventoryReceivingPage() {
           </label>
           <label className="block">
             <span className={labelClassName}>Quantity Received</span>
-            <input className={inputClassName} placeholder="0" type="number" />
+            <input
+              className={inputClassName}
+              placeholder="0"
+              required
+              type="number"
+            />
           </label>
           <label className="block">
             <span className={labelClassName}>Unit Cost</span>
-            <input className={inputClassName} placeholder="$0.00" />
+            <input className={inputClassName} placeholder="$0.00" required />
           </label>
           <label className="block">
             <span className={labelClassName}>Total Cost</span>
-            <input className={inputClassName} placeholder="$0.00" />
+            <input className={inputClassName} placeholder="$0.00" required />
           </label>
           <label className="block">
             <span className={labelClassName}>Storage Location</span>
-            <input className={inputClassName} placeholder="Rack, shelf, bin" />
+            <input
+              className={inputClassName}
+              placeholder="Rack, shelf, bin"
+              required
+            />
           </label>
           <label className="block md:col-span-2 lg:col-span-4">
             <span className={labelClassName}>Notes</span>
@@ -218,19 +246,29 @@ export default function AdminInventoryReceivingPage() {
 
         <div className="mt-5 flex flex-col gap-3 sm:flex-row">
           <button
-            type="button"
+            type="submit"
             className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
           >
             Save Demo Receiving
           </button>
           <button
-            type="button"
+            type="reset"
+            onClick={() => setIsLogged(false)}
             className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
           >
             Update Inventory Placeholder
           </button>
         </div>
-      </section>
+
+        {isLogged && (
+          <p
+            role="status"
+            className="mt-5 rounded-2xl border border-blue-300/40 bg-blue-400/10 px-5 py-4 font-bold text-blue-100"
+          >
+            Inventory received and logged.
+          </p>
+        )}
+      </form>
 
       <div className={`${panelClassName} mt-6 overflow-hidden`}>
         <div className="hidden overflow-x-auto xl:block">
