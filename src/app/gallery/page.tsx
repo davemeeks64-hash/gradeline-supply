@@ -1,23 +1,125 @@
 import Link from "next/link";
 
+const categories = [
+  "Industrial & Blue Collar",
+  "Home & Kitchen",
+  "Custom Gifts",
+  "Business & Commercial",
+  "Custom Works",
+];
+
+const galleryProjects = [
+  {
+    projectName: "Union Pride Slate Awards",
+    category: "Industrial & Blue Collar",
+    material: "Black slate",
+    description:
+      "Steel-blue engraved award set with trade-inspired badge details.",
+  },
+  {
+    projectName: "Walnut Recipe Board",
+    category: "Home & Kitchen",
+    material: "Walnut",
+    description:
+      "Handwritten family recipe engraved into a warm kitchen display piece.",
+  },
+  {
+    projectName: "Wedding Keepsake Sign",
+    category: "Custom Gifts",
+    material: "Birch plywood",
+    description:
+      "Personalized name and date sign with clean, gift-ready finishing.",
+  },
+  {
+    projectName: "Shop Counter Logo",
+    category: "Business & Commercial",
+    material: "Acrylic",
+    description:
+      "Layered acrylic counter sign built for a small business front desk.",
+  },
+  {
+    projectName: "Prototype Equipment Tags",
+    category: "Custom Works",
+    material: "Brushed aluminum",
+    description:
+      "One-off serialized tags for a field-test equipment labeling run.",
+  },
+  {
+    projectName: "Leather Patch Batch",
+    category: "Industrial & Blue Collar",
+    material: "Leatherette",
+    description:
+      "Branded patches prepared for hats, jackets, and crew gear.",
+  },
+];
+
 export default function GalleryPage() {
   return (
-    <main className="min-h-screen bg-[#05070a] px-6 py-16 text-white">
-      <section className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-8 shadow-2xl md:p-12">
-        <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
-          Gradeline Supply Co.
-        </p>
-        <h1 className="mt-4 text-4xl font-black md:text-6xl">Gallery</h1>
-        <p className="mt-5 max-w-2xl text-lg leading-8 text-zinc-300">
-          Finished engravings, custom builds, leatherwork, slate, acrylic, and
-          production highlights will be showcased here.
-        </p>
-        <Link
-          href="/"
-          className="mt-8 inline-flex rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-        >
-          Back to Home
-        </Link>
+    <main className="min-h-screen bg-[#05070a] text-white">
+      <section className="relative overflow-hidden px-6 py-16">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
+
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-8 shadow-2xl md:p-12">
+            <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
+              Gradeline Supply Co.
+            </p>
+            <h1 className="mt-4 text-4xl font-black md:text-6xl">Gallery</h1>
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-zinc-300">
+              Demo showcase for finished engravings, shop-built goods,
+              leatherwork, slate, acrylic, and custom production runs.
+            </p>
+            <Link
+              href="/"
+              className="mt-8 inline-flex rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+            >
+              Back to Home
+            </Link>
+          </div>
+
+          <div className="mt-8 flex gap-2 overflow-x-auto rounded-3xl border border-white/10 bg-white/[0.04] p-3">
+            {categories.map((category, index) => (
+              <button
+                key={category}
+                className={[
+                  "min-w-max rounded-xl border px-4 py-3 text-xs font-bold uppercase tracking-widest transition",
+                  index === 0
+                    ? "border-blue-300/50 bg-blue-400/10 text-blue-200"
+                    : "border-white/10 bg-black/30 text-zinc-300 hover:border-blue-300/40 hover:bg-blue-400/10",
+                ].join(" ")}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {galleryProjects.map((project) => (
+              <article
+                key={project.projectName}
+                className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+              >
+                <div className="grid aspect-[4/3] place-items-center border-b border-white/10 bg-[linear-gradient(145deg,rgba(17,24,31,0.96),rgba(8,10,12,1)_58%,rgba(15,23,30,0.98))]">
+                  <div className="h-16 w-16 border border-blue-300/50 bg-blue-400/10 shadow-[0_0_28px_rgba(96,165,250,0.24)]" />
+                </div>
+                <div className="p-6">
+                  <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
+                    {project.category}
+                  </p>
+                  <h2 className="mt-3 text-2xl font-black">
+                    {project.projectName}
+                  </h2>
+                  <p className="mt-2 text-sm font-bold uppercase tracking-widest text-zinc-500">
+                    {project.material}
+                  </p>
+                  <p className="mt-4 leading-7 text-zinc-400">
+                    {project.description}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
     </main>
   );
