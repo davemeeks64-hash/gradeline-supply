@@ -34,34 +34,6 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
 
         <div className="relative mx-auto max-w-7xl px-6 py-6">
-          <nav className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-5 py-4 backdrop-blur">
-            <div>
-              <div className="text-xl font-black tracking-[0.18em]">
-                GRADELINE
-              </div>
-              <div className="text-xs tracking-[0.35em] text-blue-300">
-                SUPPLY CO.
-              </div>
-            </div>
-
-            <div className="hidden gap-6 text-sm text-zinc-300 md:flex">
-              <Link href="/">Home</Link>
-              <Link href="/collections">Collections</Link>
-              <Link href="/shop">Shop</Link>
-              <Link href="/custom-order">Custom Orders</Link>
-              <Link href="/gallery">Gallery</Link>
-              <Link href="/contact">Contact</Link>
-              <Link href="/admin">Admin</Link>
-            </div>
-
-            <Link
-              href="/custom-order"
-              className="rounded-xl bg-blue-400 px-4 py-2 text-sm font-bold text-black"
-            >
-              Start Order
-            </Link>
-          </nav>
-
           <div className="grid gap-10 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <p className="mb-4 inline-flex rounded-full border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-blue-200">
