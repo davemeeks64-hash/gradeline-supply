@@ -282,8 +282,8 @@ export default function Home() {
                 Review Placeholder
               </p>
               <blockquote className="mt-4 text-2xl font-black leading-10 text-white">
-                "The finished piece looked professional, rugged, and exactly
-                like the idea we had in mind."
+                &ldquo;The finished piece looked professional, rugged, and exactly
+                like the idea we had in mind.&rdquo;
               </blockquote>
               <p className="mt-5 text-sm font-bold uppercase tracking-widest text-zinc-500">
                 Future customer review
