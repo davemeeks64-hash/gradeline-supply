@@ -112,11 +112,12 @@ function TextField({
   value: string;
 }) {
   return (
-    <label className="block">
+    <label className="block" suppressHydrationWarning>
       <span className={labelClassName}>{label}</span>
       <input
         className={inputClassName}
         name={name}
+        suppressHydrationWarning
         type={type}
         value={value}
         onChange={(event) => onChange(name, event.target.value)}
@@ -139,11 +140,12 @@ function SelectField({
   value: string;
 }) {
   return (
-    <label className="block">
+    <label className="block" suppressHydrationWarning>
       <span className={labelClassName}>{label}</span>
       <select
         className={inputClassName}
         name={name}
+        suppressHydrationWarning
         value={value}
         onChange={(event) => onChange(name, event.target.value)}
       >
@@ -169,11 +171,12 @@ function TextAreaField({
   value: string;
 }) {
   return (
-    <label className="block">
+    <label className="block" suppressHydrationWarning>
       <span className={labelClassName}>{label}</span>
       <textarea
         className={`${inputClassName} min-h-28 resize-y`}
         name={name}
+        suppressHydrationWarning
         value={value}
         onChange={(event) => onChange(name, event.target.value)}
       />
@@ -193,11 +196,15 @@ function ToggleField({
   onChange: (name: BooleanSettingKey, value: boolean) => void;
 }) {
   return (
-    <label className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-black/30 px-4 py-3">
+    <label
+      className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-black/30 px-4 py-3"
+      suppressHydrationWarning
+    >
       <span className="text-sm font-bold text-zinc-200">{label}</span>
       <input
         className="h-5 w-5 accent-blue-300"
         name={name}
+        suppressHydrationWarning
         type="checkbox"
         checked={checked}
         onChange={(event) => onChange(name, event.target.checked)}
@@ -222,7 +229,7 @@ function SettingsCard({
   title: string;
 }) {
   return (
-    <section className={cardClassName}>
+    <section className={cardClassName} suppressHydrationWarning>
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/60 to-transparent" />
       <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-blue-400/10 blur-3xl" />
 
@@ -236,7 +243,9 @@ function SettingsCard({
         <StatusBadge status={status} />
       </div>
 
-      <div className="relative mt-5 grid gap-4">{children}</div>
+      <div className="relative mt-5 grid gap-4" suppressHydrationWarning>
+        {children}
+      </div>
 
       <div className="relative mt-6 flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-zinc-500">
@@ -250,6 +259,7 @@ function SettingsCard({
           )}
           <button
             type="button"
+            suppressHydrationWarning
             onClick={onSave}
             className="rounded-xl bg-blue-400 px-5 py-3 text-sm font-black uppercase tracking-widest text-black transition hover:bg-blue-300"
           >
