@@ -68,7 +68,7 @@ export default function GalleryPage() {
     <>
       <PublicHeader />
       <main className="min-h-[100svh] overflow-hidden bg-[#05070a] text-white">
-      <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
+      <section className="relative overflow-hidden px-4 py-10 sm:px-6 md:py-16">
         <Image
           src="/images/workflow/gradeline-gallery-section-banner.png"
           alt=""
@@ -83,14 +83,16 @@ export default function GalleryPage() {
             <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
               Gradeline Supply Co.
             </p>
-            <h1 className="mt-4 text-4xl font-black md:text-6xl">Gallery</h1>
+            <h1 className="mt-4 text-3xl font-black sm:text-4xl md:text-6xl">
+              Gallery
+            </h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-zinc-300">
               A visual preview of Gradeline product directions, category
               styles, and custom engraving possibilities.
             </p>
             <Link
               href="/"
-              className="mt-8 inline-flex rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+              className="mt-8 inline-flex w-full justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10 sm:w-auto"
             >
               Back to Home
             </Link>
@@ -135,7 +137,7 @@ export default function GalleryPage() {
                 </p>
                 <Link
                   href="/custom-order"
-                  className="mt-auto rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                  className="mt-auto inline-flex w-full justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
                 >
                   Request Similar
                 </Link>
@@ -157,7 +159,7 @@ export default function GalleryPage() {
                 <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                   Custom Work
                 </p>
-                <h2 className="mt-3 text-3xl font-black md:text-5xl">
+                <h2 className="mt-3 text-2xl font-black sm:text-3xl md:text-5xl">
                   Want something custom?
                 </h2>
                 <p className="mt-4 max-w-2xl leading-8 text-zinc-300">
@@ -167,7 +169,7 @@ export default function GalleryPage() {
               </div>
               <Link
                 href="/custom-order"
-                className="inline-flex w-fit rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
+                className="inline-flex w-full justify-center rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300 sm:w-fit"
               >
                 Start Custom Order
               </Link>

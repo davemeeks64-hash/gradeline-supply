@@ -58,7 +58,7 @@ export default function ContactPage() {
     <>
       <PublicHeader />
       <main className="min-h-[100svh] overflow-hidden bg-[#05070a] text-white">
-      <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
+      <section className="relative overflow-hidden px-4 py-10 sm:px-6 md:py-16">
         <Image
           src="/images/hero/gradeline-contact-page-hero-banner.png"
           alt=""
@@ -75,7 +75,7 @@ export default function ContactPage() {
                 <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                   Gradeline Supply Co.
                 </p>
-                <h1 className="mt-4 text-4xl font-black md:text-6xl">
+                <h1 className="mt-4 text-3xl font-black sm:text-4xl md:text-6xl">
                   Contact Gradeline
                 </h1>
                 <p className="mt-5 max-w-2xl text-lg leading-8 text-zinc-300">
@@ -86,19 +86,19 @@ export default function ContactPage() {
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                   <Link
                     href="/custom-order"
-                    className="rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300"
+                    className="inline-flex w-full justify-center rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300 sm:w-auto"
                   >
                     Request a Quote
                   </Link>
                   <a
                     href="#business-inquiry"
-                    className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                    className="inline-flex w-full justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10 sm:w-auto"
                   >
                     Send Message
                   </a>
                   <Link
                     href="/"
-                    className="rounded-xl border border-blue-300/30 bg-blue-400/10 px-6 py-3 text-center font-bold text-blue-100 transition hover:bg-blue-400/20"
+                    className="inline-flex w-full justify-center rounded-xl border border-blue-300/30 bg-blue-400/10 px-6 py-3 text-center font-bold text-blue-100 transition hover:bg-blue-400/20 sm:w-auto"
                   >
                     Back to Home
                   </Link>
@@ -144,7 +144,9 @@ export default function ContactPage() {
               <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                 Business Inquiry Form
               </p>
-              <h2 className="mt-3 text-3xl font-black">Tell us what you need.</h2>
+              <h2 className="mt-3 text-2xl font-black sm:text-3xl">
+                Tell us what you need.
+              </h2>
               <div className="mt-6 grid gap-4 md:grid-cols-2">
                 <TextField label="Name" placeholder="Your name" />
                 <TextField label="Phone" placeholder="(555) 000-0000" />
@@ -177,7 +179,7 @@ export default function ContactPage() {
               </div>
               <button
                 type="button"
-                className="mt-6 rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
+                className="mt-6 w-full rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300 sm:w-auto"
               >
                 Send Demo Message
               </button>
@@ -196,7 +198,7 @@ export default function ContactPage() {
             <div className="relative grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
                 <p className={labelClassName}>Custom Order CTA</p>
-                <h2 className="mt-3 text-3xl font-black md:text-5xl">
+                <h2 className="mt-3 text-2xl font-black sm:text-3xl md:text-5xl">
                   Have the details ready?
                 </h2>
                 <p className="mt-4 max-w-2xl leading-8 text-zinc-300">
@@ -206,7 +208,7 @@ export default function ContactPage() {
               </div>
               <Link
                 href="/custom-order"
-                className="inline-flex w-fit rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
+                className="inline-flex w-full justify-center rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300 sm:w-fit"
               >
                 Start Custom Order
               </Link>
@@ -225,7 +227,7 @@ export default function ContactPage() {
             <div className="relative grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
               <div>
                 <p className={labelClassName}>Social Media</p>
-                <h2 className="mt-3 text-3xl font-black">
+                <h2 className="mt-3 text-2xl font-black sm:text-3xl">
                   Follow the shop buildouts and new drops.
                 </h2>
                 <p className="mt-4 max-w-2xl leading-8 text-zinc-300">
@@ -238,7 +240,7 @@ export default function ContactPage() {
                   <button
                     key={social}
                     type="button"
-                    className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                    className="w-full rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10 sm:w-auto"
                   >
                     {social}
                   </button>

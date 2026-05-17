@@ -135,13 +135,13 @@ export default function Home() {
             <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(to_bottom,rgba(96,165,250,0.2),transparent)]" />
             <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-blue-300/25 to-transparent" />
 
-            <div className="relative mx-auto flex min-h-[460px] max-w-7xl items-center px-6 py-10 sm:min-h-[500px] md:min-h-[680px] md:py-16 lg:min-h-[720px] lg:py-20">
+            <div className="relative mx-auto flex min-h-[420px] max-w-7xl items-center px-4 py-8 sm:min-h-[500px] sm:px-6 md:min-h-[680px] md:py-16 lg:min-h-[720px] lg:py-20">
               <div className="max-w-2xl rounded-3xl border border-white/10 bg-black/25 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.26)] backdrop-blur-[2px] md:p-6 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none">
                 <p className="mb-4 inline-flex rounded-full border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-blue-200">
                   Custom Laser Engraving / Shop Built Goods
                 </p>
 
-                <h1 className="max-w-xl text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
+                <h1 className="max-w-xl text-3xl font-black leading-tight sm:text-5xl md:text-6xl">
                   Built To Be Different.
                 </h1>
 
@@ -154,19 +154,19 @@ export default function Home() {
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                   <Link
                     href="/shop"
-                    className="rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black shadow-[0_0_28px_rgba(96,165,250,0.22)] transition hover:bg-blue-300"
+                    className="inline-flex w-full justify-center rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black shadow-[0_0_28px_rgba(96,165,250,0.22)] transition hover:bg-blue-300 sm:w-auto"
                   >
                     Shop Collections
                   </Link>
                   <Link
                     href="/custom-order"
-                    className="rounded-xl border border-white/15 bg-white/10 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                    className="inline-flex w-full justify-center rounded-xl border border-white/15 bg-white/10 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10 sm:w-auto"
                   >
                     Start Custom Order
                   </Link>
                   <Link
                     href="/gallery"
-                    className="rounded-xl border border-blue-300/30 bg-black/30 px-6 py-3 text-center font-bold text-blue-100 transition hover:border-blue-300/60 hover:bg-blue-400/10"
+                    className="inline-flex w-full justify-center rounded-xl border border-blue-300/30 bg-black/30 px-6 py-3 text-center font-bold text-blue-100 transition hover:border-blue-300/60 hover:bg-blue-400/10 sm:w-auto"
                   >
                     View Gallery
                   </Link>
@@ -185,26 +185,26 @@ export default function Home() {
               <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                 Featured Categories
               </p>
-              <h2 className="mt-2 max-w-2xl text-3xl font-black md:text-4xl">
+              <h2 className="mt-2 max-w-2xl text-2xl font-black sm:text-3xl md:text-4xl">
                 Made for work, home, gifts, and brands.
               </h2>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap md:justify-end">
               <Link
                 href="/shop"
-                className="rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300"
+                className="inline-flex w-full justify-center rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300 sm:w-auto"
               >
                 Shop Collections
               </Link>
               <Link
                 href="/custom-order"
-                className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                className="inline-flex w-full justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10 sm:w-auto"
               >
                 Start Custom Order
               </Link>
               <Link
                 href="/gallery"
-                className="rounded-xl border border-blue-300/30 bg-blue-400/10 px-6 py-3 text-center font-bold text-blue-100 transition hover:bg-blue-400/20"
+                className="inline-flex w-full justify-center rounded-xl border border-blue-300/30 bg-blue-400/10 px-6 py-3 text-center font-bold text-blue-100 transition hover:bg-blue-400/20 sm:w-auto"
               >
                 View Gallery
               </Link>
@@ -246,13 +246,13 @@ export default function Home() {
               <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                 Featured Products
               </p>
-              <h2 className="mt-2 text-3xl font-black md:text-4xl">
+              <h2 className="mt-2 text-2xl font-black sm:text-3xl md:text-4xl">
                 Ready-made pieces with a custom-shop feel.
               </h2>
             </div>
             <Link
               href="/shop"
-              className="w-fit rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
+              className="inline-flex w-full justify-center rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300 sm:w-fit"
             >
               Shop Collections
             </Link>
@@ -298,7 +298,7 @@ export default function Home() {
                 <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                   How It Works
                 </p>
-                <h2 className="mt-3 text-3xl font-black md:text-4xl">
+                <h2 className="mt-3 text-2xl font-black sm:text-3xl md:text-4xl">
                   A clear path from rough idea to finished piece.
                 </h2>
                 <p className="mt-4 leading-8 text-zinc-300">
@@ -344,13 +344,13 @@ export default function Home() {
               <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                 Gallery Preview
               </p>
-              <h2 className="mt-2 text-3xl font-black md:text-4xl">
+              <h2 className="mt-2 text-2xl font-black sm:text-3xl md:text-4xl">
                 A look at the kind of work Gradeline builds.
               </h2>
             </div>
             <Link
               href="/gallery"
-              className="w-fit rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+              className="inline-flex w-full justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10 sm:w-fit"
             >
               View Gallery
             </Link>
@@ -394,7 +394,7 @@ export default function Home() {
                 <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                   Custom Orders
                 </p>
-                <h2 className="mt-3 max-w-3xl text-3xl font-black md:text-5xl">
+                <h2 className="mt-3 max-w-3xl text-2xl font-black sm:text-3xl md:text-5xl">
                   Have an idea that does not fit a shelf?
                 </h2>
                 <p className="mt-4 max-w-2xl leading-8 text-zinc-300">
@@ -406,7 +406,7 @@ export default function Home() {
 
               <Link
                 href="/custom-order"
-                className="inline-flex w-fit rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
+                className="inline-flex w-full justify-center rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300 sm:w-fit"
               >
                 Start Custom Order
               </Link>

@@ -60,7 +60,7 @@ export default function CollectionsPage() {
     <>
       <PublicHeader />
       <main className="min-h-[100svh] overflow-hidden bg-[#05070a] text-white">
-      <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
+      <section className="relative overflow-hidden px-4 py-10 sm:px-6 md:py-16">
         <Image
           src="/images/backgrounds/gradeline-about-workshop-background.png"
           alt=""
@@ -75,7 +75,7 @@ export default function CollectionsPage() {
             <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
               Gradeline Supply Co.
             </p>
-            <h1 className="mt-4 text-4xl font-black md:text-6xl">
+            <h1 className="mt-4 text-3xl font-black sm:text-4xl md:text-6xl">
               Collections
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-zinc-300">
@@ -85,7 +85,7 @@ export default function CollectionsPage() {
             </p>
             <Link
               href="/"
-              className="mt-8 inline-flex rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+              className="mt-8 inline-flex w-full justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10 sm:w-auto"
             >
               Back to Home
             </Link>
@@ -110,7 +110,7 @@ export default function CollectionsPage() {
 
                 <Link
                   href={collection.href}
-                  className="mt-auto rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300"
+                  className="mt-auto inline-flex w-full justify-center rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300"
                 >
                   {collection.cta}
                 </Link>

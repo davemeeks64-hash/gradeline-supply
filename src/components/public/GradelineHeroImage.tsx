@@ -9,8 +9,8 @@ export type GradelineImagePreset =
   | "square";
 
 const aspectPresetClass: Record<GradelineImagePreset, string> = {
-  hero: "min-h-[460px] sm:min-h-[520px] md:min-h-[680px] lg:min-h-[720px]",
-  banner: "min-h-[260px] md:min-h-[340px]",
+  hero: "min-h-[420px] sm:min-h-[500px] md:min-h-[680px] lg:min-h-[720px]",
+  banner: "min-h-[220px] sm:min-h-[260px] md:min-h-[340px]",
   category: "aspect-[16/11]",
   product: "aspect-[16/11]",
   square: "aspect-square",

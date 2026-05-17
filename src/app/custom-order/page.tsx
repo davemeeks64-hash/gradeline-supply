@@ -151,7 +151,7 @@ export default function CustomOrderPage() {
     <>
       <PublicHeader />
       <main className="min-h-[100svh] overflow-hidden bg-[#05070a] text-white">
-      <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
+      <section className="relative overflow-hidden px-4 py-10 sm:px-6 md:py-16">
         <Image
           src="/images/backgrounds/gradeline-order-form-section-bg.png"
           alt=""
@@ -168,7 +168,7 @@ export default function CustomOrderPage() {
                 <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                   Gradeline Supply Co.
                 </p>
-                <h1 className="mt-4 text-4xl font-black md:text-6xl">
+                <h1 className="mt-4 text-3xl font-black sm:text-4xl md:text-6xl">
                   Custom Order
                 </h1>
                 <p className="mt-5 max-w-2xl text-lg leading-8 text-zinc-300">
@@ -178,19 +178,19 @@ export default function CustomOrderPage() {
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                   <a
                     href="#custom-order-form"
-                    className="rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300"
+                    className="inline-flex w-full justify-center rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300 sm:w-auto"
                   >
                     Start Order Form
                   </a>
                   <Link
                     href="/contact"
-                    className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                    className="inline-flex w-full justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10 sm:w-auto"
                   >
                     Contact Gradeline
                   </Link>
                   <Link
                     href="/"
-                    className="rounded-xl border border-blue-300/30 bg-blue-400/10 px-6 py-3 text-center font-bold text-blue-100 transition hover:bg-blue-400/20"
+                    className="inline-flex w-full justify-center rounded-xl border border-blue-300/30 bg-blue-400/10 px-6 py-3 text-center font-bold text-blue-100 transition hover:bg-blue-400/20 sm:w-auto"
                   >
                     Back to Home
                   </Link>
@@ -212,7 +212,7 @@ export default function CustomOrderPage() {
           <section className="mt-8 grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-stretch">
             <div className={sectionClassName}>
               <p className={labelClassName}>How It Works</p>
-              <h2 className="mt-3 text-3xl font-black">
+              <h2 className="mt-3 text-2xl font-black sm:text-3xl">
                 From rough idea to finished work.
               </h2>
               <p className="mt-4 leading-8 text-zinc-300">
@@ -222,7 +222,7 @@ export default function CustomOrderPage() {
               </p>
               <Link
                 href="/gallery"
-                className="mt-6 inline-flex rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                className="mt-6 inline-flex w-full justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10 sm:w-auto"
               >
                 View Gallery
               </Link>
@@ -248,7 +248,7 @@ export default function CustomOrderPage() {
             <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
               <div className="p-6 md:p-8">
                 <p className={labelClassName}>Upload / Design Approval</p>
-                <h2 className="mt-3 text-3xl font-black">
+                <h2 className="mt-3 text-2xl font-black sm:text-3xl">
                   Send files now. Final production waits for approval.
                 </h2>
                 <p className="mt-4 leading-8 text-zinc-300">
@@ -285,13 +285,13 @@ export default function CustomOrderPage() {
             <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <div>
                 <p className={labelClassName}>Product Options</p>
-                <h2 className="mt-2 text-3xl font-black">
+                <h2 className="mt-2 text-2xl font-black sm:text-3xl">
                   Start with a product direction.
                 </h2>
               </div>
               <Link
                 href="/collections"
-                className="w-fit rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                className="inline-flex w-full justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10 sm:w-fit"
               >
                 Browse Collections
               </Link>
@@ -328,7 +328,7 @@ export default function CustomOrderPage() {
               <div className="absolute inset-0 bg-black/[0.55]" />
               <div className="relative">
                 <p className={labelClassName}>Timeline Expectations</p>
-                <h2 className="mt-3 text-3xl font-black">
+                <h2 className="mt-3 text-2xl font-black sm:text-3xl">
                   Timing depends on proofing, materials, and deadline needs.
                 </h2>
                 <p className="mt-4 leading-8 text-zinc-300">
@@ -363,7 +363,7 @@ export default function CustomOrderPage() {
             <div className="relative grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
                 <p className={labelClassName}>Ready To Start?</p>
-                <h2 className="mt-3 text-3xl font-black md:text-5xl">
+                <h2 className="mt-3 text-2xl font-black sm:text-3xl md:text-5xl">
                   Send the details and Gradeline will review the project.
                 </h2>
                 <p className="mt-4 max-w-2xl leading-8 text-zinc-300">
@@ -374,13 +374,13 @@ export default function CustomOrderPage() {
               <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
                 <a
                   href="#custom-order-form"
-                  className="rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300"
+                  className="inline-flex w-full justify-center rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300 sm:w-auto lg:w-full"
                 >
                   Start Order
                 </a>
                 <Link
                   href="/contact"
-                  className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                  className="inline-flex w-full justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10 sm:w-auto lg:w-full"
                 >
                   Contact
                 </Link>
@@ -542,14 +542,14 @@ export default function CustomOrderPage() {
             <div className="flex flex-col gap-3 sm:flex-row">
               <button
                 type="submit"
-                className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
+                className="rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300 sm:w-auto"
               >
                 Submit Demo Request
               </button>
               <button
                 type="reset"
                 onClick={() => setIsSubmitted(false)}
-                className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10 sm:w-auto"
               >
                 Clear Form
               </button>

@@ -4,8 +4,8 @@ import { type ReactNode } from "react";
 import { type GradelineImagePreset } from "./GradelineHeroImage";
 
 const aspectPresetClass: Record<GradelineImagePreset, string> = {
-  hero: "min-h-[460px] sm:min-h-[520px] md:min-h-[680px] lg:min-h-[720px]",
-  banner: "min-h-[260px] md:min-h-[340px]",
+  hero: "min-h-[420px] sm:min-h-[500px] md:min-h-[680px] lg:min-h-[720px]",
+  banner: "min-h-[220px] sm:min-h-[260px] md:min-h-[340px]",
   category: "aspect-[16/11]",
   product: "aspect-[16/11]",
   square: "aspect-square",
@@ -37,7 +37,7 @@ export default function GradelineImageCard({
   className = "",
   contentClassName = "p-6",
   imageClassName = "",
-  overlayClassName = "bg-[linear-gradient(to_top,rgba(5,7,10,0.3),transparent)]",
+  overlayClassName = "bg-[linear-gradient(to_top,rgba(5,7,10,0.42),rgba(5,7,10,0.08))]",
   children,
 }: GradelineImageCardProps) {
   const objectFitClassName =
