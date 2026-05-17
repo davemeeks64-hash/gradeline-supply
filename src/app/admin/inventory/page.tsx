@@ -39,6 +39,21 @@ type InventoryFormState = {
   notes: string;
 };
 
+type QuickFilter = "all" | "low" | "Tumblers" | "Leather" | "Wood" | "Acrylic";
+
+type SortKey =
+  | "sku"
+  | "item_name"
+  | "category"
+  | "material"
+  | "quantity_on_hand"
+  | "reorder_level"
+  | "unit_cost"
+  | "storage_location"
+  | "status";
+
+type SortDirection = "asc" | "desc";
+
 const emptyFormState: InventoryFormState = {
   sku: "",
   item_name: "",
@@ -148,6 +163,27 @@ const colorSkuCodes: Record<string, string> = {
   White: "WHT",
 };
 
+const quickFilters: Array<{ label: string; value: QuickFilter }> = [
+  { label: "All", value: "all" },
+  { label: "Low Stock", value: "low" },
+  { label: "Tumblers", value: "Tumblers" },
+  { label: "Leather", value: "Leather" },
+  { label: "Wood", value: "Wood" },
+  { label: "Acrylic", value: "Acrylic" },
+];
+
+const sortableColumns: Array<{ label: string; value: SortKey }> = [
+  { label: "SKU", value: "sku" },
+  { label: "Item", value: "item_name" },
+  { label: "Category", value: "category" },
+  { label: "Material", value: "material" },
+  { label: "Qty", value: "quantity_on_hand" },
+  { label: "Reorder", value: "reorder_level" },
+  { label: "Cost", value: "unit_cost" },
+  { label: "Location", value: "storage_location" },
+  { label: "Status", value: "status" },
+];
+
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -161,6 +197,32 @@ function displayValue(value: string | number | null | undefined) {
 
 function isLowStock(item: InventoryItem) {
   return item.quantity_on_hand <= item.reorder_level;
+}
+
+function matchesQuickFilter(item: InventoryItem, quickFilter: QuickFilter) {
+  if (quickFilter === "all") {
+    return true;
+  }
+
+  if (quickFilter === "low") {
+    return isLowStock(item);
+  }
+
+  return item.category === quickFilter || item.material === quickFilter;
+}
+
+function getSortValue(item: InventoryItem, sortKey: SortKey) {
+  if (sortKey === "status") {
+    return isLowStock(item) ? 0 : 1;
+  }
+
+  const value = item[sortKey];
+
+  if (typeof value === "number") {
+    return value;
+  }
+
+  return String(value ?? "").toLowerCase();
 }
 
 function fieldLabel(field: string) {
@@ -232,6 +294,31 @@ function StockBadge({ item }: { item: InventoryItem }) {
     >
       {lowStock ? "Low Stock" : "In Stock"}
     </span>
+  );
+}
+
+function SortButton({
+  active,
+  direction,
+  label,
+  onClick,
+}: {
+  active: boolean;
+  direction: SortDirection;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex items-center gap-2 text-left text-xs font-bold uppercase tracking-widest text-blue-300 transition hover:text-blue-100"
+    >
+      <span>{label}</span>
+      <span className={active ? "text-blue-100" : "text-zinc-600"}>
+        {active ? (direction === "asc" ? "Up" : "Down") : "Sort"}
+      </span>
+    </button>
   );
 }
 
@@ -316,6 +403,9 @@ export default function AdminInventoryPage() {
   const [stockFilter, setStockFilter] = useState<"all" | "low" | "healthy">(
     "all"
   );
+  const [quickFilter, setQuickFilter] = useState<QuickFilter>("all");
+  const [sortKey, setSortKey] = useState<SortKey>("item_name");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [skuManuallyEdited, setSkuManuallyEdited] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -351,9 +441,32 @@ export default function AdminInventoryPage() {
         (stockFilter === "low" && lowStock) ||
         (stockFilter === "healthy" && !lowStock);
 
-      return matchesSearch && matchesCategory && matchesStock;
+      return (
+        matchesSearch &&
+        matchesCategory &&
+        matchesStock &&
+        matchesQuickFilter(item, quickFilter)
+      );
     });
-  }, [categoryFilter, items, searchTerm, stockFilter]);
+  }, [categoryFilter, items, quickFilter, searchTerm, stockFilter]);
+
+  const sortedItems = useMemo(() => {
+    return [...filteredItems].sort((a, b) => {
+      const aValue = getSortValue(a, sortKey);
+      const bValue = getSortValue(b, sortKey);
+
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
+      }
+
+      const comparison = String(aValue).localeCompare(String(bValue), undefined, {
+        numeric: true,
+        sensitivity: "base",
+      });
+
+      return sortDirection === "asc" ? comparison : -comparison;
+    });
+  }, [filteredItems, sortDirection, sortKey]);
 
   const summaryCards = useMemo(() => {
     const totalUnits = items.reduce(
@@ -373,24 +486,24 @@ export default function AdminInventoryPage() {
 
     return [
       {
-        label: "Blank SKUs",
+        label: "Total Inventory Items",
         value: String(items.length),
         detail: "Raw products from Supabase",
       },
       {
-        label: "Units On Hand",
-        value: String(totalUnits),
-        detail: "Total blank inventory count",
-      },
-      {
-        label: "Low Stock",
+        label: "Low Stock Items",
         value: String(lowStockCount),
         detail: "At or below reorder level",
       },
       {
-        label: "Inventory Value",
+        label: "Total Estimated Inventory Value",
         value: formatCurrency(inventoryValue),
-        detail: `${vendorCount} active vendor sources`,
+        detail: `${totalUnits} units on hand`,
+      },
+      {
+        label: "Active Vendors",
+        value: String(vendorCount),
+        detail: "Unique vendor names",
       },
     ];
   }, [items]);
@@ -527,6 +640,16 @@ export default function AdminInventoryPage() {
     }));
   }
 
+  function updateSort(nextSortKey: SortKey) {
+    if (nextSortKey === sortKey) {
+      setSortDirection((current) => (current === "asc" ? "desc" : "asc"));
+      return;
+    }
+
+    setSortKey(nextSortKey);
+    setSortDirection("asc");
+  }
+
   function resetForm() {
     setFormState(emptyFormState);
     setEditingItemId(null);
@@ -630,10 +753,29 @@ export default function AdminInventoryPage() {
         {summaryCards.map((card) => (
           <article
             key={card.label}
-            className="relative overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.78),rgba(7,9,12,0.96))] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)]"
+            className={[
+              "relative overflow-hidden rounded-3xl border p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)]",
+              card.label === "Low Stock Items" && card.value !== "0"
+                ? "border-amber-300/30 bg-[linear-gradient(145deg,rgba(72,52,18,0.36),rgba(7,9,12,0.96))]"
+                : "border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.78),rgba(7,9,12,0.96))]",
+            ].join(" ")}
           >
-            <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-blue-400/10 blur-3xl" />
-            <div className="relative h-2 w-12 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
+            <div
+              className={[
+                "absolute -right-12 -top-12 h-32 w-32 rounded-full blur-3xl",
+                card.label === "Low Stock Items" && card.value !== "0"
+                  ? "bg-amber-400/15"
+                  : "bg-blue-400/10",
+              ].join(" ")}
+            />
+            <div
+              className={[
+                "relative h-2 w-12 shadow-[0_0_18px_rgba(96,165,250,0.65)]",
+                card.label === "Low Stock Items" && card.value !== "0"
+                  ? "bg-amber-300"
+                  : "bg-blue-400",
+              ].join(" ")}
+            />
             <p className="relative mt-4 text-xs font-bold uppercase tracking-widest text-blue-300">
               {card.label}
             </p>
@@ -829,6 +971,32 @@ export default function AdminInventoryPage() {
 
         <div className="space-y-5">
           <section className={`${panelClassName} p-5 md:p-6`}>
+            <div className="mb-5 flex flex-wrap gap-2">
+              {quickFilters.map((filter) => {
+                const isActive = quickFilter === filter.value;
+
+                return (
+                  <button
+                    key={filter.value}
+                    type="button"
+                    onClick={() => {
+                      setQuickFilter(filter.value);
+                      setCategoryFilter("all");
+                      setStockFilter("all");
+                    }}
+                    className={[
+                      "rounded-xl border px-4 py-2 text-sm font-bold uppercase tracking-widest transition",
+                      isActive
+                        ? "border-blue-300/60 bg-blue-400/20 text-blue-100 shadow-[0_0_18px_rgba(96,165,250,0.16)]"
+                        : "border-white/10 bg-black/25 text-zinc-400 hover:border-blue-300/40 hover:bg-blue-400/10 hover:text-white",
+                    ].join(" ")}
+                  >
+                    {filter.label}
+                  </button>
+                );
+              })}
+            </div>
+
             <div className="grid gap-4 lg:grid-cols-[1fr_220px_180px]">
               <label className="block">
                 <span className={labelClassName}>Search Inventory</span>
@@ -843,7 +1011,10 @@ export default function AdminInventoryPage() {
                 <span className={labelClassName}>Category</span>
                 <select
                   className={inputClassName}
-                  onChange={(event) => setCategoryFilter(event.target.value)}
+                  onChange={(event) => {
+                    setCategoryFilter(event.target.value);
+                    setQuickFilter("all");
+                  }}
                   value={categoryFilter}
                 >
                   <option value="all">All categories</option>
@@ -858,9 +1029,10 @@ export default function AdminInventoryPage() {
                 <span className={labelClassName}>Stock</span>
                 <select
                   className={inputClassName}
-                  onChange={(event) =>
-                    setStockFilter(event.target.value as typeof stockFilter)
-                  }
+                  onChange={(event) => {
+                    setStockFilter(event.target.value as typeof stockFilter);
+                    setQuickFilter("all");
+                  }}
                   value={stockFilter}
                 >
                   <option value="all">All stock</option>
@@ -869,6 +1041,9 @@ export default function AdminInventoryPage() {
                 </select>
               </label>
             </div>
+            <p className="mt-4 text-sm text-zinc-500">
+              Showing {sortedItems.length} of {items.length} inventory records.
+            </p>
           </section>
 
           <section className={`${panelClassName} overflow-hidden`}>
@@ -885,15 +1060,16 @@ export default function AdminInventoryPage() {
               <table className="w-full border-collapse text-left">
                 <thead className="border-b border-white/10 bg-black/30 text-xs font-bold uppercase tracking-widest text-blue-300">
                   <tr>
-                    <th className="px-5 py-4">SKU</th>
-                    <th className="px-5 py-4">Item</th>
-                    <th className="px-5 py-4">Category</th>
-                    <th className="px-5 py-4">Material</th>
-                    <th className="px-5 py-4">Qty</th>
-                    <th className="px-5 py-4">Reorder</th>
-                    <th className="px-5 py-4">Cost</th>
-                    <th className="px-5 py-4">Location</th>
-                    <th className="px-5 py-4">Status</th>
+                    {sortableColumns.map((column) => (
+                      <th key={column.value} className="px-5 py-4">
+                        <SortButton
+                          active={sortKey === column.value}
+                          direction={sortDirection}
+                          label={column.label}
+                          onClick={() => updateSort(column.value)}
+                        />
+                      </th>
+                    ))}
                     <th className="px-5 py-4">Actions</th>
                   </tr>
                 </thead>
@@ -907,10 +1083,16 @@ export default function AdminInventoryPage() {
                   )}
 
                   {!isLoading &&
-                    filteredItems.map((item) => (
+                    sortedItems.map((item) => {
+                      const lowStock = isLowStock(item);
+
+                      return (
                       <tr
                         key={item.id}
-                        className="bg-white/[0.02] transition hover:bg-white/[0.06]"
+                        className={[
+                          "transition hover:bg-white/[0.06]",
+                          lowStock ? "bg-amber-400/[0.06]" : "bg-white/[0.02]",
+                        ].join(" ")}
                       >
                         <td className="px-5 py-4 font-black text-white">
                           {item.sku}
@@ -932,6 +1114,11 @@ export default function AdminInventoryPage() {
                         </td>
                         <td className="px-5 py-4 font-black text-white">
                           {item.quantity_on_hand}
+                          {lowStock && (
+                            <p className="mt-1 text-xs font-bold uppercase tracking-widest text-amber-200">
+                              Reorder
+                            </p>
+                          )}
                         </td>
                         <td className="px-5 py-4 text-zinc-300">
                           {item.reorder_level}
@@ -955,9 +1142,10 @@ export default function AdminInventoryPage() {
                           </button>
                         </td>
                       </tr>
-                    ))}
+                    );
+                    })}
 
-                  {!isLoading && filteredItems.length === 0 && (
+                  {!isLoading && sortedItems.length === 0 && (
                     <tr>
                       <td className="px-5 py-6 text-zinc-400" colSpan={10}>
                         No inventory items match the current filters.
@@ -976,11 +1164,19 @@ export default function AdminInventoryPage() {
               )}
 
               {!isLoading &&
-                filteredItems.map((item) => (
-                  <article
-                    key={item.id}
-                    className="rounded-2xl border border-white/10 bg-black/30 p-5"
-                  >
+                sortedItems.map((item) => {
+                  const lowStock = isLowStock(item);
+
+                  return (
+                    <article
+                      key={item.id}
+                      className={[
+                        "rounded-2xl border p-5",
+                        lowStock
+                          ? "border-amber-300/35 bg-amber-400/[0.06]"
+                          : "border-white/10 bg-black/30",
+                      ].join(" ")}
+                    >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div>
                         <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
@@ -1014,9 +1210,14 @@ export default function AdminInventoryPage() {
                         {displayValue(item.size)}
                       </p>
                       <p>
-                        <span className="font-bold text-zinc-500">Qty: </span>
-                        {item.quantity_on_hand}
-                      </p>
+                      <span className="font-bold text-zinc-500">Qty: </span>
+                      {item.quantity_on_hand}
+                      {lowStock && (
+                        <span className="ml-2 font-bold uppercase tracking-widest text-amber-200">
+                          Reorder
+                        </span>
+                      )}
+                    </p>
                       <p>
                         <span className="font-bold text-zinc-500">
                           Reorder:{" "}
@@ -1047,11 +1248,12 @@ export default function AdminInventoryPage() {
                       className="mt-5 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
                     >
                       Edit Item
-                    </button>
-                  </article>
-                ))}
+                  </button>
+                </article>
+                  );
+                })}
 
-              {!isLoading && filteredItems.length === 0 && (
+              {!isLoading && sortedItems.length === 0 && (
                 <p className="rounded-2xl border border-white/10 bg-black/30 p-5 text-zinc-400">
                   No inventory items match the current filters.
                 </p>
