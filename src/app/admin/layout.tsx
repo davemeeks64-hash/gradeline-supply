@@ -21,7 +21,9 @@ export default function AdminRouteLayout({
 }) {
   return (
     <main className="min-h-screen bg-[#05070a] text-white lg:flex">
-      <aside className="border-b border-white/10 bg-[#080b0f] shadow-[0_18px_55px_rgba(0,0,0,0.38)] lg:sticky lg:top-0 lg:h-screen lg:w-72 lg:shrink-0 lg:border-b-0 lg:border-r lg:border-white/10">
+      <aside className="relative overflow-hidden border-b border-white/10 bg-[#080b0f] shadow-[0_18px_55px_rgba(0,0,0,0.38)] lg:sticky lg:top-0 lg:h-screen lg:w-72 lg:shrink-0 lg:border-b-0 lg:border-r lg:border-white/10">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/70 to-transparent" />
+        <div className="pointer-events-none absolute -left-24 top-20 h-64 w-64 rounded-full bg-blue-400/10 blur-3xl" />
         <div className="flex h-full flex-col bg-[linear-gradient(145deg,rgba(18,25,31,0.98),rgba(8,10,12,1)_58%,rgba(14,21,27,0.98))]">
           <Link
             href="/admin"
@@ -76,6 +78,7 @@ export default function AdminRouteLayout({
 
       <section className="relative flex-1 overflow-hidden px-4 py-5 sm:px-6 lg:px-10 lg:py-8">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.24),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.22),_transparent_36%)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/40 to-transparent" />
         <div className="relative mx-auto w-full max-w-7xl">{children}</div>
       </section>
     </main>
