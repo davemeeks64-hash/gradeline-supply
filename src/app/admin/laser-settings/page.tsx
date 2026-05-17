@@ -124,6 +124,7 @@ function SettingField({
         onChange={(event) => onChange(name, event.target.value)}
         placeholder={placeholder}
         required={required}
+        suppressHydrationWarning
         value={value}
       />
     </label>
@@ -265,7 +266,11 @@ export default function AdminLaserSettingsPage() {
           </p>
         </div>
 
-        <form className="mt-6 grid gap-5" onSubmit={handleSubmit}>
+        <form
+          className="mt-6 grid gap-5"
+          onSubmit={handleSubmit}
+          suppressHydrationWarning
+        >
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <SettingField
               label="Material"
@@ -290,6 +295,7 @@ export default function AdminLaserSettingsPage() {
                 onChange={(event) =>
                   updateFormField("operationType", event.target.value)
                 }
+                suppressHydrationWarning
                 value={formState.operationType}
               >
                 {operationTypes.map((operation) => (
@@ -328,6 +334,7 @@ export default function AdminLaserSettingsPage() {
                 onChange={(event) =>
                   updateFormField("airAssist", event.target.value)
                 }
+                suppressHydrationWarning
                 value={formState.airAssist}
               >
                 {airAssistOptions.map((option) => (
@@ -343,6 +350,7 @@ export default function AdminLaserSettingsPage() {
               className={`${inputClassName} min-h-32 resize-y`}
               onChange={(event) => updateFormField("notes", event.target.value)}
               placeholder="Material prep, masking, focus, cleanup, testing notes, or best-use guidance"
+              suppressHydrationWarning
               value={formState.notes}
             />
           </label>
@@ -397,6 +405,7 @@ export default function AdminLaserSettingsPage() {
                 className={inputClassName}
                 onChange={(event) => setSearchTerm(event.target.value)}
                 placeholder="Search material, machine, operation, notes"
+                suppressHydrationWarning
                 value={searchTerm}
               />
             </label>
@@ -406,6 +415,7 @@ export default function AdminLaserSettingsPage() {
               <select
                 className={inputClassName}
                 onChange={(event) => setMachineFilter(event.target.value)}
+                suppressHydrationWarning
                 value={machineFilter}
               >
                 <option value="all">All Machines</option>
@@ -422,6 +432,7 @@ export default function AdminLaserSettingsPage() {
               <select
                 className={inputClassName}
                 onChange={(event) => setOperationFilter(event.target.value)}
+                suppressHydrationWarning
                 value={operationFilter}
               >
                 <option value="all">All Operations</option>
