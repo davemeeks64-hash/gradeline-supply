@@ -23,14 +23,44 @@ const dashboardLinks = [
     description: "Follow design approval, material pull, laser setup, and finishing.",
   },
   {
+    title: "Inventory",
+    href: "/admin/inventory",
+    description: "Manage blank stock, SKU generation, low stock warnings, and costs.",
+  },
+  {
     title: "Stock Products",
     href: "/admin/stock-products",
     description: "Track ready-made products, stock quantities, files, and profit.",
   },
   {
+    title: "Vendors",
+    href: "/admin/vendors",
+    description: "Manage supplier contacts, preferred vendors, categories, and notes.",
+  },
+  {
+    title: "Receiving",
+    href: "/admin/receiving",
+    description: "Track purchase orders and receive blank inventory into stock.",
+  },
+  {
+    title: "Inventory Receiving",
+    href: "/admin/inventory-receiving",
+    description: "Use the simple static receiving log for quick demo entries.",
+  },
+  {
     title: "Laser Settings",
     href: "/admin/laser-settings",
     description: "Reference saved material settings for machines and engraving runs.",
+  },
+  {
+    title: "Sales",
+    href: "/admin/sales",
+    description: "Review sales metrics, recent orders, category activity, and revenue.",
+  },
+  {
+    title: "Designs",
+    href: "/admin/designs",
+    description: "Review design files, proof status, exports, and folder locations.",
   },
   {
     title: "Reports",

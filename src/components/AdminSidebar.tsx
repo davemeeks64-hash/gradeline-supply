@@ -19,6 +19,8 @@ const adminLinks: AdminSidebarLink[] = [
   { label: "Production", href: "/admin/production" },
   { label: "Inventory", href: "/admin/inventory" },
   { label: "Inventory Receiving", href: "/admin/inventory-receiving" },
+  { label: "Receiving", href: "/admin/receiving" },
+  { label: "Vendors", href: "/admin/vendors" },
   { label: "Stock Products", href: "/admin/stock-products" },
   { label: "Sales", href: "/admin/sales" },
   { label: "Laser Settings", href: "/admin/laser-settings" },

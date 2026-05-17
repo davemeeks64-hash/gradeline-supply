@@ -14,11 +14,13 @@ const adminLinks = [
   { label: "New Order", href: "/admin/new-order" },
   { label: "Production", href: "/admin/production" },
   { label: "Inventory", href: "/admin/inventory" },
+  { label: "Inventory Receiving", href: "/admin/inventory-receiving" },
   { label: "Receiving", href: "/admin/receiving" },
   { label: "Vendors", href: "/admin/vendors" },
   { label: "Products", href: "/admin/stock-products" },
   { label: "Sales", href: "/admin/sales" },
   { label: "Laser Settings", href: "/admin/laser-settings" },
+  { label: "Designs", href: "/admin/designs" },
   { label: "Reports", href: "/admin/reports" },
   { label: "Settings", href: "/admin/settings" },
 ];
