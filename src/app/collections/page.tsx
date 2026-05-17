@@ -5,69 +5,52 @@ import PublicHeader from "@/components/PublicHeader";
 
 const collections = [
   {
-    title: "Industrial & Blue Collar",
-    href: "/shop?collection=industrial-blue-collar",
+    title: "Tumblers",
+    href: "/shop?collection=tumblers",
     description:
-      "Rugged shop-built goods for trades, unions, crews, garages, and hard-working brands.",
-    examples: [
-      "Blue Collar Bling",
-      "Union pride pieces",
-      "Shop tags",
-      "Leather patches",
-    ],
-    image: "/images/categories/gradeline-category-blue-collar-series.png",
+      "Ready-to-request drinkware built for crews, businesses, gifts, events, and everyday carry.",
+    cta: "Shop Tumblers",
+    image: "/images/categories/gradeline-category-tumblers.png",
   },
   {
-    title: "Home & Kitchen",
-    href: "/shop?collection=home-kitchen",
+    title: "Leather Goods",
+    href: "/shop?collection=leather-goods",
     description:
-      "Warm, functional pieces built for kitchens, gifting, hosting, and daily use.",
-    examples: [
-      "Cutting boards",
-      "Charcuterie boards",
-      "Recipe boards",
-      "Serving trays",
-    ],
+      "Patches, tags, keepsakes, and rugged branded pieces with a clean engraved finish.",
+    cta: "Shop Leather",
+    image: "/images/categories/gradeline-category-leather-goods.png",
+  },
+  {
+    title: "Cutting Boards",
+    href: "/shop?collection=cutting-boards",
+    description:
+      "Warm home and kitchen pieces for recipes, names, dates, hosting, and personalized gifts.",
+    cta: "Shop Boards",
     image: "/images/categories/gradeline-category-cutting-boards.png",
   },
   {
-    title: "Custom Gifts",
-    href: "/shop?collection=custom-gifts",
+    title: "Custom Signs",
+    href: "/shop?collection=custom-signs",
     description:
-      "Personalized keepsakes for milestones, families, holidays, weddings, and memorials.",
-    examples: [
-      "Name signs",
-      "Wedding gifts",
-      "Holiday items",
-      "Memorial pieces",
-    ],
-    image: "/images/categories/gradeline-category-custom-orders.png",
-  },
-  {
-    title: "Business & Commercial",
-    href: "/shop?collection=business-commercial",
-    description:
-      "Branded products and signage for shops, crews, small businesses, and events.",
-    examples: [
-      "Logo signs",
-      "Equipment tags",
-      "Industrial labels",
-      "Promotional products",
-    ],
+      "Logo displays, wall pieces, shop signage, event signs, and dimensional branded builds.",
+    cta: "Shop Signs",
     image: "/images/categories/gradeline-category-custom-signs.png",
   },
   {
-    title: "Custom Works",
-    href: "/shop?collection=custom-works",
+    title: "Blue Collar Series",
+    href: "/shop?collection=blue-collar-series",
     description:
-      "One-off requests, prototypes, uploaded designs, and special builds that need a custom path.",
-    examples: [
-      "Customer uploads",
-      "Prototype pieces",
-      "Special requests",
-      "One-off fabrication",
-    ],
-    image: "/images/categories/gradeline-category-leather-goods.png",
+      "Trade-inspired goods, shop tags, cow tags, union pride pieces, and work-ready designs.",
+    cta: "Shop Series",
+    image: "/images/categories/gradeline-category-blue-collar-series.png",
+  },
+  {
+    title: "Custom Orders",
+    href: "/custom-order",
+    description:
+      "One-off ideas, uploaded logos, special gifts, prototypes, and pieces built around your request.",
+    cta: "Start Custom Order",
+    image: "/images/categories/gradeline-category-custom-orders.png",
   },
 ];
 
@@ -95,8 +78,9 @@ export default function CollectionsPage() {
               Collections
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-zinc-300">
-              Shop-ready categories for custom engraving, business branding,
-              home goods, gifts, and one-off builds.
+              Browse production-ready Gradeline collections for drinkware,
+              leather goods, kitchen pieces, signage, blue-collar designs, and
+              custom requests.
             </p>
             <Link
               href="/"
@@ -106,13 +90,13 @@ export default function CollectionsPage() {
             </Link>
           </div>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
             {collections.map((collection) => (
               <article
                 key={collection.title}
                 className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
-                <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-white/10 bg-black">
+                <div className="relative aspect-[16/11] w-full overflow-hidden border-b border-white/10 bg-black">
                   <Image
                     src={collection.image}
                     alt=""
@@ -132,25 +116,11 @@ export default function CollectionsPage() {
                     {collection.description}
                   </p>
 
-                  <div className="mt-5 rounded-2xl border border-white/10 bg-black/30 p-4">
-                    <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
-                      Example Products
-                    </p>
-                    <ul className="mt-3 grid gap-2 text-sm text-zinc-300">
-                      {collection.examples.map((example) => (
-                        <li key={example} className="flex items-center gap-3">
-                          <span className="h-2 w-2 border border-blue-300 bg-blue-400" />
-                          {example}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
                   <Link
                     href={collection.href}
                     className="mt-auto rounded-xl bg-blue-400 px-5 py-3 text-center font-bold text-black transition hover:bg-blue-300"
                   >
-                    View Products
+                    {collection.cta}
                   </Link>
                 </div>
               </article>
