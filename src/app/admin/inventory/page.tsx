@@ -896,56 +896,66 @@ export default function AdminInventoryPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/10">
-                  {filteredItems.map((item) => (
-                    <tr
-                      key={item.id}
-                      className="bg-white/[0.02] transition hover:bg-white/[0.06]"
-                    >
-                      <td className="px-5 py-4 font-black text-white">
-                        {item.sku}
-                      </td>
-                      <td className="px-5 py-4">
-                        <p className="font-bold text-zinc-100">
-                          {item.item_name}
-                        </p>
-                        <p className="mt-1 text-xs text-zinc-500">
-                          {displayValue(item.vendor)}
-                        </p>
-                      </td>
-                      <td className="px-5 py-4 text-zinc-300">
-                        {item.category}
-                      </td>
-                      <td className="px-5 py-4 text-zinc-300">
-                        {item.material} / {item.color} / {item.size}
-                      </td>
-                      <td className="px-5 py-4 font-black text-white">
-                        {item.quantity_on_hand}
-                      </td>
-                      <td className="px-5 py-4 text-zinc-300">
-                        {item.reorder_level}
-                      </td>
-                      <td className="px-5 py-4 text-zinc-300">
-                        {formatCurrency(item.unit_cost)}
-                      </td>
-                      <td className="px-5 py-4 text-zinc-300">
-                        {item.storage_location}
-                      </td>
-                      <td className="px-5 py-4">
-                        <StockBadge item={item} />
-                      </td>
-                      <td className="px-5 py-4">
-                        <button
-                          type="button"
-                          onClick={() => startEditing(item)}
-                          className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-                        >
-                          Edit
-                        </button>
+                  {isLoading && (
+                    <tr>
+                      <td className="px-5 py-6 text-zinc-400" colSpan={10}>
+                        Loading inventory items from Supabase...
                       </td>
                     </tr>
-                  ))}
+                  )}
 
-                  {filteredItems.length === 0 && (
+                  {!isLoading &&
+                    filteredItems.map((item) => (
+                      <tr
+                        key={item.id}
+                        className="bg-white/[0.02] transition hover:bg-white/[0.06]"
+                      >
+                        <td className="px-5 py-4 font-black text-white">
+                          {item.sku}
+                        </td>
+                        <td className="px-5 py-4">
+                          <p className="font-bold text-zinc-100">
+                            {item.item_name}
+                          </p>
+                          <p className="mt-1 text-xs text-zinc-500">
+                            {displayValue(item.vendor)}
+                          </p>
+                        </td>
+                        <td className="px-5 py-4 text-zinc-300">
+                          {displayValue(item.category)}
+                        </td>
+                        <td className="px-5 py-4 text-zinc-300">
+                          {displayValue(item.material)} /{" "}
+                          {displayValue(item.color)} / {displayValue(item.size)}
+                        </td>
+                        <td className="px-5 py-4 font-black text-white">
+                          {item.quantity_on_hand}
+                        </td>
+                        <td className="px-5 py-4 text-zinc-300">
+                          {item.reorder_level}
+                        </td>
+                        <td className="px-5 py-4 text-zinc-300">
+                          {formatCurrency(item.unit_cost)}
+                        </td>
+                        <td className="px-5 py-4 text-zinc-300">
+                          {displayValue(item.storage_location)}
+                        </td>
+                        <td className="px-5 py-4">
+                          <StockBadge item={item} />
+                        </td>
+                        <td className="px-5 py-4">
+                          <button
+                            type="button"
+                            onClick={() => startEditing(item)}
+                            className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                          >
+                            Edit
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+
+                  {!isLoading && filteredItems.length === 0 && (
                     <tr>
                       <td className="px-5 py-6 text-zinc-400" colSpan={10}>
                         No inventory items match the current filters.
@@ -957,76 +967,89 @@ export default function AdminInventoryPage() {
             </div>
 
             <div className="grid gap-4 p-4 xl:hidden">
-              {filteredItems.map((item) => (
-                <article
-                  key={item.id}
-                  className="rounded-2xl border border-white/10 bg-black/30 p-5"
-                >
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
-                        {item.sku} / {item.category}
-                      </p>
-                      <h3 className="mt-2 text-xl font-black text-white">
-                        {item.item_name}
-                      </h3>
-                      <p className="mt-2 text-zinc-400">{item.vendor}</p>
-                    </div>
-                    <StockBadge item={item} />
-                  </div>
+              {isLoading && (
+                <p className="rounded-2xl border border-white/10 bg-black/30 p-5 text-zinc-400">
+                  Loading inventory items from Supabase...
+                </p>
+              )}
 
-                  <div className="mt-5 grid gap-3 text-sm text-zinc-300 sm:grid-cols-2">
-                    <p>
-                      <span className="font-bold text-zinc-500">
-                        Material:{" "}
-                      </span>
-                      {item.material}
-                    </p>
-                    <p>
-                      <span className="font-bold text-zinc-500">Color: </span>
-                      {item.color}
-                    </p>
-                    <p>
-                      <span className="font-bold text-zinc-500">Size: </span>
-                      {item.size}
-                    </p>
-                    <p>
-                      <span className="font-bold text-zinc-500">Qty: </span>
-                      {item.quantity_on_hand}
-                    </p>
-                    <p>
-                      <span className="font-bold text-zinc-500">
-                        Reorder:{" "}
-                      </span>
-                      {item.reorder_level}
-                    </p>
-                    <p>
-                      <span className="font-bold text-zinc-500">Cost: </span>
-                      {formatCurrency(item.unit_cost)}
-                    </p>
-                    <p>
-                      <span className="font-bold text-zinc-500">
-                        Location:{" "}
-                      </span>
-                      {item.storage_location}
-                    </p>
-                    <p>
-                      <span className="font-bold text-zinc-500">Notes: </span>
-                      {displayValue(item.notes)}
-                    </p>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => startEditing(item)}
-                    className="mt-5 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+              {!isLoading &&
+                filteredItems.map((item) => (
+                  <article
+                    key={item.id}
+                    className="rounded-2xl border border-white/10 bg-black/30 p-5"
                   >
-                    Edit Item
-                  </button>
-                </article>
-              ))}
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
+                          {item.sku} / {displayValue(item.category)}
+                        </p>
+                        <h3 className="mt-2 text-xl font-black text-white">
+                          {item.item_name}
+                        </h3>
+                        <p className="mt-2 text-zinc-400">
+                          {displayValue(item.vendor)}
+                        </p>
+                      </div>
+                      <StockBadge item={item} />
+                    </div>
 
-              {filteredItems.length === 0 && (
+                    <div className="mt-5 grid gap-3 text-sm text-zinc-300 sm:grid-cols-2">
+                      <p>
+                        <span className="font-bold text-zinc-500">
+                          Material:{" "}
+                        </span>
+                        {displayValue(item.material)}
+                      </p>
+                      <p>
+                        <span className="font-bold text-zinc-500">
+                          Color:{" "}
+                        </span>
+                        {displayValue(item.color)}
+                      </p>
+                      <p>
+                        <span className="font-bold text-zinc-500">Size: </span>
+                        {displayValue(item.size)}
+                      </p>
+                      <p>
+                        <span className="font-bold text-zinc-500">Qty: </span>
+                        {item.quantity_on_hand}
+                      </p>
+                      <p>
+                        <span className="font-bold text-zinc-500">
+                          Reorder:{" "}
+                        </span>
+                        {item.reorder_level}
+                      </p>
+                      <p>
+                        <span className="font-bold text-zinc-500">Cost: </span>
+                        {formatCurrency(item.unit_cost)}
+                      </p>
+                      <p>
+                        <span className="font-bold text-zinc-500">
+                          Location:{" "}
+                        </span>
+                        {displayValue(item.storage_location)}
+                      </p>
+                      <p>
+                        <span className="font-bold text-zinc-500">
+                          Notes:{" "}
+                        </span>
+                        {displayValue(item.notes)}
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => startEditing(item)}
+                      className="mt-5 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                    >
+                      Edit Item
+                    </button>
+                  </article>
+                ))}
+
+              {!isLoading && filteredItems.length === 0 && (
                 <p className="rounded-2xl border border-white/10 bg-black/30 p-5 text-zinc-400">
                   No inventory items match the current filters.
                 </p>
