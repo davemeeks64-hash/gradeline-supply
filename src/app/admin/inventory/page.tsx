@@ -78,6 +78,7 @@ const categories = [
 const materials = [
   "Acrylic",
   "Cast acrylic",
+  "Leather",
   "Leatherette",
   "Slate",
   "Stainless steel",
@@ -105,6 +106,7 @@ const sizes = [
   "16 oz",
   "20 oz",
   "24 oz",
+  "Other",
 ];
 
 const textFieldNames: Array<keyof Omit<
