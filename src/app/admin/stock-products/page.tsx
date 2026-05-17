@@ -90,6 +90,31 @@ function formatInventoryItemLabel(item: InventoryItem | undefined) {
   return `${displayValue(item.sku)} / ${displayValue(item.item_name)}`;
 }
 
+function MaterialsUsedSummary({
+  inventoryItemById,
+  materials,
+}: {
+  inventoryItemById: Record<string, InventoryItem>;
+  materials: ProductMaterial[] | undefined;
+}) {
+  if (!materials || materials.length === 0) {
+    return <span className="text-zinc-500">No BOM lines</span>;
+  }
+
+  return (
+    <div className="grid gap-1">
+      {materials.map((material) => (
+        <p key={material.inventory_item_id}>
+          {material.quantity_used} x{" "}
+          {formatInventoryItemLabel(
+            inventoryItemById[material.inventory_item_id]
+          )}
+        </p>
+      ))}
+    </div>
+  );
+}
+
 function ProductField({
   label,
   name,
@@ -186,9 +211,21 @@ export default function AdminStockProductsPage() {
     const normalizedSearch = searchTerm.trim().toLowerCase();
 
     return products.filter((product) => {
+      const productSearchFields = [
+        product.sku,
+        product.name,
+        product.category,
+        product.material,
+      ];
+      const materialsSearchFields = (product.materials_used ?? []).flatMap(
+        (material) => {
+          const item = inventoryItemById[material.inventory_item_id];
+          return [item?.sku, item?.item_name];
+        }
+      );
       const matchesSearch =
         normalizedSearch.length === 0 ||
-        [product.sku, product.name, product.category, product.material]
+        [...productSearchFields, ...materialsSearchFields]
           .filter(Boolean)
           .some((value) =>
             String(value).toLowerCase().includes(normalizedSearch)
@@ -204,7 +241,7 @@ export default function AdminStockProductsPage() {
 
       return matchesSearch && matchesActive && matchesCategory;
     });
-  }, [activeFilter, categoryFilter, products, searchTerm]);
+  }, [activeFilter, categoryFilter, inventoryItemById, products, searchTerm]);
 
   async function readProducts() {
     const [productsResponse, inventoryResponse] = await Promise.all([
