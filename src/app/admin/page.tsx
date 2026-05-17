@@ -47,14 +47,16 @@ const dashboardLinks = [
 export default function AdminPage() {
   return (
     <AdminLayout activeHref="/admin">
-      <section className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-8">
+      <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-8">
+        <div className="absolute -right-20 -top-24 h-64 w-64 rounded-full bg-blue-400/10 blur-3xl" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/70 to-transparent" />
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-          <div>
+          <div className="relative">
             <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
               Gradeline Admin
             </p>
-            <h1 className="mt-3 text-4xl font-black md:text-6xl">
-              Backend Command Center
+            <h1 className="mt-3 max-w-4xl text-4xl font-black tracking-tight text-white drop-shadow-[0_0_18px_rgba(96,165,250,0.18)] md:text-6xl">
+              Gradeline Operations Terminal
             </h1>
             <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-300">
               A clean operations hub for customers, orders, production,
