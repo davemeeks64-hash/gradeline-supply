@@ -141,6 +141,35 @@ function formatDate(value: string | null | undefined) {
   }).format(date);
 }
 
+function getTrackingHref(
+  carrier: string | null | undefined,
+  trackingNumber: string | null | undefined
+) {
+  if (!trackingNumber) {
+    return "";
+  }
+
+  const normalizedCarrier = (carrier ?? "").trim().toLowerCase();
+  const encodedTracking = encodeURIComponent(trackingNumber.trim());
+
+  if (normalizedCarrier.includes("ups")) {
+    return `https://www.ups.com/track?tracknum=${encodedTracking}`;
+  }
+
+  if (normalizedCarrier.includes("fedex")) {
+    return `https://www.fedex.com/fedextrack/?trknbr=${encodedTracking}`;
+  }
+
+  if (
+    normalizedCarrier.includes("usps") ||
+    normalizedCarrier.includes("postal")
+  ) {
+    return `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodedTracking}`;
+  }
+
+  return `https://www.google.com/search?q=${encodedTracking}`;
+}
+
 function StatusBadge({ status }: { status: WorkflowStatus }) {
   return (
     <span
@@ -169,6 +198,29 @@ function DesignStatusBadge({ status }: { status: string | null | undefined }) {
       ].join(" ")}
     >
       {statusLabel}
+    </span>
+  );
+}
+
+function FulfillmentMethodBadge({
+  method,
+}: {
+  method: string | null | undefined;
+}) {
+  const methodLabel = method || "Pickup";
+  const className =
+    methodLabel in fulfillmentMethodClassNames
+      ? fulfillmentMethodClassNames[methodLabel as FulfillmentMethod]
+      : "border-white/20 bg-white/10 text-zinc-200";
+
+  return (
+    <span
+      className={[
+        "inline-flex w-fit rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-widest",
+        className,
+      ].join(" ")}
+    >
+      {methodLabel}
     </span>
   );
 }
