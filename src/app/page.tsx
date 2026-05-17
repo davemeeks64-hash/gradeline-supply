@@ -114,7 +114,7 @@ export default function Home() {
   return (
     <>
       <PublicHeader />
-      <main className="min-h-screen overflow-hidden bg-[#05070a] text-white">
+      <main className="min-h-[100svh] overflow-hidden bg-[#05070a] text-white">
         <section
           aria-label="Hero Banner"
           className="relative overflow-hidden border-b border-white/10"
@@ -196,19 +196,19 @@ export default function Home() {
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap md:justify-end">
               <Link
                 href="/shop"
-                className="rounded-xl bg-blue-400 px-5 py-3 text-center font-bold text-black transition hover:bg-blue-300"
+                className="rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300"
               >
                 Shop Collections
               </Link>
               <Link
                 href="/custom-order"
-                className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
               >
                 Start Custom Order
               </Link>
               <Link
                 href="/gallery"
-                className="rounded-xl border border-blue-300/30 bg-blue-400/10 px-5 py-3 text-center font-bold text-blue-100 transition hover:bg-blue-400/20"
+                className="rounded-xl border border-blue-300/30 bg-blue-400/10 px-6 py-3 text-center font-bold text-blue-100 transition hover:bg-blue-400/20"
               >
                 View Gallery
               </Link>
@@ -264,7 +264,7 @@ export default function Home() {
             </div>
             <Link
               href="/shop"
-              className="w-fit rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300"
+              className="w-fit rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
             >
               Shop Collections
             </Link>
@@ -302,7 +302,7 @@ export default function Home() {
                   </p>
                   <Link
                     href="/shop"
-                    className="mt-auto rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                    className="mt-auto rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
                   >
                     Request This
                   </Link>
@@ -371,7 +371,7 @@ export default function Home() {
             </div>
             <Link
               href="/gallery"
-              className="w-fit rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+              className="w-fit rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
             >
               View Gallery
             </Link>

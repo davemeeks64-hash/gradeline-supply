@@ -66,7 +66,7 @@ export default function GalleryPage() {
   return (
     <>
       <PublicHeader />
-      <main className="min-h-screen overflow-hidden bg-[#05070a] text-white">
+      <main className="min-h-[100svh] overflow-hidden bg-[#05070a] text-white">
       <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
         <Image
           src="/images/workflow/gradeline-gallery-section-banner.png"
@@ -89,7 +89,7 @@ export default function GalleryPage() {
             </p>
             <Link
               href="/"
-              className="mt-8 inline-flex rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+              className="mt-8 inline-flex rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
             >
               Back to Home
             </Link>
@@ -142,7 +142,7 @@ export default function GalleryPage() {
                   </p>
                   <Link
                     href="/custom-order"
-                    className="mt-auto rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                    className="mt-auto rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
                   >
                     Request Similar
                   </Link>

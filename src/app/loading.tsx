@@ -2,14 +2,14 @@ import Image from "next/image";
 
 export default function Loading() {
   return (
-    <main className="relative grid min-h-screen place-items-center overflow-hidden bg-[#05070a] px-4 py-16 text-white sm:px-6">
+    <main className="relative grid min-h-[100svh] place-items-center overflow-hidden bg-[#05070a] px-4 py-16 text-white sm:px-6">
       <Image
         src="/images/backgrounds/gradeline-loading-screen-background.png"
         alt=""
         fill
         priority
         sizes="100vw"
-        className="object-cover object-center opacity-35"
+        className="object-cover object-center opacity-[0.35]"
       />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(96,165,250,0.24),_transparent_34%),linear-gradient(to_bottom,rgba(5,7,10,0.68),rgba(5,7,10,0.96))]" />
 

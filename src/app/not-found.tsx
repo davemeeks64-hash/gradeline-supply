@@ -3,14 +3,14 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <main className="relative grid min-h-screen place-items-center overflow-hidden bg-[#05070a] px-4 py-16 text-white sm:px-6">
+    <main className="relative grid min-h-[100svh] place-items-center overflow-hidden bg-[#05070a] px-4 py-16 text-white sm:px-6">
       <Image
         src="/images/backgrounds/gradeline-404-page-background.png"
         alt=""
         fill
         priority
         sizes="100vw"
-        className="object-cover object-center opacity-40"
+        className="object-cover object-center opacity-[0.4]"
       />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(96,165,250,0.25),_transparent_34%),linear-gradient(to_bottom,rgba(5,7,10,0.66),rgba(5,7,10,0.96))]" />
 

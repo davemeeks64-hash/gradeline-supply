@@ -57,7 +57,7 @@ export default function ContactPage() {
   return (
     <>
       <PublicHeader />
-      <main className="min-h-screen overflow-hidden bg-[#05070a] text-white">
+      <main className="min-h-[100svh] overflow-hidden bg-[#05070a] text-white">
       <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
         <Image
           src="/images/hero/gradeline-contact-page-hero-banner.png"
@@ -139,7 +139,7 @@ export default function ContactPage() {
 
             <form
               id="business-inquiry"
-              className="rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.28)] md:p-8"
+              className="scroll-mt-24 rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.28)] md:p-8"
             >
               <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
                 Business Inquiry Form
@@ -221,7 +221,7 @@ export default function ContactPage() {
               sizes="100vw"
               className="object-cover object-center opacity-[0.22]"
             />
-            <div className="absolute inset-0 bg-black/62" />
+            <div className="absolute inset-0 bg-black/[0.62]" />
             <div className="relative grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
               <div>
                 <p className={labelClassName}>Social Media</p>
@@ -238,7 +238,7 @@ export default function ContactPage() {
                   <button
                     key={social}
                     type="button"
-                    className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                    className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
                   >
                     {social}
                   </button>

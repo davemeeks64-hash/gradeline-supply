@@ -149,7 +149,7 @@ export default function CustomOrderPage() {
   return (
     <>
       <PublicHeader />
-      <main className="min-h-screen overflow-hidden bg-[#05070a] text-white">
+      <main className="min-h-[100svh] overflow-hidden bg-[#05070a] text-white">
       <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
         <Image
           src="/images/backgrounds/gradeline-order-form-section-bg.png"
@@ -177,19 +177,19 @@ export default function CustomOrderPage() {
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                   <a
                     href="#custom-order-form"
-                    className="rounded-xl bg-blue-400 px-5 py-3 text-center font-bold text-black transition hover:bg-blue-300"
+                    className="rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300"
                   >
                     Start Order Form
                   </a>
                   <Link
                     href="/contact"
-                    className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                    className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
                   >
                     Contact Gradeline
                   </Link>
                   <Link
                     href="/"
-                    className="rounded-xl border border-blue-300/30 bg-blue-400/10 px-5 py-3 text-center font-bold text-blue-100 transition hover:bg-blue-400/20"
+                    className="rounded-xl border border-blue-300/30 bg-blue-400/10 px-6 py-3 text-center font-bold text-blue-100 transition hover:bg-blue-400/20"
                   >
                     Back to Home
                   </Link>
@@ -221,7 +221,7 @@ export default function CustomOrderPage() {
               </p>
               <Link
                 href="/gallery"
-                className="mt-6 inline-flex rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                className="mt-6 inline-flex rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
               >
                 View Gallery
               </Link>
@@ -290,7 +290,7 @@ export default function CustomOrderPage() {
               </div>
               <Link
                 href="/collections"
-                className="w-fit rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                className="w-fit rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
               >
                 Browse Collections
               </Link>
@@ -330,7 +330,7 @@ export default function CustomOrderPage() {
                 sizes="(min-width: 1024px) 55vw, 100vw"
                 className="object-cover object-center opacity-25"
               />
-              <div className="absolute inset-0 bg-black/55" />
+              <div className="absolute inset-0 bg-black/[0.55]" />
               <div className="relative">
                 <p className={labelClassName}>Timeline Expectations</p>
                 <h2 className="mt-3 text-3xl font-black">
@@ -395,7 +395,7 @@ export default function CustomOrderPage() {
 
           <form
             id="custom-order-form"
-            className="mt-8 grid gap-6"
+            className="mt-8 grid scroll-mt-24 gap-6"
             onSubmit={handleSubmit}
           >
             <section className={sectionClassName}>
