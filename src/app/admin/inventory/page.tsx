@@ -30,7 +30,8 @@ type InventoryFormState = {
   category: string;
   vendor: string;
   material: string;
-  color: string;
+  primary_color: string;
+  secondary_color: string;
   size: string;
   quantity_on_hand: number;
   reorder_level: number;
@@ -60,7 +61,8 @@ const emptyFormState: InventoryFormState = {
   category: "",
   vendor: "",
   material: "",
-  color: "",
+  primary_color: "",
+  secondary_color: "",
   size: "",
   quantity_on_hand: 0,
   reorder_level: 0,
@@ -81,6 +83,7 @@ const panelClassName =
 const categories = [
   "Acrylic",
   "Cutting Boards",
+  "Hats",
   "Hardware",
   "Leather",
   "Packaging",
@@ -103,12 +106,23 @@ const materials = [
 
 const colors = [
   "Black",
+  "Blue",
+  "Brown",
+  "Charcoal",
   "Clear",
+  "Cream",
+  "Gray",
+  "Green",
   "Matte black",
   "Natural",
+  "Navy",
+  "Orange",
   "Raw",
+  "Red",
+  "Tan",
   "Walnut",
   "White",
+  "Yellow",
 ];
 
 const sizes = [
@@ -122,16 +136,20 @@ const sizes = [
   "20 oz",
   "24 oz",
   "Other",
+  "R112",
+  "Snapback",
+  "Trucker",
 ];
 
 const textFieldNames: Array<keyof Omit<
   InventoryFormState,
   | "category"
-  | "color"
   | "material"
   | "notes"
+  | "primary_color"
   | "quantity_on_hand"
   | "reorder_level"
+  | "secondary_color"
   | "size"
   | "sku"
   | "unit_cost"
@@ -144,6 +162,8 @@ const textFieldNames: Array<keyof Omit<
 const categorySkuCodes: Record<string, string> = {
   Acrylic: "ACR",
   "Cutting Boards": "CB",
+  Hat: "HAT",
+  Hats: "HAT",
   Hardware: "HDW",
   Leather: "LTH",
   Packaging: "PKG",
@@ -155,12 +175,23 @@ const categorySkuCodes: Record<string, string> = {
 
 const colorSkuCodes: Record<string, string> = {
   Black: "BLK",
+  Blue: "BLU",
+  Brown: "BRN",
+  Charcoal: "CHC",
   Clear: "CLR",
+  Cream: "CRM",
+  Gray: "GRY",
+  Green: "GRN",
   "Matte black": "BLK",
   Natural: "NAT",
+  Navy: "NVY",
+  Orange: "ORG",
   Raw: "RAW",
+  Red: "RED",
+  Tan: "TAN",
   Walnut: "WAL",
   White: "WHT",
+  Yellow: "YLW",
 };
 
 const quickFilters: Array<{ label: string; value: QuickFilter }> = [
@@ -247,8 +278,27 @@ function getColorCode(color: string) {
   return colorSkuCodes[color] || toSkuSegment(color).slice(0, 3) || "CLR";
 }
 
+function getColorSkuSegment(primaryColor: string, secondaryColor: string) {
+  const primaryCode = primaryColor ? getColorCode(primaryColor) : "CLR";
+  const secondaryCode = secondaryColor ? getColorCode(secondaryColor) : "";
+
+  return `${primaryCode}${secondaryCode}`;
+}
+
 function getSizeCode(size: string) {
   return toSkuSegment(size) || "SIZE";
+}
+
+function combineColorLabel(primaryColor: string, secondaryColor: string) {
+  return [primaryColor, secondaryColor].filter(Boolean).join(" / ");
+}
+
+function splitStoredColor(color: string | null) {
+  const [primaryColor = "", secondaryColor = ""] = (color ?? "")
+    .split("/")
+    .map((part) => part.trim());
+
+  return { primaryColor, secondaryColor };
 }
 
 function nextSkuNumber(
@@ -273,7 +323,7 @@ function generateSkuPreview(
   const prefix = [
     "BLK",
     getCategoryCode(formState.category),
-    getColorCode(formState.color),
+    getColorSkuSegment(formState.primary_color, formState.secondary_color),
     getSizeCode(formState.size),
   ].join("-");
 
@@ -550,7 +600,8 @@ export default function AdminInventoryPage() {
       category: state.category || null,
       vendor: state.vendor || null,
       material: state.material || null,
-      color: state.color || null,
+      color:
+        combineColorLabel(state.primary_color, state.secondary_color) || null,
       size: state.size || null,
       quantity_on_hand: Number(state.quantity_on_hand) || 0,
       reorder_level: Number(state.reorder_level) || 0,
@@ -561,13 +612,16 @@ export default function AdminInventoryPage() {
   }
 
   function toFormState(item: InventoryItem): InventoryFormState {
+    const { primaryColor, secondaryColor } = splitStoredColor(item.color);
+
     return {
       sku: item.sku,
       item_name: item.item_name,
       category: item.category ?? "",
       vendor: item.vendor ?? "",
       material: item.material ?? "",
-      color: item.color ?? "",
+      primary_color: primaryColor,
+      secondary_color: secondaryColor,
       size: item.size ?? "",
       quantity_on_hand: Number(item.quantity_on_hand) || 0,
       reorder_level: Number(item.reorder_level) || 0,
@@ -630,7 +684,10 @@ export default function AdminInventoryPage() {
       [name]: value,
       sku:
         !skuManuallyEdited &&
-        (name === "category" || name === "color" || name === "size")
+        (name === "category" ||
+          name === "primary_color" ||
+          name === "secondary_color" ||
+          name === "size")
           ? generateSkuPreview(
               {
                 ...current,
@@ -880,8 +937,9 @@ export default function AdminInventoryPage() {
                 {generatedSkuPreview}
               </p>
               <p className="mt-2 text-sm leading-6 text-zinc-400">
-                Format: BLK-[CATEGORY]-[COLOR]-[SIZE]-[NUMBER]. The SKU field
-                auto-updates until you manually edit it.
+                Format: BLK-[CATEGORY]-[PRIMARY+SECONDARY]-[SIZE]-[NUMBER].
+                Example: BLK-HAT-BLKGRY-R112-001. The SKU field auto-updates
+                until you manually edit it.
               </p>
             </div>
 
@@ -901,11 +959,18 @@ export default function AdminInventoryPage() {
                 value={formState.material}
               />
               <InventorySelectField
-                label="Color"
-                name="color"
+                label="Primary Color"
+                name="primary_color"
                 onChange={updateFormField}
                 options={colors}
-                value={formState.color}
+                value={formState.primary_color}
+              />
+              <InventorySelectField
+                label="Secondary Color"
+                name="secondary_color"
+                onChange={updateFormField}
+                options={colors}
+                value={formState.secondary_color}
               />
               <InventorySelectField
                 label="Size"
@@ -1282,7 +1347,7 @@ export default function AdminInventoryPage() {
                       </p>
                       <p>
                         <span className="font-bold text-zinc-500">
-                          Color:{" "}
+                          Colors:{" "}
                         </span>
                         {displayValue(item.color)}
                       </p>
