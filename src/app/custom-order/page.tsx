@@ -103,7 +103,7 @@ export default function CustomOrderPage() {
           alt=""
           fill
           sizes="100vw"
-          className="object-cover opacity-30"
+          className="object-cover object-center opacity-30"
         />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.26),_transparent_35%),linear-gradient(to_bottom,rgba(5,7,10,0.72),rgba(5,7,10,0.96))]" />
 
@@ -129,13 +129,13 @@ export default function CustomOrderPage() {
                   Back to Home
                 </Link>
               </div>
-              <div className="relative min-h-72 border-t border-white/10 lg:border-l lg:border-t-0">
+              <div className="relative min-h-[260px] overflow-hidden border-t border-white/10 sm:min-h-[320px] lg:min-h-full lg:border-l lg:border-t-0">
                 <Image
                   src="/images/workflow/gradeline-custom-order-workflow.png"
                   alt=""
                   fill
                   sizes="(min-width: 1024px) 48vw, 100vw"
-                  className="object-cover"
+                  className="object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.45),transparent)]" />
               </div>
@@ -239,7 +239,7 @@ export default function CustomOrderPage() {
                     alt=""
                     fill
                     sizes="340px"
-                    className="object-cover opacity-25"
+                    className="object-cover object-center opacity-25"
                   />
                   <div className="absolute inset-0 bg-black/45" />
                   <div className="relative">

@@ -82,7 +82,7 @@ export default function CollectionsPage() {
           alt=""
           fill
           sizes="100vw"
-          className="object-cover opacity-25"
+          className="object-cover object-center opacity-25"
         />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),linear-gradient(to_bottom,rgba(5,7,10,0.68),rgba(5,7,10,0.96))]" />
 
@@ -112,13 +112,13 @@ export default function CollectionsPage() {
                 key={collection.title}
                 className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
-                <div className="relative aspect-[4/3] overflow-hidden border-b border-white/10 bg-black">
+                <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-white/10 bg-black">
                   <Image
                     src={collection.image}
                     alt=""
                     fill
                     sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                    className="object-cover transition duration-500 hover:scale-105"
+                    className="object-cover object-center transition duration-500 hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.34),transparent)]" />
                 </div>

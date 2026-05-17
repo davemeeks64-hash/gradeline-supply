@@ -21,7 +21,7 @@ export default function AboutPage() {
             alt=""
             fill
             sizes="100vw"
-            className="object-cover opacity-30"
+            className="object-cover object-center opacity-30"
           />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),linear-gradient(to_bottom,rgba(5,7,10,0.62),rgba(5,7,10,0.96))]" />
 
@@ -53,7 +53,7 @@ export default function AboutPage() {
                   alt=""
                   fill
                   sizes="(min-width: 1024px) 45vw, 100vw"
-                  className="object-cover opacity-20"
+                  className="object-cover object-center opacity-20"
                 />
                 <div className="absolute inset-0 bg-black/55" />
                 <div className="relative">

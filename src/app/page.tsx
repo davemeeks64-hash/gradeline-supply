@@ -137,7 +137,7 @@ export default function Home() {
           <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(to_bottom,rgba(96,165,250,0.2),transparent)]" />
           <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-blue-300/25 to-transparent" />
 
-          <div className="relative mx-auto flex min-h-[520px] max-w-7xl items-center px-6 py-12 md:min-h-[580px] md:py-16 lg:py-20">
+          <div className="relative mx-auto flex min-h-[460px] max-w-7xl items-center px-6 py-10 sm:min-h-[500px] md:min-h-[680px] md:py-16 lg:min-h-[720px] lg:py-20">
             <div className="max-w-2xl rounded-3xl border border-white/10 bg-black/25 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.26)] backdrop-blur-[2px] md:p-6 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none">
               <p className="mb-4 inline-flex rounded-full border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-blue-200">
                 Custom Laser Engraving / Shop Built Goods
@@ -197,14 +197,14 @@ export default function Home() {
               <Link
                 key={collection.title}
                 href={collection.href}
-                className="group relative flex h-full min-h-80 overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(27,36,45,0.78),rgba(6,8,11,0.98))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.24)] transition hover:-translate-y-1 hover:border-blue-300/40 hover:shadow-[0_24px_60px_rgba(0,0,0,0.36)]"
+                className="group relative flex h-full min-h-[360px] overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(27,36,45,0.78),rgba(6,8,11,0.98))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.24)] transition hover:-translate-y-1 hover:border-blue-300/40 hover:shadow-[0_24px_60px_rgba(0,0,0,0.36)] md:min-h-[380px]"
               >
                 <Image
                   src={collection.image}
                   alt=""
                   fill
                   sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  className="object-cover opacity-[0.48] transition duration-500 group-hover:scale-105 group-hover:opacity-[0.62]"
+                  className="object-cover object-center opacity-[0.48] transition duration-500 group-hover:scale-105 group-hover:opacity-[0.62]"
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.96),rgba(5,7,10,0.62)_52%,rgba(5,7,10,0.18))]" />
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/50 to-transparent opacity-0 transition group-hover:opacity-100" />
@@ -250,13 +250,13 @@ export default function Home() {
                 key={product.name}
                 className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
-                <div className="relative aspect-[4/3] overflow-hidden border-b border-white/10 bg-black">
+                <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-white/10 bg-black">
                   <Image
                     src={product.image}
                     alt=""
                     fill
                     sizes="(min-width: 768px) 33vw, 100vw"
-                    className="object-cover transition duration-500 hover:scale-105"
+                    className="object-cover object-center transition duration-500 hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.22),transparent)]" />
                 </div>
@@ -301,13 +301,13 @@ export default function Home() {
               </div>
 
               <div className="grid gap-5">
-                <div className="relative min-h-56 overflow-hidden rounded-2xl border border-white/10">
+                <div className="relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 md:min-h-[280px]">
                   <Image
                     src="/images/workflow/gradeline-custom-order-workflow.png"
                     alt=""
                     fill
                     sizes="(min-width: 1024px) 58vw, 100vw"
-                    className="object-cover"
+                    className="object-cover object-center"
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.72),rgba(5,7,10,0.1))]" />
                 </div>
@@ -354,13 +354,13 @@ export default function Home() {
                 key={item.name}
                 className="h-full overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
-                <div className="relative aspect-square overflow-hidden border-b border-white/10 bg-black">
+                <div className="relative aspect-square w-full overflow-hidden border-b border-white/10 bg-black">
                   <Image
                     src={item.image}
                     alt=""
                     fill
                     sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover transition duration-500 hover:scale-105"
+                    className="object-cover object-center transition duration-500 hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.3),transparent)]" />
                 </div>
@@ -385,7 +385,7 @@ export default function Home() {
               alt=""
               fill
               sizes="100vw"
-              className="object-cover opacity-[0.34]"
+              className="object-cover object-center opacity-[0.34]"
             />
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,10,0.92),rgba(5,7,10,0.72),rgba(5,7,10,0.36))]" />
             <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/70 to-transparent" />

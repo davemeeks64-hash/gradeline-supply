@@ -18,7 +18,7 @@ export function PublicFooter() {
         alt=""
         fill
         sizes="100vw"
-        className="object-cover opacity-[0.16]"
+        className="object-cover object-center opacity-[0.16]"
       />
       <div className="absolute inset-0 bg-[#05070a]/80" />
       <div className="relative mx-auto grid max-w-7xl gap-6 text-sm text-zinc-500 lg:grid-cols-[1fr_auto] lg:items-center">
