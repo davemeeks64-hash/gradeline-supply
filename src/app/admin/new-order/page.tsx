@@ -53,7 +53,14 @@ type OrderFormState = {
   product_type: string;
   description: string;
   qty: string;
+  material_cost: string;
+  labor_cost: string;
+  design_fee: string;
+  shipping_cost: string;
+  tax_amount: string;
+  discount_amount: string;
   total_price: string;
+  profit_estimate: string;
   due_date: string;
   status: OrderStatus;
   design_status: DesignStatus;
@@ -61,6 +68,14 @@ type OrderFormState = {
   approval_date: string;
   design_notes: string;
 };
+
+type CostField =
+  | "material_cost"
+  | "labor_cost"
+  | "design_fee"
+  | "shipping_cost"
+  | "tax_amount"
+  | "discount_amount";
 
 const initialFormState: OrderFormState = {
   customer_id: "",
@@ -70,7 +85,14 @@ const initialFormState: OrderFormState = {
   product_type: "",
   description: "",
   qty: "1",
+  material_cost: "",
+  labor_cost: "",
+  design_fee: "",
+  shipping_cost: "",
+  tax_amount: "",
+  discount_amount: "",
   total_price: "",
+  profit_estimate: "",
   due_date: "",
   status: "new",
   design_status: "Not Started",
@@ -97,6 +119,19 @@ const designStatuses: DesignStatus[] = [
   "Revision Needed",
 ];
 
+const costingFields: {
+  key: CostField;
+  label: string;
+  placeholder: string;
+}[] = [
+  { key: "material_cost", label: "Material Cost", placeholder: "35.00" },
+  { key: "labor_cost", label: "Labor Cost", placeholder: "45.00" },
+  { key: "design_fee", label: "Design Fee", placeholder: "25.00" },
+  { key: "shipping_cost", label: "Shipping Cost", placeholder: "12.00" },
+  { key: "tax_amount", label: "Tax Amount", placeholder: "8.75" },
+  { key: "discount_amount", label: "Discount Amount", placeholder: "10.00" },
+];
+
 const inputClassName =
   "mt-2 w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none transition placeholder:text-zinc-600 focus:border-blue-300/60 focus:bg-black/45";
 
@@ -106,6 +141,34 @@ const labelClassName =
 function normalizeId(value: string) {
   const numericValue = Number(value);
   return Number.isNaN(numericValue) ? value : numericValue;
+}
+
+function parseMoneyInput(value: string | number | null | undefined) {
+  const numericValue = Number(value ?? 0);
+  return Number.isFinite(numericValue) ? numericValue : 0;
+}
+
+function formatMoneyInput(value: number) {
+  return value.toFixed(2);
+}
+
+function calculateTotalPrice(state: OrderFormState) {
+  return (
+    parseMoneyInput(state.material_cost) +
+    parseMoneyInput(state.labor_cost) +
+    parseMoneyInput(state.design_fee) +
+    parseMoneyInput(state.shipping_cost) +
+    parseMoneyInput(state.tax_amount) -
+    parseMoneyInput(state.discount_amount)
+  );
+}
+
+function calculateProfitEstimate(state: OrderFormState) {
+  return (
+    parseMoneyInput(state.total_price) -
+    parseMoneyInput(state.material_cost) -
+    parseMoneyInput(state.labor_cost)
+  );
 }
 
 function formatStatusLabel(status: string) {
@@ -153,6 +216,7 @@ export default function AdminNewOrderPage() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [formState, setFormState] = useState<OrderFormState>(initialFormState);
+  const [isTotalPriceOverridden, setIsTotalPriceOverridden] = useState(false);
   const [isLoadingCustomers, setIsLoadingCustomers] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -254,15 +318,69 @@ export default function AdminNewOrderPage() {
   }, []);
 
   function updateFormField(name: keyof OrderFormState, value: string) {
-    setFormState((current) => ({
-      ...current,
-      [name]: value,
-    }));
+    if (name === "total_price") {
+      setIsTotalPriceOverridden(true);
+    }
+
+    setFormState((current) => {
+      const nextState = {
+        ...current,
+        [name]: value,
+      };
+
+      if (name === "total_price") {
+        return {
+          ...nextState,
+          profit_estimate: formatMoneyInput(calculateProfitEstimate(nextState)),
+        };
+      }
+
+      if (costingFields.some((field) => field.key === name)) {
+        const nextTotal = isTotalPriceOverridden
+          ? parseMoneyInput(nextState.total_price)
+          : calculateTotalPrice(nextState);
+        const stateWithTotal = {
+          ...nextState,
+          total_price: formatMoneyInput(nextTotal),
+        };
+
+        return {
+          ...stateWithTotal,
+          profit_estimate: formatMoneyInput(
+            calculateProfitEstimate(stateWithTotal)
+          ),
+        };
+      }
+
+      return nextState;
+    });
+  }
+
+  function useCalculatedTotalPrice() {
+    setFormState((current) => {
+      const totalPrice = calculateTotalPrice(current);
+      const nextState = {
+        ...current,
+        total_price: formatMoneyInput(totalPrice),
+      };
+
+      return {
+        ...nextState,
+        profit_estimate: formatMoneyInput(calculateProfitEstimate(nextState)),
+      };
+    });
+    setIsTotalPriceOverridden(false);
   }
 
   function selectStockProduct(productId: string) {
     const selectedProduct = products.find(
       (product) => String(product.id) === productId
+    );
+    setIsTotalPriceOverridden(
+      Boolean(
+        selectedProduct?.base_price !== null &&
+          selectedProduct?.base_price !== undefined
+      )
     );
 
     setFormState((current) => {
@@ -280,7 +398,12 @@ export default function AdminNewOrderPage() {
         selectedProduct.sku ? `SKU: ${selectedProduct.sku}` : "",
       ].filter(Boolean);
 
-      return {
+      const nextTotalPrice =
+        selectedProduct.base_price === null ||
+        selectedProduct.base_price === undefined
+          ? current.total_price
+          : String(selectedProduct.base_price);
+      const nextState = {
         ...current,
         stock_product_id: productId,
         product_type:
@@ -288,11 +411,12 @@ export default function AdminNewOrderPage() {
           selectedProduct.category ||
           current.product_type,
         description: descriptionParts.join(" | "),
-        total_price:
-          selectedProduct.base_price === null ||
-          selectedProduct.base_price === undefined
-            ? current.total_price
-            : String(selectedProduct.base_price),
+        total_price: nextTotalPrice,
+      };
+
+      return {
+        ...nextState,
+        profit_estimate: formatMoneyInput(calculateProfitEstimate(nextState)),
       };
     });
   }
@@ -309,7 +433,14 @@ export default function AdminNewOrderPage() {
       product_type: formState.product_type.trim(),
       description: formState.description.trim(),
       qty: Number(formState.qty),
+      material_cost: Number(formState.material_cost || 0),
+      labor_cost: Number(formState.labor_cost || 0),
+      design_fee: Number(formState.design_fee || 0),
+      shipping_cost: Number(formState.shipping_cost || 0),
+      tax_amount: Number(formState.tax_amount || 0),
+      discount_amount: Number(formState.discount_amount || 0),
       total_price: Number(formState.total_price),
+      profit_estimate: Number(formState.profit_estimate || 0),
       due_date: formState.due_date || null,
       status: formState.status,
       design_status: formState.design_status,
@@ -331,6 +462,7 @@ export default function AdminNewOrderPage() {
 
     setSuccessMessage("Order created successfully.");
     setFormState(initialFormState);
+    setIsTotalPriceOverridden(false);
     setIsSaving(false);
   }
 
@@ -480,17 +612,6 @@ export default function AdminNewOrderPage() {
             />
 
             <OrderField
-              label="Total Price"
-              name="total_price"
-              onChange={updateFormField}
-              placeholder="125.00"
-              required
-              step="0.01"
-              type="number"
-              value={formState.total_price}
-            />
-
-            <OrderField
               label="Due Date"
               name="due_date"
               onChange={updateFormField}
@@ -552,6 +673,64 @@ export default function AdminNewOrderPage() {
             />
           </div>
 
+          <section className="rounded-2xl border border-white/10 bg-black/25 p-4">
+            <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className={labelClassName}>Job Costing</p>
+                <h3 className="mt-2 text-xl font-black text-white">
+                  Costs, Price, and Profit
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-zinc-400">
+                  Total auto-calculates from costs until manually overridden.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={useCalculatedTotalPrice}
+                className="w-fit rounded-xl border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-blue-400/20"
+              >
+                Use Calculated Total
+              </button>
+            </div>
+
+            <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {costingFields.map((field) => (
+                <OrderField
+                  key={field.key}
+                  label={field.label}
+                  name={field.key}
+                  onChange={updateFormField}
+                  placeholder={field.placeholder}
+                  step="0.01"
+                  type="number"
+                  value={formState[field.key]}
+                />
+              ))}
+
+              <OrderField
+                label="Total Price"
+                name="total_price"
+                onChange={updateFormField}
+                placeholder="125.00"
+                required
+                step="0.01"
+                type="number"
+                value={formState.total_price}
+              />
+
+              <label className="block">
+                <span className={labelClassName}>Profit Estimate</span>
+                <input
+                  className={`${inputClassName} text-blue-100`}
+                  name="profit_estimate"
+                  readOnly
+                  type="number"
+                  value={formState.profit_estimate}
+                />
+              </label>
+            </div>
+          </section>
+
           <label className="block">
             <span className={labelClassName}>Description</span>
             <textarea
@@ -591,6 +770,7 @@ export default function AdminNewOrderPage() {
               className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
               onClick={() => {
                 setFormState(initialFormState);
+                setIsTotalPriceOverridden(false);
                 setSuccessMessage("");
                 setErrorMessage("");
               }}

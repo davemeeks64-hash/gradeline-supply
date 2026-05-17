@@ -44,7 +44,14 @@ type Order = {
   product_type: string | null;
   description: string | null;
   qty: number | null;
+  material_cost?: number | null;
+  labor_cost?: number | null;
+  design_fee?: number | null;
+  shipping_cost?: number | null;
+  tax_amount?: number | null;
+  discount_amount?: number | null;
   total_price: number | null;
+  profit_estimate?: number | null;
   status: OrderStatus | string | null;
   design_status?: DesignStatus | string | null;
   proof_sent_date?: string | null;
@@ -65,7 +72,14 @@ type OrderFormState = {
   product_type: string;
   description: string;
   qty: string;
+  material_cost: string;
+  labor_cost: string;
+  design_fee: string;
+  shipping_cost: string;
+  tax_amount: string;
+  discount_amount: string;
   total_price: string;
+  profit_estimate: string;
   status: OrderStatus;
   design_status: DesignStatus;
   proof_sent_date: string;
@@ -86,6 +100,14 @@ type FileLinkField =
 
 type FileLinkDraft = Record<FileLinkField, string>;
 
+type CostField =
+  | "material_cost"
+  | "labor_cost"
+  | "design_fee"
+  | "shipping_cost"
+  | "tax_amount"
+  | "discount_amount";
+
 const initialFormState: OrderFormState = {
   order_number: "",
   customer_id: "",
@@ -93,7 +115,14 @@ const initialFormState: OrderFormState = {
   product_type: "",
   description: "",
   qty: "1",
+  material_cost: "",
+  labor_cost: "",
+  design_fee: "",
+  shipping_cost: "",
+  tax_amount: "",
+  discount_amount: "",
   total_price: "",
+  profit_estimate: "",
   status: "New",
   design_status: "Not Started",
   proof_sent_date: "",
@@ -131,6 +160,19 @@ const fileLinkFields: { key: FileLinkField; label: string }[] = [
   { key: "lightburn_file_url", label: "LightBurn" },
 ];
 
+const costingFields: {
+  key: CostField;
+  label: string;
+  placeholder: string;
+}[] = [
+  { key: "material_cost", label: "Material Cost", placeholder: "35.00" },
+  { key: "labor_cost", label: "Labor Cost", placeholder: "45.00" },
+  { key: "design_fee", label: "Design Fee", placeholder: "25.00" },
+  { key: "shipping_cost", label: "Shipping Cost", placeholder: "12.00" },
+  { key: "tax_amount", label: "Tax Amount", placeholder: "8.75" },
+  { key: "discount_amount", label: "Discount Amount", placeholder: "10.00" },
+];
+
 const inputClassName =
   "mt-2 w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none transition placeholder:text-zinc-600 focus:border-blue-300/60 focus:bg-black/45";
 
@@ -162,6 +204,34 @@ function normalizeId(value: string) {
 
 function displayValue(value: string | number | null | undefined) {
   return value === null || value === undefined || value === "" ? "-" : value;
+}
+
+function parseMoneyInput(value: string | number | null | undefined) {
+  const numericValue = Number(value ?? 0);
+  return Number.isFinite(numericValue) ? numericValue : 0;
+}
+
+function formatMoneyInput(value: number) {
+  return value.toFixed(2);
+}
+
+function calculateTotalPrice(state: OrderFormState) {
+  return (
+    parseMoneyInput(state.material_cost) +
+    parseMoneyInput(state.labor_cost) +
+    parseMoneyInput(state.design_fee) +
+    parseMoneyInput(state.shipping_cost) +
+    parseMoneyInput(state.tax_amount) -
+    parseMoneyInput(state.discount_amount)
+  );
+}
+
+function calculateProfitEstimate(state: OrderFormState) {
+  return (
+    parseMoneyInput(state.total_price) -
+    parseMoneyInput(state.material_cost) -
+    parseMoneyInput(state.labor_cost)
+  );
 }
 
 function getOrderKey(order: Order) {
@@ -323,6 +393,49 @@ function FileLinkEditor({
   );
 }
 
+function CostingSummary({ order }: { order: Order }) {
+  return (
+    <div className="grid gap-2 rounded-2xl border border-white/10 bg-black/25 p-3 text-xs">
+      <div className="grid grid-cols-2 gap-2 text-zinc-400">
+        <span>Material</span>
+        <span className="text-right text-zinc-200">
+          {formatCurrency(order.material_cost)}
+        </span>
+        <span>Labor</span>
+        <span className="text-right text-zinc-200">
+          {formatCurrency(order.labor_cost)}
+        </span>
+        <span>Design</span>
+        <span className="text-right text-zinc-200">
+          {formatCurrency(order.design_fee)}
+        </span>
+        <span>Shipping</span>
+        <span className="text-right text-zinc-200">
+          {formatCurrency(order.shipping_cost)}
+        </span>
+        <span>Tax</span>
+        <span className="text-right text-zinc-200">
+          {formatCurrency(order.tax_amount)}
+        </span>
+        <span>Discount</span>
+        <span className="text-right text-zinc-200">
+          {formatCurrency(order.discount_amount)}
+        </span>
+      </div>
+      <div className="mt-1 border-t border-white/10 pt-2">
+        <div className="flex items-center justify-between font-black text-white">
+          <span>Total</span>
+          <span>{formatCurrency(order.total_price)}</span>
+        </div>
+        <div className="mt-1 flex items-center justify-between font-bold text-blue-200">
+          <span>Est. Profit</span>
+          <span>{formatCurrency(order.profit_estimate)}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function InventoryLinkSummary({
   item,
   quantity,
@@ -389,6 +502,7 @@ export default function AdminOrdersPage() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [formState, setFormState] = useState<OrderFormState>(initialFormState);
+  const [isTotalPriceOverridden, setIsTotalPriceOverridden] = useState(false);
   const [fileLinkDrafts, setFileLinkDrafts] = useState<
     Record<string, FileLinkDraft>
   >({});
@@ -512,10 +626,58 @@ export default function AdminOrdersPage() {
   }, []);
 
   function updateFormField(name: keyof OrderFormState, value: string) {
-    setFormState((current) => ({
-      ...current,
-      [name]: value,
-    }));
+    if (name === "total_price") {
+      setIsTotalPriceOverridden(true);
+    }
+
+    setFormState((current) => {
+      const nextState = {
+        ...current,
+        [name]: value,
+      };
+
+      if (name === "total_price") {
+        return {
+          ...nextState,
+          profit_estimate: formatMoneyInput(calculateProfitEstimate(nextState)),
+        };
+      }
+
+      if (costingFields.some((field) => field.key === name)) {
+        const nextTotal = isTotalPriceOverridden
+          ? parseMoneyInput(nextState.total_price)
+          : calculateTotalPrice(nextState);
+        const stateWithTotal = {
+          ...nextState,
+          total_price: formatMoneyInput(nextTotal),
+        };
+
+        return {
+          ...stateWithTotal,
+          profit_estimate: formatMoneyInput(
+            calculateProfitEstimate(stateWithTotal)
+          ),
+        };
+      }
+
+      return nextState;
+    });
+  }
+
+  function useCalculatedTotalPrice() {
+    setFormState((current) => {
+      const totalPrice = calculateTotalPrice(current);
+      const nextState = {
+        ...current,
+        total_price: formatMoneyInput(totalPrice),
+      };
+
+      return {
+        ...nextState,
+        profit_estimate: formatMoneyInput(calculateProfitEstimate(nextState)),
+      };
+    });
+    setIsTotalPriceOverridden(false);
   }
 
   function updateFileLinkDraft(
@@ -546,7 +708,14 @@ export default function AdminOrdersPage() {
       product_type: formState.product_type.trim(),
       description: formState.description.trim(),
       qty: Number(formState.qty),
+      material_cost: Number(formState.material_cost || 0),
+      labor_cost: Number(formState.labor_cost || 0),
+      design_fee: Number(formState.design_fee || 0),
+      shipping_cost: Number(formState.shipping_cost || 0),
+      tax_amount: Number(formState.tax_amount || 0),
+      discount_amount: Number(formState.discount_amount || 0),
       total_price: Number(formState.total_price),
+      profit_estimate: Number(formState.profit_estimate || 0),
       status: formState.status,
       design_status: formState.design_status,
       proof_sent_date: formState.proof_sent_date || null,
@@ -572,6 +741,7 @@ export default function AdminOrdersPage() {
 
     setSuccessMessage("Order saved successfully.");
     setFormState(initialFormState);
+    setIsTotalPriceOverridden(false);
     await loadPageData();
     setIsSaving(false);
   }
@@ -768,17 +938,6 @@ export default function AdminOrdersPage() {
               value={formState.qty}
             />
 
-            <OrderField
-              label="Total Price"
-              name="total_price"
-              onChange={updateFormField}
-              placeholder="125.00"
-              required
-              step="0.01"
-              type="number"
-              value={formState.total_price}
-            />
-
             <label className="block">
               <span className={labelClassName}>Status</span>
               <select
@@ -838,6 +997,64 @@ export default function AdminOrdersPage() {
               value={formState.approval_date}
             />
           </div>
+
+          <section className="rounded-2xl border border-white/10 bg-black/25 p-4">
+            <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className={labelClassName}>Job Costing</p>
+                <h3 className="mt-2 text-xl font-black text-white">
+                  Costs, Price, and Profit
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-zinc-400">
+                  Total auto-calculates from costs until manually overridden.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={useCalculatedTotalPrice}
+                className="w-fit rounded-xl border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-blue-400/20"
+              >
+                Use Calculated Total
+              </button>
+            </div>
+
+            <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {costingFields.map((field) => (
+                <OrderField
+                  key={field.key}
+                  label={field.label}
+                  name={field.key}
+                  onChange={updateFormField}
+                  placeholder={field.placeholder}
+                  step="0.01"
+                  type="number"
+                  value={formState[field.key]}
+                />
+              ))}
+
+              <OrderField
+                label="Total Price"
+                name="total_price"
+                onChange={updateFormField}
+                placeholder="125.00"
+                required
+                step="0.01"
+                type="number"
+                value={formState.total_price}
+              />
+
+              <label className="block">
+                <span className={labelClassName}>Profit Estimate</span>
+                <input
+                  className={`${inputClassName} text-blue-100`}
+                  name="profit_estimate"
+                  readOnly
+                  type="number"
+                  value={formState.profit_estimate}
+                />
+              </label>
+            </div>
+          </section>
 
           <label className="block">
             <span className={labelClassName}>Description</span>
@@ -927,7 +1144,10 @@ export default function AdminOrdersPage() {
             <button
               type="button"
               className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-              onClick={() => setFormState(initialFormState)}
+              onClick={() => {
+                setFormState(initialFormState);
+                setIsTotalPriceOverridden(false);
+              }}
             >
               Clear Form
             </button>
@@ -991,6 +1211,7 @@ export default function AdminOrdersPage() {
                     <th className="px-5 py-4">Design</th>
                     <th className="px-5 py-4">Files</th>
                     <th className="px-5 py-4">Due</th>
+                    <th className="px-5 py-4">Costing</th>
                     <th className="px-5 py-4 text-right">Total</th>
                   </tr>
                 </thead>
@@ -1084,6 +1305,9 @@ export default function AdminOrdersPage() {
                       <td className="px-5 py-4 text-zinc-300">
                         {formatDate(order.due_date)}
                       </td>
+                      <td className="px-5 py-4">
+                        <CostingSummary order={order} />
+                      </td>
                       <td className="px-5 py-4 text-right font-black text-white">
                         {formatCurrency(order.total_price)}
                       </td>
@@ -1142,6 +1366,12 @@ export default function AdminOrdersPage() {
                       <span className="font-bold text-zinc-500">Due: </span>
                       {formatDate(order.due_date)}
                     </p>
+                    <div>
+                      <p className="font-bold text-zinc-500">Costing:</p>
+                      <div className="mt-2">
+                        <CostingSummary order={order} />
+                      </div>
+                    </div>
                     <div>
                       <p className="font-bold text-zinc-500">Design:</p>
                       <div className="mt-2 grid gap-2">
