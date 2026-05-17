@@ -28,8 +28,19 @@ type InventoryItem = {
   quantity_on_hand: number | null;
 };
 
+type Product = {
+  id: string | number;
+  sku: string | null;
+  name: string | null;
+  category: string | null;
+  material: string | null;
+  base_price: number | null;
+  active: boolean | null;
+};
+
 type OrderFormState = {
   customer_id: string;
+  stock_product_id: string;
   inventory_item_id: string;
   order_number: string;
   product_type: string;
@@ -42,6 +53,7 @@ type OrderFormState = {
 
 const initialFormState: OrderFormState = {
   customer_id: "",
+  stock_product_id: "",
   inventory_item_id: "",
   order_number: "",
   product_type: "",
@@ -116,6 +128,7 @@ function OrderField({
 export default function AdminNewOrderPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [formState, setFormState] = useState<OrderFormState>(initialFormState);
   const [isLoadingCustomers, setIsLoadingCustomers] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -123,18 +136,24 @@ export default function AdminNewOrderPage() {
   const [successMessage, setSuccessMessage] = useState("");
 
   async function readFormData() {
-    const [customersResponse, inventoryResponse] = await Promise.all([
-      supabase.from("customers").select("id,name,email,company"),
-      supabase
-        .from("inventory_items")
-        .select("id,sku,item_name,quantity_on_hand"),
-    ]);
+    const [customersResponse, inventoryResponse, productsResponse] =
+      await Promise.all([
+        supabase.from("customers").select("id,name,email,company"),
+        supabase
+          .from("inventory_items")
+          .select("id,sku,item_name,quantity_on_hand"),
+        supabase
+          .from("products")
+          .select("id,sku,name,category,material,base_price,active"),
+      ]);
 
     return {
       customers: (customersResponse.data ?? []) as Customer[],
       customersError: customersResponse.error,
       inventoryItems: (inventoryResponse.data ?? []) as InventoryItem[],
       inventoryError: inventoryResponse.error,
+      products: (productsResponse.data ?? []) as Product[],
+      productsError: productsResponse.error,
     };
   }
 
@@ -147,19 +166,24 @@ export default function AdminNewOrderPage() {
       customersError,
       inventoryItems: nextInventoryItems,
       inventoryError,
+      products: nextProducts,
+      productsError,
     } = await readFormData();
 
-    if (customersError || inventoryError) {
+    if (customersError || inventoryError || productsError) {
       setErrorMessage(
         customersError?.message ||
           inventoryError?.message ||
+          productsError?.message ||
           "Unable to load form data."
       );
       setCustomers([]);
       setInventoryItems([]);
+      setProducts([]);
     } else {
       setCustomers(nextCustomers);
       setInventoryItems(nextInventoryItems);
+      setProducts(nextProducts);
     }
 
     setIsLoadingCustomers(false);
@@ -174,22 +198,27 @@ export default function AdminNewOrderPage() {
         customersError,
         inventoryItems: nextInventoryItems,
         inventoryError,
+        products: nextProducts,
+        productsError,
       }) => {
         if (!isMounted) {
           return;
         }
 
-        if (customersError || inventoryError) {
+        if (customersError || inventoryError || productsError) {
           setErrorMessage(
             customersError?.message ||
               inventoryError?.message ||
+              productsError?.message ||
               "Unable to load form data."
           );
           setCustomers([]);
           setInventoryItems([]);
+          setProducts([]);
         } else {
           setCustomers(nextCustomers);
           setInventoryItems(nextInventoryItems);
+          setProducts(nextProducts);
         }
 
         setIsLoadingCustomers(false);
@@ -206,6 +235,43 @@ export default function AdminNewOrderPage() {
       ...current,
       [name]: value,
     }));
+  }
+
+  function selectStockProduct(productId: string) {
+    const selectedProduct = products.find(
+      (product) => String(product.id) === productId
+    );
+
+    setFormState((current) => {
+      if (!selectedProduct) {
+        return {
+          ...current,
+          stock_product_id: productId,
+        };
+      }
+
+      const descriptionParts = [
+        selectedProduct.name,
+        selectedProduct.category ? `Collection: ${selectedProduct.category}` : "",
+        selectedProduct.material ? `Material: ${selectedProduct.material}` : "",
+        selectedProduct.sku ? `SKU: ${selectedProduct.sku}` : "",
+      ].filter(Boolean);
+
+      return {
+        ...current,
+        stock_product_id: productId,
+        product_type:
+          selectedProduct.name ||
+          selectedProduct.category ||
+          current.product_type,
+        description: descriptionParts.join(" | "),
+        total_price:
+          selectedProduct.base_price === null ||
+          selectedProduct.base_price === undefined
+            ? current.total_price
+            : String(selectedProduct.base_price),
+      };
+    });
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -278,7 +344,7 @@ export default function AdminNewOrderPage() {
             onClick={loadCustomers}
             className="w-fit rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
           >
-            Refresh Customers
+            Refresh Form Data
           </button>
         </div>
 
@@ -307,6 +373,30 @@ export default function AdminNewOrderPage() {
                       customer.company ||
                       customer.email ||
                       `Customer ${customer.id}`}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="block">
+              <span className={labelClassName}>Stock Product</span>
+              <select
+                className={inputClassName}
+                disabled={isLoadingCustomers}
+                name="stock_product_id"
+                onChange={(event) => selectStockProduct(event.target.value)}
+                value={formState.stock_product_id}
+              >
+                <option value="">Manual / custom order</option>
+                {products.map((product) => (
+                  <option key={product.id} value={String(product.id)}>
+                    {product.sku ? `${product.sku} / ` : ""}
+                    {product.name || `Product ${product.id}`}
+                    {product.base_price !== null &&
+                    product.base_price !== undefined
+                      ? ` / $${product.base_price}`
+                      : ""}
+                    {product.active === false ? " / inactive" : ""}
                   </option>
                 ))}
               </select>
