@@ -382,6 +382,35 @@ function formatDate(value: string | null | undefined) {
   }).format(date);
 }
 
+function getTrackingHref(
+  carrier: string | null | undefined,
+  trackingNumber: string | null | undefined
+) {
+  if (!trackingNumber) {
+    return "";
+  }
+
+  const normalizedCarrier = (carrier ?? "").trim().toLowerCase();
+  const encodedTracking = encodeURIComponent(trackingNumber.trim());
+
+  if (normalizedCarrier.includes("ups")) {
+    return `https://www.ups.com/track?tracknum=${encodedTracking}`;
+  }
+
+  if (normalizedCarrier.includes("fedex")) {
+    return `https://www.fedex.com/fedextrack/?trknbr=${encodedTracking}`;
+  }
+
+  if (
+    normalizedCarrier.includes("usps") ||
+    normalizedCarrier.includes("postal")
+  ) {
+    return `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodedTracking}`;
+  }
+
+  return `https://www.google.com/search?q=${encodedTracking}`;
+}
+
 function getStatusClassName(status: string | null | undefined) {
   return status && status in statusClassNames
     ? statusClassNames[status as OrderStatus]
@@ -409,6 +438,12 @@ function getInvoiceStatusClassName(status: string | null | undefined) {
 function getPaymentStatusClassName(status: string | null | undefined) {
   return status && status in paymentStatusClassNames
     ? paymentStatusClassNames[status as PaymentStatus]
+    : "border-white/20 bg-white/10 text-zinc-200";
+}
+
+function getFulfillmentMethodClassName(status: string | null | undefined) {
+  return status && status in fulfillmentMethodClassNames
+    ? fulfillmentMethodClassNames[status as FulfillmentMethod]
     : "border-white/20 bg-white/10 text-zinc-200";
 }
 
@@ -473,6 +508,23 @@ function PaymentStatusBadge({ status }: { status: string | null | undefined }) {
       ].join(" ")}
     >
       {displayValue(status)}
+    </span>
+  );
+}
+
+function FulfillmentMethodBadge({
+  method,
+}: {
+  method: string | null | undefined;
+}) {
+  return (
+    <span
+      className={[
+        "inline-flex w-fit rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-widest",
+        getFulfillmentMethodClassName(method),
+      ].join(" ")}
+    >
+      {displayValue(method)}
     </span>
   );
 }
@@ -614,6 +666,41 @@ function QuotePaymentSummary({ order }: { order: Order }) {
           {formatCurrency(order.balance_due)}
         </span>
       </div>
+    </div>
+  );
+}
+
+function FulfillmentSummary({ order }: { order: Order }) {
+  const trackingHref = getTrackingHref(
+    order.shipping_carrier,
+    order.tracking_number
+  );
+
+  return (
+    <div className="grid gap-3 rounded-2xl border border-white/10 bg-black/25 p-3 text-xs">
+      <FulfillmentMethodBadge method={order.fulfillment_method || "Pickup"} />
+      <div className="grid gap-1 text-zinc-400">
+        <p>Pickup: {formatDate(order.pickup_date)}</p>
+        <p>Delivery: {formatDate(order.delivery_date)}</p>
+        <p>Carrier: {displayValue(order.shipping_carrier)}</p>
+      </div>
+      {order.tracking_number ? (
+        <a
+          href={trackingHref}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex w-fit rounded-lg border border-blue-300/30 bg-blue-400/10 px-3 py-2 font-bold uppercase tracking-widest text-blue-100 transition hover:bg-blue-400/20"
+        >
+          Track {order.tracking_number}
+        </a>
+      ) : (
+        <span className="text-zinc-500">No tracking number yet</span>
+      )}
+      {order.delivery_notes && (
+        <p className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 leading-5 text-zinc-400">
+          {order.delivery_notes}
+        </p>
+      )}
     </div>
   );
 }
@@ -915,6 +1002,12 @@ export default function AdminOrdersPage() {
       payment_status: formState.payment_status,
       amount_paid: Number(formState.amount_paid || 0),
       balance_due: Number(formState.balance_due || 0),
+      fulfillment_method: formState.fulfillment_method,
+      pickup_date: formState.pickup_date || null,
+      delivery_date: formState.delivery_date || null,
+      shipping_carrier: formState.shipping_carrier.trim(),
+      tracking_number: formState.tracking_number.trim(),
+      delivery_notes: formState.delivery_notes.trim(),
       status: formState.status,
       design_status: formState.design_status,
       proof_sent_date: formState.proof_sent_date || null,
