@@ -922,8 +922,8 @@ export default function AdminReceivingPage() {
               {isSaving
                 ? "Saving..."
                 : editingRecordId
-                  ? "Update Receiving"
-                  : "Save Receiving"}
+                  ? "Update Receiving Order"
+                  : "Save Receiving Order"}
             </button>
             <button
               type="button"
@@ -1059,8 +1059,8 @@ export default function AdminReceivingPage() {
                                 className="rounded-lg border border-blue-300/40 bg-blue-400/10 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60"
                               >
                                 {updatingRecordId === record.id
-                                  ? "Updating"
-                                  : "Mark Received"}
+                                  ? "Marking as Received"
+                                  : "Mark as Received"}
                               </button>
                             ) : (
                               <span className="rounded-lg border border-white/10 bg-black/25 px-4 py-2 text-sm font-bold text-zinc-500">
@@ -1173,8 +1173,8 @@ export default function AdminReceivingPage() {
                         className="rounded-lg border border-blue-300/40 bg-blue-400/10 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60"
                       >
                         {updatingRecordId === record.id
-                          ? "Updating"
-                          : "Mark Received"}
+                          ? "Marking as Received"
+                          : "Mark as Received"}
                       </button>
                     ) : (
                       <p className="rounded-lg border border-white/10 bg-black/25 px-4 py-2 text-sm font-bold text-zinc-500">

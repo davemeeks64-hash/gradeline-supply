@@ -983,13 +983,15 @@ export default function AdminInventoryPage() {
         >
           <div className="flex flex-col gap-2">
             <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
-              Raw Blank Intake
+              {editingItemId ? "Editing Existing Inventory" : "Raw Blank Intake"}
             </p>
             <h2 className="text-2xl font-black text-white">
               {editingItemId ? "Edit Inventory Item" : "Add Inventory Item"}
             </h2>
             <p className="text-sm leading-6 text-zinc-400">
-              Add or edit raw blanks in the Supabase inventory_items table.
+              {editingItemId
+                ? "This form is in Edit mode. Changes will update the selected Supabase inventory record."
+                : "Add raw blanks to the Supabase inventory_items table."}
             </p>
           </div>
 
@@ -1157,7 +1159,7 @@ export default function AdminInventoryPage() {
               {isSaving
                 ? "Saving..."
                 : editingItemId
-                  ? "Save Changes"
+                  ? "Update Inventory"
                   : "Add Inventory Item"}
             </button>
             {editingItemId && (
@@ -1342,7 +1344,7 @@ export default function AdminInventoryPage() {
                               onClick={() => startEditing(item)}
                               className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
                             >
-                              Edit
+                              Edit Item
                             </button>
                             <button
                               type="button"
@@ -1352,7 +1354,7 @@ export default function AdminInventoryPage() {
                             >
                               {deletingItemId === item.id
                                 ? "Deleting"
-                                : "Delete"}
+                                : "Delete Item"}
                             </button>
                           </div>
                         </td>
