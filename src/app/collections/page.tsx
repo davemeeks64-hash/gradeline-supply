@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
@@ -14,6 +15,7 @@ const collections = [
       "Shop tags",
       "Leather patches",
     ],
+    image: "/images/categories/gradeline-category-blue-collar-series.png",
   },
   {
     title: "Home & Kitchen",
@@ -26,6 +28,7 @@ const collections = [
       "Recipe boards",
       "Serving trays",
     ],
+    image: "/images/categories/gradeline-category-cutting-boards.png",
   },
   {
     title: "Custom Gifts",
@@ -38,6 +41,7 @@ const collections = [
       "Holiday items",
       "Memorial pieces",
     ],
+    image: "/images/categories/gradeline-category-custom-orders.png",
   },
   {
     title: "Business & Commercial",
@@ -50,6 +54,7 @@ const collections = [
       "Industrial labels",
       "Promotional products",
     ],
+    image: "/images/categories/gradeline-category-custom-signs.png",
   },
   {
     title: "Custom Works",
@@ -62,6 +67,7 @@ const collections = [
       "Special requests",
       "One-off fabrication",
     ],
+    image: "/images/categories/gradeline-category-leather-goods.png",
   },
 ];
 
@@ -71,7 +77,14 @@ export default function CollectionsPage() {
       <PublicHeader />
       <main className="min-h-screen overflow-hidden bg-[#05070a] text-white">
       <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
+        <Image
+          src="/images/backgrounds/gradeline-about-workshop-background.png"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover opacity-25"
+        />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),linear-gradient(to_bottom,rgba(5,7,10,0.68),rgba(5,7,10,0.96))]" />
 
         <div className="relative mx-auto max-w-7xl">
           <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-10">
@@ -99,10 +112,15 @@ export default function CollectionsPage() {
                 key={collection.title}
                 className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
-                <div className="grid aspect-[4/3] place-items-center border-b border-white/10 bg-[linear-gradient(145deg,rgba(17,24,31,0.96),rgba(8,10,12,1)_58%,rgba(15,23,30,0.98))]">
-                  <div className="grid h-20 w-20 place-items-center border border-blue-300/50 bg-blue-400/10 shadow-[0_0_28px_rgba(96,165,250,0.24)]">
-                    <span className="h-8 w-8 border border-blue-300/70 bg-black/40" />
-                  </div>
+                <div className="relative aspect-[4/3] overflow-hidden border-b border-white/10 bg-black">
+                  <Image
+                    src={collection.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition duration-500 hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.34),transparent)]" />
                 </div>
 
                 <div className="flex flex-1 flex-col p-6">

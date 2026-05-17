@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
@@ -17,6 +18,7 @@ const galleryProjects = [
     material: "Black slate",
     description:
       "Steel-blue engraved award set with trade-inspired badge details.",
+    image: "/images/categories/gradeline-category-blue-collar-series.png",
   },
   {
     projectName: "Walnut Recipe Board",
@@ -24,6 +26,7 @@ const galleryProjects = [
     material: "Walnut",
     description:
       "Handwritten family recipe engraved into a warm kitchen display piece.",
+    image: "/images/products/gradeline-product-placeholder-cutting-board.png",
   },
   {
     projectName: "Wedding Keepsake Sign",
@@ -31,6 +34,7 @@ const galleryProjects = [
     material: "Birch plywood",
     description:
       "Personalized name and date sign with clean, gift-ready finishing.",
+    image: "/images/categories/gradeline-category-custom-orders.png",
   },
   {
     projectName: "Shop Counter Logo",
@@ -38,6 +42,7 @@ const galleryProjects = [
     material: "Acrylic",
     description:
       "Layered acrylic counter sign built for a small business front desk.",
+    image: "/images/products/gradeline-product-placeholder-layered-sign.png",
   },
   {
     projectName: "Prototype Equipment Tags",
@@ -45,6 +50,7 @@ const galleryProjects = [
     material: "Brushed aluminum",
     description:
       "One-off serialized tags for a field-test equipment labeling run.",
+    image: "/images/categories/gradeline-category-custom-signs.png",
   },
   {
     projectName: "Leather Patch Batch",
@@ -52,6 +58,7 @@ const galleryProjects = [
     material: "Leatherette",
     description:
       "Branded patches prepared for hats, jackets, and crew gear.",
+    image: "/images/products/gradeline-product-placeholder-leather-patch.png",
   },
 ];
 
@@ -61,7 +68,14 @@ export default function GalleryPage() {
       <PublicHeader />
       <main className="min-h-screen overflow-hidden bg-[#05070a] text-white">
       <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
+        <Image
+          src="/images/workflow/gradeline-gallery-section-banner.png"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover opacity-35"
+        />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.24),_transparent_35%),linear-gradient(to_bottom,rgba(5,7,10,0.66),rgba(5,7,10,0.96))]" />
 
         <div className="relative mx-auto max-w-7xl">
           <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-10">
@@ -103,8 +117,15 @@ export default function GalleryPage() {
                 key={project.projectName}
                 className="h-full overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
-                <div className="grid aspect-[4/3] place-items-center border-b border-white/10 bg-[linear-gradient(145deg,rgba(17,24,31,0.96),rgba(8,10,12,1)_58%,rgba(15,23,30,0.98))]">
-                  <div className="h-16 w-16 border border-blue-300/50 bg-blue-400/10 shadow-[0_0_28px_rgba(96,165,250,0.24)]" />
+                <div className="relative aspect-[4/3] overflow-hidden border-b border-white/10 bg-black">
+                  <Image
+                    src={project.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition duration-500 hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.28),transparent)]" />
                 </div>
                 <div className="p-6">
                   <p className="text-xs font-bold uppercase tracking-widest text-blue-300">

@@ -9,30 +9,35 @@ const collections = [
     href: "/shop?collection=industrial-blue-collar",
     text: "Trade-inspired goods, shop tags, patches, tumblers, cow tags, and rugged everyday pieces.",
     examples: "Cow tags / leather patches / blackout gear",
+    image: "/images/categories/gradeline-category-blue-collar-series.png",
   },
   {
     title: "Home & Kitchen",
     href: "/shop?collection=home-kitchen",
     text: "Cutting boards, charcuterie boards, serving boards, recipe boards, and kitchen gifts.",
     examples: "Boards / trays / engraved keepsakes",
+    image: "/images/categories/gradeline-category-cutting-boards.png",
   },
   {
     title: "Custom Gifts",
     href: "/shop?collection=custom-gifts",
     text: "Personal pieces for weddings, holidays, families, memorials, birthdays, and one-off ideas.",
     examples: "Name signs / photo gifts / keepsakes",
+    image: "/images/categories/gradeline-category-custom-orders.png",
   },
   {
     title: "Business & Commercial",
     href: "/shop?collection=business-commercial",
     text: "Logo engraving, shop signage, equipment tags, promotional products, and branded goods.",
     examples: "Logo signs / tags / client gifts",
+    image: "/images/categories/gradeline-category-custom-signs.png",
   },
   {
     title: "Custom Works",
     href: "/shop?collection=custom-works",
     text: "Customer uploads, special requests, prototypes, and pieces built around a specific idea.",
     examples: "Uploads / prototypes / special builds",
+    image: "/images/categories/gradeline-category-leather-goods.png",
   },
 ];
 
@@ -42,18 +47,21 @@ const featuredProducts = [
     collection: "Industrial & Blue Collar",
     price: "From $12",
     material: "Brushed aluminum",
+    image: "/images/products/gradeline-product-placeholder-leather-patch.png",
   },
   {
     name: "Walnut Recipe Board",
     collection: "Home & Kitchen",
     price: "From $64",
     material: "Walnut",
+    image: "/images/products/gradeline-product-placeholder-cutting-board.png",
   },
   {
     name: "Shop Logo Display Sign",
     collection: "Business & Commercial",
     price: "From $85",
     material: "Acrylic",
+    image: "/images/products/gradeline-product-placeholder-layered-sign.png",
   },
 ];
 
@@ -77,21 +85,25 @@ const galleryPreview = [
     name: "Union Pride Patch Set",
     category: "Industrial & Blue Collar",
     material: "Leather",
+    image: "/images/products/gradeline-product-placeholder-leather-patch.png",
   },
   {
     name: "Engraved Serving Board",
     category: "Home & Kitchen",
     material: "Walnut",
+    image: "/images/products/gradeline-product-placeholder-cutting-board.png",
   },
   {
     name: "Business Counter Sign",
     category: "Business & Commercial",
     material: "Acrylic",
+    image: "/images/products/gradeline-product-placeholder-layered-sign.png",
   },
   {
     name: "Custom Memorial Keepsake",
     category: "Custom Gifts",
     material: "Slate",
+    image: "/images/categories/gradeline-category-custom-orders.png",
   },
 ];
 
@@ -105,12 +117,20 @@ export default function Home() {
           className="relative overflow-hidden border-b border-white/10"
         >
           <Image
-            src="/hero-banner.png"
+            src="/images/hero/gradeline-homepage-hero-banner-v2.png"
             alt=""
             fill
             preload
             sizes="100vw"
-            className="object-cover object-[58%_center] md:object-center"
+            className="hidden object-cover object-[58%_center] md:block md:object-center"
+          />
+          <Image
+            src="/images/hero/gradeline-mobile-homepage-banner.png"
+            alt=""
+            fill
+            preload
+            sizes="100vw"
+            className="object-cover object-center md:hidden"
           />
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,10,0.82)_0%,rgba(5,7,10,0.54)_44%,rgba(5,7,10,0.14)_100%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(5,7,10,0.2),rgba(5,7,10,0.03)_42%,rgba(5,7,10,0.66)_100%)]" />
@@ -177,11 +197,19 @@ export default function Home() {
               <Link
                 key={collection.title}
                 href={collection.href}
-                className="group relative flex h-full min-h-64 overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(27,36,45,0.78),rgba(6,8,11,0.98))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.24)] transition hover:-translate-y-1 hover:border-blue-300/40 hover:shadow-[0_24px_60px_rgba(0,0,0,0.36)]"
+                className="group relative flex h-full min-h-80 overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(27,36,45,0.78),rgba(6,8,11,0.98))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.24)] transition hover:-translate-y-1 hover:border-blue-300/40 hover:shadow-[0_24px_60px_rgba(0,0,0,0.36)]"
               >
+                <Image
+                  src={collection.image}
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                  className="object-cover opacity-48 transition duration-500 group-hover:scale-105 group-hover:opacity-62"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.96),rgba(5,7,10,0.62)_52%,rgba(5,7,10,0.18))]" />
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/50 to-transparent opacity-0 transition group-hover:opacity-100" />
                 <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-blue-400/10 blur-3xl transition group-hover:bg-blue-400/15" />
-                <div className="relative flex h-full flex-col">
+                <div className="relative mt-auto flex h-full flex-col justify-end">
                   <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
                   <h3 className="mt-5 text-xl font-black">
                     {collection.title}
@@ -222,10 +250,15 @@ export default function Home() {
                 key={product.name}
                 className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
-                <div className="grid aspect-[4/3] place-items-center border-b border-white/10 bg-[linear-gradient(145deg,rgba(17,24,31,0.96),rgba(8,10,12,1)_58%,rgba(15,23,30,0.98))]">
-                  <div className="grid h-20 w-20 place-items-center border border-blue-300/50 bg-blue-400/10 shadow-[0_0_28px_rgba(96,165,250,0.24)]">
-                    <span className="h-8 w-8 border border-blue-300/70 bg-black/40" />
-                  </div>
+                <div className="relative aspect-[4/3] overflow-hidden border-b border-white/10 bg-black">
+                  <Image
+                    src={product.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                    className="object-cover transition duration-500 hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.22),transparent)]" />
                 </div>
                 <div className="flex flex-1 flex-col p-6">
                   <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
@@ -267,19 +300,31 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="grid items-stretch gap-5 md:grid-cols-3">
-                {workflowSteps.map((step, index) => (
-                  <article
-                    key={step.title}
-                    className="h-full rounded-2xl border border-white/10 bg-black/30 p-5"
-                  >
-                    <p className="text-sm font-black text-blue-300">
-                      Step {index + 1}
-                    </p>
-                    <h3 className="mt-3 text-xl font-black">{step.title}</h3>
-                    <p className="mt-3 leading-7 text-zinc-400">{step.text}</p>
-                  </article>
-                ))}
+              <div className="grid gap-5">
+                <div className="relative min-h-56 overflow-hidden rounded-2xl border border-white/10">
+                  <Image
+                    src="/images/workflow/gradeline-custom-order-workflow.png"
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 58vw, 100vw"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.72),rgba(5,7,10,0.1))]" />
+                </div>
+                <div className="grid items-stretch gap-5 md:grid-cols-3">
+                  {workflowSteps.map((step, index) => (
+                    <article
+                      key={step.title}
+                      className="h-full rounded-2xl border border-white/10 bg-black/30 p-5"
+                    >
+                      <p className="text-sm font-black text-blue-300">
+                        Step {index + 1}
+                      </p>
+                      <h3 className="mt-3 text-xl font-black">{step.title}</h3>
+                      <p className="mt-3 leading-7 text-zinc-400">{step.text}</p>
+                    </article>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -309,8 +354,15 @@ export default function Home() {
                 key={item.name}
                 className="h-full overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
-                <div className="grid aspect-square place-items-center border-b border-white/10 bg-[linear-gradient(145deg,rgba(17,24,31,0.96),rgba(5,7,10,1))]">
-                  <div className="h-16 w-16 border border-blue-300/50 bg-blue-400/10 shadow-[0_0_28px_rgba(96,165,250,0.22)]" />
+                <div className="relative aspect-square overflow-hidden border-b border-white/10 bg-black">
+                  <Image
+                    src={item.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover transition duration-500 hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.3),transparent)]" />
                 </div>
                 <div className="p-5">
                   <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
@@ -328,6 +380,14 @@ export default function Home() {
 
         <section className="mx-auto max-w-7xl px-6 py-10 pb-16 md:py-14 md:pb-20">
           <div className="relative overflow-hidden rounded-3xl border border-blue-300/20 bg-[linear-gradient(135deg,rgba(12,19,26,1),rgba(7,9,12,1)_58%,rgba(20,43,61,0.72))] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.4)] md:p-10">
+            <Image
+              src="/images/workflow/gradeline-footer-cta-banner.png"
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover opacity-34"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,10,0.92),rgba(5,7,10,0.72),rgba(5,7,10,0.36))]" />
             <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/70 to-transparent" />
             <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-blue-400/10 blur-3xl" />
             <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">

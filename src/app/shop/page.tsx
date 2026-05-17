@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
@@ -18,6 +19,7 @@ const products = [
     startingPrice: "$12",
     description:
       "Ready-made industrial tags with a rugged blacked-out finish and engraved detail.",
+    image: "/images/categories/gradeline-category-blue-collar-series.png",
   },
   {
     productName: "Blue Collar Keychains",
@@ -26,6 +28,7 @@ const products = [
     startingPrice: "$10",
     description:
       "Shop-ready keychains for trades, crews, unions, and hard-working brands.",
+    image: "/images/products/gradeline-product-placeholder-leather-patch.png",
   },
   {
     productName: "Walnut Recipe Board",
@@ -34,6 +37,7 @@ const products = [
     startingPrice: "$64",
     description:
       "Warm kitchen display board ready for names, recipes, dates, or family details.",
+    image: "/images/products/gradeline-product-placeholder-cutting-board.png",
   },
   {
     productName: "Slate Coaster Set",
@@ -42,6 +46,7 @@ const products = [
     startingPrice: "$28",
     description:
       "Gift-ready slate set with a premium engraved look for homes, events, or keepsakes.",
+    image: "/images/categories/gradeline-category-custom-orders.png",
   },
   {
     productName: "Shop Logo Display Sign",
@@ -50,6 +55,7 @@ const products = [
     startingPrice: "$85",
     description:
       "Counter or desk sign placeholder for business logos and branded displays.",
+    image: "/images/products/gradeline-product-placeholder-layered-sign.png",
   },
   {
     productName: "Trade Motto Wall Plate",
@@ -58,6 +64,7 @@ const products = [
     startingPrice: "$38",
     description:
       "Ready-made wall piece that can be adapted for shop slogans or custom sayings.",
+    image: "/images/categories/gradeline-category-custom-signs.png",
   },
 ];
 
@@ -67,7 +74,14 @@ export default function ShopPage() {
       <PublicHeader />
       <main className="min-h-screen overflow-hidden bg-[#05070a] text-white">
       <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
+        <Image
+          src="/images/hero/gradeline-products-page-hero-banner.png"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover opacity-38"
+        />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.24),_transparent_35%),linear-gradient(to_bottom,rgba(5,7,10,0.62),rgba(5,7,10,0.96))]" />
 
         <div className="relative mx-auto max-w-7xl">
           <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-10">
@@ -112,10 +126,15 @@ export default function ShopPage() {
                 key={product.productName}
                 className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
-                <div className="grid aspect-[4/3] place-items-center border-b border-white/10 bg-[linear-gradient(145deg,rgba(17,24,31,0.96),rgba(8,10,12,1)_58%,rgba(15,23,30,0.98))]">
-                  <div className="grid h-20 w-20 place-items-center border border-blue-300/50 bg-blue-400/10 shadow-[0_0_28px_rgba(96,165,250,0.24)]">
-                    <span className="h-8 w-8 border border-blue-300/70 bg-black/40" />
-                  </div>
+                <div className="relative aspect-[4/3] overflow-hidden border-b border-white/10 bg-black">
+                  <Image
+                    src={product.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition duration-500 hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.28),transparent)]" />
                 </div>
 
                 <div className="flex flex-1 flex-col p-6">
