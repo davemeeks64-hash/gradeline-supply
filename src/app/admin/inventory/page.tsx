@@ -1,11 +1,30 @@
 "use client";
 
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import AdminLayout from "@/components/AdminLayout";
+import { supabase } from "@/lib/supabase";
 
 type InventoryItem = {
-  id: number;
+  id: string | number;
+  sku: string;
+  item_name: string;
+  category: string | null;
+  vendor: string | null;
+  material: string | null;
+  color: string | null;
+  size: string | null;
+  quantity_on_hand: number;
+  reorder_level: number;
+  unit_cost: number;
+  storage_location: string | null;
+  notes: string | null;
+  created_at?: string | null;
+};
+
+type InventoryPayload = Omit<InventoryItem, "created_at" | "id">;
+
+type InventoryFormState = {
   sku: string;
   item_name: string;
   category: string;
@@ -19,71 +38,6 @@ type InventoryItem = {
   storage_location: string;
   notes: string;
 };
-
-type InventoryFormState = Omit<InventoryItem, "id">;
-
-const initialInventoryItems: InventoryItem[] = [
-  {
-    id: 1,
-    sku: "BLK-SLT-BLK-4IN-001",
-    item_name: "Round slate coaster blanks",
-    category: "Slate",
-    vendor: "StoneCraft Supply",
-    material: "Slate",
-    color: "Black",
-    size: "4 in round",
-    quantity_on_hand: 18,
-    reorder_level: 24,
-    unit_cost: 2.85,
-    storage_location: "Rack A2",
-    notes: "Good for logo coaster sets and realtor gifts.",
-  },
-  {
-    id: 2,
-    sku: "BLK-CB-WAL-12X16-001",
-    item_name: "Walnut cutting board blanks",
-    category: "Cutting Boards",
-    vendor: "North Mill Goods",
-    material: "Walnut",
-    color: "Walnut",
-    size: "12 x 16 in",
-    quantity_on_hand: 12,
-    reorder_level: 8,
-    unit_cost: 18.5,
-    storage_location: "Rack B1",
-    notes: "Oil before final photos. Check knots before engraving.",
-  },
-  {
-    id: 3,
-    sku: "BLK-TMB-BLK-20OZ-001",
-    item_name: "Powder coated tumbler blanks",
-    category: "Tumblers",
-    vendor: "SteelCup Wholesale",
-    material: "Stainless steel",
-    color: "Matte black",
-    size: "20 oz",
-    quantity_on_hand: 34,
-    reorder_level: 18,
-    unit_cost: 7.4,
-    storage_location: "Shelf D2",
-    notes: "Use rotary jig. Mask logos with high contrast proof.",
-  },
-  {
-    id: 4,
-    sku: "BLK-ACR-CLR-12X12-001",
-    item_name: "Clear acrylic sheet blanks",
-    category: "Acrylic",
-    vendor: "Acrylic Depot",
-    material: "Cast acrylic",
-    color: "Clear",
-    size: "12 x 12 in",
-    quantity_on_hand: 6,
-    reorder_level: 10,
-    unit_cost: 9.25,
-    storage_location: "Flat Bin 3",
-    notes: "Keep protective film on until final pass.",
-  },
-];
 
 const emptyFormState: InventoryFormState = {
   sku: "",
@@ -236,7 +190,7 @@ function getSizeCode(size: string) {
 function nextSkuNumber(
   items: InventoryItem[],
   prefix: string,
-  editingItemId: number | null
+  editingItemId: string | number | null
 ) {
   const matchingNumbers = items
     .filter((item) => item.id !== editingItemId && item.sku.startsWith(prefix))
@@ -250,7 +204,7 @@ function nextSkuNumber(
 function generateSkuPreview(
   formState: InventoryFormState,
   items: InventoryItem[],
-  editingItemId: number | null
+  editingItemId: string | number | null
 ) {
   const prefix = [
     "BLK",
@@ -349,16 +303,21 @@ function InventorySelectField({
 }
 
 export default function AdminInventoryPage() {
-  const [items, setItems] = useState<InventoryItem[]>(initialInventoryItems);
+  const [items, setItems] = useState<InventoryItem[]>([]);
   const [formState, setFormState] =
     useState<InventoryFormState>(emptyFormState);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | number | null>(
+    null
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [stockFilter, setStockFilter] = useState<"all" | "low" | "healthy">(
     "all"
   );
   const [skuManuallyEdited, setSkuManuallyEdited] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
   const filteredItems = useMemo(() => {
@@ -377,7 +336,9 @@ export default function AdminInventoryPage() {
           item.size,
           item.storage_location,
           item.notes,
-        ].some((value) => value.toLowerCase().includes(normalizedSearch));
+        ].some((value) =>
+          String(value ?? "").toLowerCase().includes(normalizedSearch)
+        );
 
       const matchesCategory =
         categoryFilter === "all" || item.category === categoryFilter;
@@ -402,13 +363,17 @@ export default function AdminInventoryPage() {
       (sum, item) => sum + item.quantity_on_hand * item.unit_cost,
       0
     );
-    const vendorCount = new Set(items.map((item) => item.vendor)).size;
+    const vendorCount = new Set(
+      items
+        .map((item) => item.vendor)
+        .filter((vendor): vendor is string => Boolean(vendor))
+    ).size;
 
     return [
       {
         label: "Blank SKUs",
         value: String(items.length),
-        detail: "Raw products tracked locally",
+        detail: "Raw products from Supabase",
       },
       {
         label: "Units On Hand",
@@ -432,8 +397,94 @@ export default function AdminInventoryPage() {
     return generateSkuPreview(formState, items, editingItemId);
   }, [editingItemId, formState, items]);
 
+  async function readInventoryItems() {
+    const { data, error } = await supabase
+      .from("inventory_items")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    return {
+      data: (data ?? []) as InventoryItem[],
+      error,
+    };
+  }
+
+  async function loadInventoryItems() {
+    setIsLoading(true);
+    setErrorMessage("");
+
+    const { data, error } = await readInventoryItems();
+
+    if (error) {
+      setItems([]);
+      setErrorMessage(error.message);
+    } else {
+      setItems(data);
+    }
+
+    setIsLoading(false);
+  }
+
+  function toInventoryPayload(state: InventoryFormState): InventoryPayload {
+    return {
+      sku: state.sku || generatedSkuPreview,
+      item_name: state.item_name,
+      category: state.category || null,
+      vendor: state.vendor || null,
+      material: state.material || null,
+      color: state.color || null,
+      size: state.size || null,
+      quantity_on_hand: Number(state.quantity_on_hand) || 0,
+      reorder_level: Number(state.reorder_level) || 0,
+      unit_cost: Number(state.unit_cost) || 0,
+      storage_location: state.storage_location || null,
+      notes: state.notes || null,
+    };
+  }
+
+  function toFormState(item: InventoryItem): InventoryFormState {
+    return {
+      sku: item.sku,
+      item_name: item.item_name,
+      category: item.category ?? "",
+      vendor: item.vendor ?? "",
+      material: item.material ?? "",
+      color: item.color ?? "",
+      size: item.size ?? "",
+      quantity_on_hand: Number(item.quantity_on_hand) || 0,
+      reorder_level: Number(item.reorder_level) || 0,
+      unit_cost: Number(item.unit_cost) || 0,
+      storage_location: item.storage_location ?? "",
+      notes: item.notes ?? "",
+    };
+  }
+
+  useEffect(() => {
+    let isMounted = true;
+
+    readInventoryItems().then(({ data, error }) => {
+      if (!isMounted) {
+        return;
+      }
+
+      if (error) {
+        setItems([]);
+        setErrorMessage(error.message);
+      } else {
+        setItems(data);
+      }
+
+      setIsLoading(false);
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   function updateFormField(name: keyof InventoryFormState, value: string) {
     setSuccessMessage("");
+    setErrorMessage("");
 
     if (name === "sku") {
       setSkuManuallyEdited(true);
@@ -480,41 +531,60 @@ export default function AdminInventoryPage() {
     setSkuManuallyEdited(false);
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const nextItemState = {
-      ...formState,
-      sku: formState.sku || generatedSkuPreview,
-    };
+    setIsSaving(true);
+    setErrorMessage("");
+    setSuccessMessage("");
+    const nextItemState = toInventoryPayload(formState);
 
     if (editingItemId) {
-      setItems((current) =>
-        current.map((item) =>
-          item.id === editingItemId ? { ...item, ...nextItemState } : item
-        )
-      );
-      setSuccessMessage("Inventory item updated locally.");
-      resetForm();
+      const { data, error } = await supabase
+        .from("inventory_items")
+        .update(nextItemState)
+        .eq("id", editingItemId)
+        .select()
+        .single();
+
+      if (error) {
+        setErrorMessage(error.message);
+      } else {
+        setItems((current) =>
+          current.map((item) =>
+            item.id === editingItemId ? ((data as InventoryItem) ?? item) : item
+          )
+        );
+        setSuccessMessage("Inventory item updated in Supabase.");
+        resetForm();
+      }
+
+      setIsSaving(false);
       return;
     }
 
-    setItems((current) => [
-      {
-        ...nextItemState,
-        id: Date.now(),
-      },
-      ...current,
-    ]);
-    setSuccessMessage("Inventory item added locally.");
-    resetForm();
+    const { data, error } = await supabase
+      .from("inventory_items")
+      .insert(nextItemState)
+      .select()
+      .single();
+
+    if (error) {
+      setErrorMessage(error.message);
+    } else {
+      setItems((current) => [(data as InventoryItem), ...current]);
+      setSuccessMessage("Inventory item added to Supabase.");
+      resetForm();
+    }
+
+    setIsSaving(false);
   }
 
   function startEditing(item: InventoryItem) {
-    const { id, ...nextFormState } = item;
-    setEditingItemId(id);
-    setFormState(nextFormState);
+    setEditingItemId(item.id);
+    setFormState(toFormState(item));
     setSkuManuallyEdited(false);
     setSuccessMessage("");
+    setErrorMessage("");
   }
 
   return (
@@ -536,12 +606,21 @@ export default function AdminInventoryPage() {
             </p>
           </div>
 
-          <Link
-            href="/admin"
-            className="inline-flex w-fit rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-          >
-            Back to Dashboard
-          </Link>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={loadInventoryItems}
+              className="rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300"
+            >
+              Refresh Inventory
+            </button>
+            <Link
+              href="/admin"
+              className="inline-flex w-fit rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+            >
+              Back to Dashboard
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -572,6 +651,15 @@ export default function AdminInventoryPage() {
         </p>
       )}
 
+      {errorMessage && (
+        <p
+          role="alert"
+          className="mt-6 rounded-2xl border border-red-400/40 bg-red-500/10 px-5 py-4 font-bold text-red-100"
+        >
+          {errorMessage}
+        </p>
+      )}
+
       <section className="mt-6 grid gap-6 xl:grid-cols-[420px_1fr]">
         <form
           onSubmit={handleSubmit}
@@ -585,8 +673,7 @@ export default function AdminInventoryPage() {
               {editingItemId ? "Edit Inventory Item" : "Add Inventory Item"}
             </h2>
             <p className="text-sm leading-6 text-zinc-400">
-              Local-only form structure ready for a future Supabase inventory
-              table.
+              Add or edit raw blanks in the Supabase inventory_items table.
             </p>
           </div>
 
@@ -717,9 +804,14 @@ export default function AdminInventoryPage() {
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <button
               type="submit"
-              className="rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300"
+              disabled={isSaving}
+              className="rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {editingItemId ? "Save Changes" : "Add Inventory Item"}
+              {isSaving
+                ? "Saving..."
+                : editingItemId
+                  ? "Save Changes"
+                  : "Add Inventory Item"}
             </button>
             {editingItemId && (
               <button
