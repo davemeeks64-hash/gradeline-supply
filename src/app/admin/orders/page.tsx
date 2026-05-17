@@ -1467,6 +1467,86 @@ export default function AdminOrdersPage() {
             />
           </label>
 
+          <section className="rounded-2xl border border-white/10 bg-black/25 p-4">
+            <div>
+              <p className={labelClassName}>Delivery & Pickup</p>
+              <h3 className="mt-2 text-xl font-black text-white">
+                Fulfillment Tracking
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-zinc-400">
+                Track whether the order is picked up, locally delivered, or
+                shipped.
+              </p>
+            </div>
+
+            <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <label className="block">
+                <span className={labelClassName}>Fulfillment Method</span>
+                <select
+                  className={inputClassName}
+                  name="fulfillment_method"
+                  onChange={(event) =>
+                    updateFormField("fulfillment_method", event.target.value)
+                  }
+                  value={formState.fulfillment_method}
+                >
+                  {fulfillmentMethods.map((method) => (
+                    <option key={method} value={method}>
+                      {method}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <OrderField
+                label="Pickup Date"
+                name="pickup_date"
+                onChange={updateFormField}
+                placeholder="Select pickup date"
+                type="date"
+                value={formState.pickup_date}
+              />
+
+              <OrderField
+                label="Delivery Date"
+                name="delivery_date"
+                onChange={updateFormField}
+                placeholder="Select delivery date"
+                type="date"
+                value={formState.delivery_date}
+              />
+
+              <OrderField
+                label="Shipping Carrier"
+                name="shipping_carrier"
+                onChange={updateFormField}
+                placeholder="USPS, UPS, FedEx"
+                value={formState.shipping_carrier}
+              />
+
+              <OrderField
+                label="Tracking Number"
+                name="tracking_number"
+                onChange={updateFormField}
+                placeholder="Tracking number"
+                value={formState.tracking_number}
+              />
+            </div>
+
+            <label className="mt-4 block">
+              <span className={labelClassName}>Delivery Notes</span>
+              <textarea
+                className={`${inputClassName} min-h-24 resize-y`}
+                name="delivery_notes"
+                onChange={(event) =>
+                  updateFormField("delivery_notes", event.target.value)
+                }
+                placeholder="Pickup instructions, local delivery notes, shipping details, handoff notes"
+                value={formState.delivery_notes}
+              />
+            </label>
+          </section>
+
           <label className="block">
             <span className={labelClassName}>Design Notes</span>
             <textarea
@@ -1607,6 +1687,7 @@ export default function AdminOrdersPage() {
                     <th className="px-5 py-4">Qty</th>
                     <th className="px-5 py-4">Status</th>
                     <th className="px-5 py-4">Quote / Payment</th>
+                    <th className="px-5 py-4">Fulfillment</th>
                     <th className="px-5 py-4">Design</th>
                     <th className="px-5 py-4">Files</th>
                     <th className="px-5 py-4">Due</th>
@@ -1655,6 +1736,9 @@ export default function AdminOrdersPage() {
                       </td>
                       <td className="px-5 py-4">
                         <QuotePaymentSummary order={order} />
+                      </td>
+                      <td className="px-5 py-4">
+                        <FulfillmentSummary order={order} />
                       </td>
                       <td className="px-5 py-4">
                         <div className="grid gap-3">
@@ -1774,6 +1858,12 @@ export default function AdminOrdersPage() {
                       </p>
                       <div className="mt-2">
                         <QuotePaymentSummary order={order} />
+                      </div>
+                    </div>
+                    <div>
+                      <p className="font-bold text-zinc-500">Fulfillment:</p>
+                      <div className="mt-2">
+                        <FulfillmentSummary order={order} />
                       </div>
                     </div>
                     <div>

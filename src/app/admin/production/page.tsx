@@ -14,6 +14,8 @@ type DesignStatus =
   | "Approved"
   | "Revision Needed";
 
+type FulfillmentMethod = "Pickup" | "Local Delivery" | "Shipped";
+
 type Customer = {
   id: string | number;
   name: string | null;
@@ -46,6 +48,12 @@ type Order = {
   customer_artwork_url?: string | null;
   final_design_file_url?: string | null;
   lightburn_file_url?: string | null;
+  fulfillment_method?: FulfillmentMethod | string | null;
+  pickup_date?: string | null;
+  delivery_date?: string | null;
+  shipping_carrier?: string | null;
+  tracking_number?: string | null;
+  delivery_notes?: string | null;
 };
 
 const workflowColumns: WorkflowStatus[] = [
@@ -76,6 +84,12 @@ const designStatusClassNames: Record<DesignStatus, string> = {
   "Proof Sent": "border-cyan-300/50 bg-cyan-400/10 text-cyan-200",
   Approved: "border-emerald-300/50 bg-emerald-400/10 text-emerald-200",
   "Revision Needed": "border-amber-300/50 bg-amber-400/10 text-amber-200",
+};
+
+const fulfillmentMethodClassNames: Record<FulfillmentMethod, string> = {
+  Pickup: "border-blue-300/50 bg-blue-400/10 text-blue-200",
+  "Local Delivery": "border-cyan-300/50 bg-cyan-400/10 text-cyan-200",
+  Shipped: "border-emerald-300/50 bg-emerald-400/10 text-emerald-200",
 };
 
 function normalizeStatus(status: string | null | undefined): WorkflowStatus {
