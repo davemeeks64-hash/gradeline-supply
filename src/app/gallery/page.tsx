@@ -115,7 +115,7 @@ export default function GalleryPage() {
             {galleryProjects.map((project) => (
               <article
                 key={project.projectName}
-                className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+                className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
                 <div className="relative aspect-[16/11] w-full overflow-hidden border-b border-white/10 bg-black">
                   <Image
@@ -123,7 +123,7 @@ export default function GalleryPage() {
                     alt=""
                     fill
                     sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-                    className="object-cover object-center transition duration-500 hover:scale-105"
+                    className="object-cover object-center transition duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.28),transparent)]" />
                 </div>
@@ -137,7 +137,7 @@ export default function GalleryPage() {
                   <p className="mt-2 text-sm font-bold uppercase tracking-widest text-zinc-500">
                     {project.material}
                   </p>
-                  <p className="mt-4 leading-7 text-zinc-400">
+                  <p className="mt-4 flex-1 leading-7 text-zinc-400">
                     {project.description}
                   </p>
                   <Link

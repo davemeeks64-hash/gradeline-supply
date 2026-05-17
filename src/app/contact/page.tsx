@@ -104,7 +104,7 @@ export default function ContactPage() {
                   </Link>
                 </div>
               </div>
-              <div className="relative min-h-[260px] border-t border-white/10 lg:border-l lg:border-t-0">
+              <div className="relative min-h-[260px] overflow-hidden border-t border-white/10 lg:border-l lg:border-t-0">
                 <Image
                   src="/images/hero/gradeline-contact-page-hero-banner.png"
                   alt=""

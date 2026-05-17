@@ -267,7 +267,7 @@ export default function CustomOrderPage() {
                   </p>
                 </div>
               </div>
-              <div className="relative min-h-[280px] border-t border-white/10 lg:border-l lg:border-t-0">
+              <div className="relative min-h-[280px] overflow-hidden border-t border-white/10 lg:border-l lg:border-t-0">
                 <Image
                   src="/images/workflow/gradeline-reviews-trust-banner.png"
                   alt=""
@@ -300,21 +300,23 @@ export default function CustomOrderPage() {
               {productOptions.map((option) => (
                 <article
                   key={option.title}
-                  className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_18px_45px_rgba(0,0,0,0.28)]"
+                  className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_18px_45px_rgba(0,0,0,0.28)]"
                 >
-                  <div className="relative aspect-[16/11] overflow-hidden border-b border-white/10 bg-black">
+                  <div className="relative aspect-[16/11] w-full overflow-hidden border-b border-white/10 bg-black">
                     <Image
                       src={option.image}
                       alt=""
                       fill
                       sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 100vw"
-                      className="object-cover object-center"
+                      className="object-cover object-center transition duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.32),transparent)]" />
                   </div>
                   <div className="flex flex-1 flex-col p-5">
                     <h3 className="text-xl font-black">{option.title}</h3>
-                    <p className="mt-3 leading-7 text-zinc-400">{option.text}</p>
+                    <p className="mt-3 flex-1 leading-7 text-zinc-400">
+                      {option.text}
+                    </p>
                   </div>
                 </article>
               ))}

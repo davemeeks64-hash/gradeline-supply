@@ -125,7 +125,7 @@ export default function Home() {
             fill
             preload
             sizes="100vw"
-            className="hidden object-cover object-[58%_center] md:block md:object-center"
+            className="hidden object-cover object-center md:block"
           />
           <Image
             src="/images/hero/gradeline-mobile-homepage-banner.png"
@@ -220,24 +220,25 @@ export default function Home() {
               <Link
                 key={collection.title}
                 href={collection.href}
-                className="group relative flex h-full min-h-[360px] overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(27,36,45,0.78),rgba(6,8,11,0.98))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.24)] transition hover:-translate-y-1 hover:border-blue-300/40 hover:shadow-[0_24px_60px_rgba(0,0,0,0.36)] md:min-h-[380px]"
+                className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:-translate-y-1 hover:border-blue-300/40 hover:bg-white/[0.07] hover:shadow-[0_24px_60px_rgba(0,0,0,0.36)]"
               >
-                <Image
-                  src={collection.image}
-                  alt=""
-                  fill
-                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  className="object-cover object-center opacity-[0.48] transition duration-500 group-hover:scale-105 group-hover:opacity-[0.62]"
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.96),rgba(5,7,10,0.62)_52%,rgba(5,7,10,0.18))]" />
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/50 to-transparent opacity-0 transition group-hover:opacity-100" />
-                <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-blue-400/10 blur-3xl transition group-hover:bg-blue-400/15" />
-                <div className="relative mt-auto flex min-h-full flex-col justify-end">
+                <div className="relative aspect-[16/11] w-full overflow-hidden border-b border-white/10 bg-black">
+                  <Image
+                    src={collection.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover object-center transition duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.34),transparent)]" />
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/50 to-transparent opacity-0 transition group-hover:opacity-100" />
+                </div>
+                <div className="flex flex-1 flex-col p-6">
                   <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
                   <h3 className="mt-5 text-xl font-black">
                     {collection.title}
                   </h3>
-                  <p className="mt-3 leading-7 text-zinc-300">
+                  <p className="mt-3 flex-1 leading-7 text-zinc-300">
                     {collection.text}
                   </p>
                   <p className="mt-6 border-t border-white/10 pt-4 text-xs font-bold uppercase tracking-widest text-blue-200">
@@ -274,7 +275,7 @@ export default function Home() {
             {featuredProducts.map((product) => (
               <article
                 key={product.name}
-                className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+                className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
                 <div className="relative aspect-[16/11] w-full overflow-hidden border-b border-white/10 bg-black">
                   <Image
@@ -282,7 +283,7 @@ export default function Home() {
                     alt=""
                     fill
                     sizes="(min-width: 768px) 33vw, 100vw"
-                    className="object-cover object-center transition duration-500 hover:scale-105"
+                    className="object-cover object-center transition duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.22),transparent)]" />
                 </div>
@@ -381,19 +382,19 @@ export default function Home() {
             {galleryPreview.map((item) => (
               <article
                 key={item.name}
-                className="h-full overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+                className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
-                <div className="relative aspect-square w-full overflow-hidden border-b border-white/10 bg-black">
+                <div className="relative aspect-[16/11] w-full overflow-hidden border-b border-white/10 bg-black">
                   <Image
                     src={item.image}
                     alt=""
                     fill
                     sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover object-center transition duration-500 hover:scale-105"
+                    className="object-cover object-center transition duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.3),transparent)]" />
                 </div>
-                <div className="p-5">
+                <div className="flex flex-1 flex-col p-5">
                   <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
                     {item.category}
                   </p>
