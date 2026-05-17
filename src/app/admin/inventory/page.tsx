@@ -1261,128 +1261,19 @@ export default function AdminInventoryPage() {
               </h2>
             </div>
 
-            <div className="hidden overflow-x-auto xl:block">
-              <table className="min-w-[1180px] w-full border-separate border-spacing-0 text-left">
-                <thead className="border-b border-white/10 bg-black/30 text-xs font-bold uppercase tracking-widest text-blue-300">
-                  <tr>
-                    {sortableColumns.map((column) => (
-                      <th key={column.value} className="px-5 py-4">
-                        <SortButton
-                          active={sortKey === column.value}
-                          direction={sortDirection}
-                          label={column.label}
-                          onClick={() => updateSort(column.value)}
-                        />
-                      </th>
-                    ))}
-                    <th className="sticky right-0 z-20 w-48 min-w-48 border-l border-white/10 bg-black/90 px-5 py-4 text-center shadow-[-18px_0_28px_rgba(5,7,10,0.72)]">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/10">
-                  {isLoading && (
-                    <tr>
-                      <td className="px-5 py-6 text-zinc-400" colSpan={10}>
-                        Loading inventory items from Supabase...
-                      </td>
-                    </tr>
-                  )}
-
-                  {!isLoading &&
-                    sortedItems.map((item) => {
-                      const lowStock = isLowStock(item);
-
-                      return (
-                      <tr
-                        key={item.id}
-                        className={[
-                          "transition hover:bg-white/[0.06]",
-                          lowStock ? "bg-amber-400/[0.06]" : "bg-white/[0.02]",
-                        ].join(" ")}
-                      >
-                        <td className="px-5 py-4 font-black text-white">
-                          {item.sku}
-                        </td>
-                        <td className="px-5 py-4">
-                          <p className="font-bold text-zinc-100">
-                            {item.item_name}
-                          </p>
-                          <p className="mt-1 text-xs text-zinc-500">
-                            {displayValue(item.vendor)}
-                          </p>
-                        </td>
-                        <td className="px-5 py-4 text-zinc-300">
-                          {displayValue(item.category)}
-                        </td>
-                        <td className="px-5 py-4 text-zinc-300">
-                          {displayValue(item.material)} /{" "}
-                          {displayValue(item.color)} / {displayValue(item.size)}
-                        </td>
-                        <td className="px-5 py-4 font-black text-white">
-                          {item.quantity_on_hand}
-                          {lowStock && (
-                            <p className="mt-1 text-xs font-bold uppercase tracking-widest text-amber-200">
-                              Reorder
-                            </p>
-                          )}
-                        </td>
-                        <td className="px-5 py-4 text-zinc-300">
-                          {item.reorder_level}
-                        </td>
-                        <td className="px-5 py-4 text-zinc-300">
-                          {formatCurrency(item.unit_cost)}
-                        </td>
-                        <td className="px-5 py-4 text-zinc-300">
-                          {displayValue(item.storage_location)}
-                        </td>
-                        <td className="px-5 py-4">
-                          <StockBadge item={item} />
-                        </td>
-                        <td
-                          className={[
-                            "sticky right-0 z-10 w-48 min-w-48 border-l border-white/10 px-5 py-4 shadow-[-18px_0_28px_rgba(5,7,10,0.72)]",
-                            lowStock ? "bg-[#17130b]/95" : "bg-[#0b1014]/95",
-                          ].join(" ")}
-                        >
-                          <div className="grid gap-2">
-                            <button
-                              type="button"
-                              onClick={() => startEditing(item)}
-                              aria-label={`Edit ${item.sku}`}
-                              className="w-full rounded-lg border border-blue-300/35 bg-blue-400/10 px-4 py-2 text-sm font-bold text-blue-50 transition hover:border-blue-300/70 hover:bg-blue-400/20"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              type="button"
-                              disabled={deletingItemId === item.id}
-                              onClick={() => deleteInventoryItem(item)}
-                              aria-label={`Delete ${item.sku}`}
-                              className="w-full rounded-lg border border-red-300/35 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-100 transition hover:border-red-300/60 hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
-                            >
-                              {deletingItemId === item.id
-                                ? "Deleting"
-                                : "Delete"}
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                    })}
-
-                  {!isLoading && sortedItems.length === 0 && (
-                    <tr>
-                      <td className="px-5 py-6 text-zinc-400" colSpan={10}>
-                        No inventory items match the current filters.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+            <div className="flex flex-wrap gap-2 border-b border-white/10 bg-black/20 px-5 py-4">
+              {sortableColumns.slice(0, 8).map((column) => (
+                <SortButton
+                  active={sortKey === column.value}
+                  direction={sortDirection}
+                  key={column.value}
+                  label={column.label}
+                  onClick={() => updateSort(column.value)}
+                />
+              ))}
             </div>
 
-            <div className="grid gap-4 p-4 xl:hidden">
+            <div className="grid gap-4 p-4 md:p-5 xl:grid-cols-2">
               {isLoading && (
                 <p className="rounded-2xl border border-white/10 bg-black/30 p-5 text-zinc-400">
                   Loading inventory items from Supabase...
@@ -1397,82 +1288,40 @@ export default function AdminInventoryPage() {
                     <article
                       key={item.id}
                       className={[
-                        "rounded-2xl border p-5",
+                        "rounded-2xl border p-5 shadow-[0_18px_60px_rgba(0,0,0,0.24)]",
                         lowStock
                           ? "border-amber-300/35 bg-amber-400/[0.06]"
                           : "border-white/10 bg-black/30",
                       ].join(" ")}
                     >
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
-                          {item.sku} / {displayValue(item.category)}
-                        </p>
-                        <h3 className="mt-2 text-xl font-black text-white">
-                          {item.item_name}
-                        </h3>
-                        <p className="mt-2 text-zinc-400">
-                          {displayValue(item.vendor)}
-                        </p>
+                      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
+                            {item.sku}
+                          </p>
+                          <h3 className="mt-2 text-xl font-black text-white">
+                            {item.item_name}
+                          </h3>
+                          <p className="mt-2 text-sm text-zinc-400">
+                            {displayValue(item.category)} /{" "}
+                            {displayValue(item.vendor)}
+                          </p>
+                          <p className="mt-3 text-sm font-bold text-zinc-200">
+                            Quantity:{" "}
+                            <span className="text-lg text-white">
+                              {item.quantity_on_hand}
+                            </span>
+                            {lowStock && (
+                              <span className="ml-2 text-xs uppercase tracking-widest text-amber-200">
+                                Reorder
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                        <StockBadge item={item} />
                       </div>
-                      <StockBadge item={item} />
-                    </div>
 
-                    <div className="mt-5 grid gap-3 text-sm text-zinc-300 sm:grid-cols-2">
-                      <p>
-                        <span className="font-bold text-zinc-500">
-                          Material:{" "}
-                        </span>
-                        {displayValue(item.material)}
-                      </p>
-                      <p>
-                        <span className="font-bold text-zinc-500">
-                          Colors:{" "}
-                        </span>
-                        {displayValue(item.color)}
-                      </p>
-                      <p>
-                        <span className="font-bold text-zinc-500">Size: </span>
-                        {displayValue(item.size)}
-                      </p>
-                      <p>
-                      <span className="font-bold text-zinc-500">Qty: </span>
-                      {item.quantity_on_hand}
-                      {lowStock && (
-                        <span className="ml-2 font-bold uppercase tracking-widest text-amber-200">
-                          Reorder
-                        </span>
-                      )}
-                    </p>
-                      <p>
-                        <span className="font-bold text-zinc-500">
-                          Reorder:{" "}
-                        </span>
-                        {item.reorder_level}
-                      </p>
-                      <p>
-                        <span className="font-bold text-zinc-500">Cost: </span>
-                        {formatCurrency(item.unit_cost)}
-                      </p>
-                      <p>
-                        <span className="font-bold text-zinc-500">
-                          Location:{" "}
-                        </span>
-                        {displayValue(item.storage_location)}
-                      </p>
-                      <p>
-                        <span className="font-bold text-zinc-500">
-                          Notes:{" "}
-                        </span>
-                        {displayValue(item.notes)}
-                      </p>
-                    </div>
-
-                    <div className="mt-5 border-t border-white/10 pt-4">
-                      <p className="text-xs font-bold uppercase tracking-[0.22em] text-blue-200">
-                        Actions
-                      </p>
-                      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                      <div className="mt-4 grid gap-2 sm:grid-cols-2">
                         <button
                           type="button"
                           onClick={() => startEditing(item)}
@@ -1493,8 +1342,52 @@ export default function AdminInventoryPage() {
                             : "Delete"}
                         </button>
                       </div>
-                    </div>
-                </article>
+
+                      <div className="mt-5 grid gap-3 border-t border-white/10 pt-5 text-sm text-zinc-300 sm:grid-cols-2">
+                        <p>
+                          <span className="font-bold text-zinc-500">
+                            Material:{" "}
+                          </span>
+                          {displayValue(item.material)}
+                        </p>
+                        <p>
+                          <span className="font-bold text-zinc-500">
+                            Colors:{" "}
+                          </span>
+                          {displayValue(item.color)}
+                        </p>
+                        <p>
+                          <span className="font-bold text-zinc-500">
+                            Size:{" "}
+                          </span>
+                          {displayValue(item.size)}
+                        </p>
+                        <p>
+                          <span className="font-bold text-zinc-500">
+                            Reorder:{" "}
+                          </span>
+                          {item.reorder_level}
+                        </p>
+                        <p>
+                          <span className="font-bold text-zinc-500">
+                            Cost:{" "}
+                          </span>
+                          {formatCurrency(item.unit_cost)}
+                        </p>
+                        <p>
+                          <span className="font-bold text-zinc-500">
+                            Location:{" "}
+                          </span>
+                          {displayValue(item.storage_location)}
+                        </p>
+                        <p className="sm:col-span-2">
+                          <span className="font-bold text-zinc-500">
+                            Notes:{" "}
+                          </span>
+                          {displayValue(item.notes)}
+                        </p>
+                      </div>
+                    </article>
                   );
                 })}
 
