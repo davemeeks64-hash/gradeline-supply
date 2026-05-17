@@ -197,9 +197,15 @@ export default function AdminReceivingPage() {
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [formState, setFormState] =
     useState<ReceivingFormState>(initialFormState);
+  const [editingRecordId, setEditingRecordId] = useState<
+    string | number | null
+  >(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [updatingRecordId, setUpdatingRecordId] = useState<
+    string | number | null
+  >(null);
+  const [deletingRecordId, setDeletingRecordId] = useState<
     string | number | null
   >(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -288,7 +294,7 @@ export default function AdminReceivingPage() {
     const [receivingResponse, inventoryResponse, vendorsResponse] =
       await Promise.all([
         supabase
-          .from("inventory_receiving")
+          .from("receiving_orders")
           .select("*")
           .order("created_at", { ascending: false }),
         supabase
@@ -476,6 +482,38 @@ export default function AdminReceivingPage() {
     };
   }
 
+  function toFormState(record: ReceivingRecord): ReceivingFormState {
+    return {
+      vendor: record.vendor ?? "",
+      purchase_order_number: record.purchase_order_number ?? "",
+      item_name: record.item_name,
+      sku: record.sku,
+      quantity_ordered: String(record.quantity_ordered ?? 0),
+      quantity_received: String(record.quantity_received ?? 0),
+      unit_cost: String(record.unit_cost ?? 0),
+      order_date: record.order_date ?? "",
+      expected_delivery_date: record.expected_delivery_date ?? "",
+      received_date: record.received_date ?? "",
+      status:
+        record.status && statuses.includes(record.status as ReceivingStatus)
+          ? (record.status as ReceivingStatus)
+          : "Ordered",
+      notes: record.notes ?? "",
+    };
+  }
+
+  function resetForm() {
+    setFormState(initialFormState);
+    setEditingRecordId(null);
+  }
+
+  function startEditing(record: ReceivingRecord) {
+    setEditingRecordId(record.id);
+    setFormState(toFormState(record));
+    setSuccessMessage("");
+    setErrorMessage("");
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSaving(true);
@@ -490,37 +528,58 @@ export default function AdminReceivingPage() {
           : formState.received_date,
     });
 
-    const { data, error } = await supabase
-      .from("inventory_receiving")
-      .insert(payload)
-      .select()
-      .single();
+    const existingRecord = editingRecordId
+      ? records.find((record) => record.id === editingRecordId)
+      : undefined;
 
-    if (error) {
-      setErrorMessage(error.message);
+    const response = editingRecordId
+      ? await supabase
+          .from("receiving_orders")
+          .update(payload)
+          .eq("id", editingRecordId)
+          .select()
+          .single()
+      : await supabase
+          .from("receiving_orders")
+          .insert(payload)
+          .select()
+          .single();
+
+    if (response.error) {
+      setErrorMessage(response.error.message);
       setIsSaving(false);
       return;
     }
 
-    const savedRecord = data as ReceivingRecord;
+    const savedRecord = response.data as ReceivingRecord;
+    const shouldApplyInventory =
+      savedRecord.status === "Received" && existingRecord?.status !== "Received";
 
     try {
-      if (savedRecord.status === "Received") {
+      if (shouldApplyInventory) {
         await applyReceivedInventory(savedRecord);
       }
 
-      setRecords((current) => [savedRecord, ...current]);
-      setSuccessMessage(
-        savedRecord.status === "Received"
-          ? "Receiving record saved and inventory quantity updated."
-          : "Receiving record saved."
+      setRecords((current) =>
+        editingRecordId
+          ? current.map((record) =>
+              record.id === editingRecordId ? savedRecord : record
+            )
+          : [savedRecord, ...current]
       );
-      setFormState(initialFormState);
+      setSuccessMessage(
+        shouldApplyInventory
+          ? "Receiving order saved and inventory quantity updated."
+          : editingRecordId
+            ? "Receiving order updated."
+            : "Receiving order saved."
+      );
+      resetForm();
     } catch (error) {
       setErrorMessage(
         error instanceof Error
-          ? error.message
-          : "Receiving saved, but inventory quantity could not be updated."
+          ? `Receiving order saved, but inventory quantity could not be updated: ${error.message}`
+          : "Receiving order saved, but inventory quantity could not be updated."
       );
     }
 
@@ -541,7 +600,7 @@ export default function AdminReceivingPage() {
     };
 
     const { data, error } = await supabase
-      .from("inventory_receiving")
+      .from("receiving_orders")
       .update({
         status: nextRecord.status,
         received_date: nextRecord.received_date,
@@ -576,6 +635,41 @@ export default function AdminReceivingPage() {
     }
 
     setUpdatingRecordId(null);
+  }
+
+  async function deleteReceivingOrder(record: ReceivingRecord) {
+    const confirmed = window.confirm(
+      `Delete/archive ${record.purchase_order_number || record.sku}? This removes the receiving order record from Supabase.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDeletingRecordId(record.id);
+    setSuccessMessage("");
+    setErrorMessage("");
+
+    const { error } = await supabase
+      .from("receiving_orders")
+      .delete()
+      .eq("id", record.id);
+
+    if (error) {
+      setErrorMessage(error.message);
+    } else {
+      setRecords((current) =>
+        current.filter((currentRecord) => currentRecord.id !== record.id)
+      );
+
+      if (editingRecordId === record.id) {
+        resetForm();
+      }
+
+      setSuccessMessage("Receiving order deleted from Supabase.");
+    }
+
+    setDeletingRecordId(null);
   }
 
   return (
@@ -665,7 +759,7 @@ export default function AdminReceivingPage() {
           <div>
             <p className={labelClassName}>Purchase Intake</p>
             <h2 className="mt-2 text-2xl font-black text-white">
-              Incoming Inventory
+              {editingRecordId ? "Edit Receiving Order" : "Incoming Inventory"}
             </h2>
             <p className="mt-2 text-sm leading-6 text-zinc-400">
               Saving as Received updates the matching inventory SKU quantity.
@@ -825,14 +919,18 @@ export default function AdminReceivingPage() {
               disabled={isSaving}
               className="rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSaving ? "Saving..." : "Save Receiving"}
+              {isSaving
+                ? "Saving..."
+                : editingRecordId
+                  ? "Update Receiving"
+                  : "Save Receiving"}
             </button>
             <button
               type="button"
-              onClick={() => setFormState(initialFormState)}
+              onClick={resetForm}
               className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
             >
-              Clear
+              {editingRecordId ? "Cancel Edit" : "Clear"}
             </button>
           </div>
         </form>
@@ -945,22 +1043,41 @@ export default function AdminReceivingPage() {
                           <StatusBadge status={record.status} />
                         </td>
                         <td className="px-5 py-4">
-                          {record.status !== "Received" ? (
+                          <div className="flex flex-wrap gap-2">
                             <button
                               type="button"
-                              disabled={updatingRecordId === record.id}
-                              onClick={() => markRecordReceived(record)}
-                              className="rounded-lg border border-blue-300/40 bg-blue-400/10 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+                              onClick={() => startEditing(record)}
+                              className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
                             >
-                              {updatingRecordId === record.id
-                                ? "Updating"
-                                : "Mark Received"}
+                              Edit
                             </button>
-                          ) : (
-                            <span className="text-sm font-bold text-zinc-500">
-                              Inventory updated
-                            </span>
-                          )}
+                            {record.status !== "Received" ? (
+                              <button
+                                type="button"
+                                disabled={updatingRecordId === record.id}
+                                onClick={() => markRecordReceived(record)}
+                                className="rounded-lg border border-blue-300/40 bg-blue-400/10 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+                              >
+                                {updatingRecordId === record.id
+                                  ? "Updating"
+                                  : "Mark Received"}
+                              </button>
+                            ) : (
+                              <span className="rounded-lg border border-white/10 bg-black/25 px-4 py-2 text-sm font-bold text-zinc-500">
+                                Inventory updated
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              disabled={deletingRecordId === record.id}
+                              onClick={() => deleteReceivingOrder(record)}
+                              className="rounded-lg border border-red-300/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-100 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                            >
+                              {deletingRecordId === record.id
+                                ? "Deleting"
+                                : "Delete"}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -1039,22 +1156,43 @@ export default function AdminReceivingPage() {
                       </p>
                     </div>
 
+                    <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                      <button
+                        type="button"
+                        onClick={() => startEditing(record)}
+                        className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                      >
+                        Edit Order
+                      </button>
+
                     {record.status !== "Received" ? (
                       <button
                         type="button"
                         disabled={updatingRecordId === record.id}
                         onClick={() => markRecordReceived(record)}
-                        className="mt-5 rounded-lg border border-blue-300/40 bg-blue-400/10 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+                        className="rounded-lg border border-blue-300/40 bg-blue-400/10 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60"
                       >
                         {updatingRecordId === record.id
                           ? "Updating"
                           : "Mark Received"}
                       </button>
                     ) : (
-                      <p className="mt-5 text-sm font-bold text-zinc-500">
+                      <p className="rounded-lg border border-white/10 bg-black/25 px-4 py-2 text-sm font-bold text-zinc-500">
                         Inventory updated
                       </p>
                     )}
+
+                      <button
+                        type="button"
+                        disabled={deletingRecordId === record.id}
+                        onClick={() => deleteReceivingOrder(record)}
+                        className="rounded-lg border border-red-300/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-100 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {deletingRecordId === record.id
+                          ? "Deleting"
+                          : "Delete Order"}
+                      </button>
+                    </div>
                   </article>
                 ))}
 
