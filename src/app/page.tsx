@@ -47,6 +47,7 @@ const featuredProducts = [
     collection: "Industrial & Blue Collar",
     price: "From $12",
     material: "Brushed aluminum",
+    text: "Ready-made rugged tag sets with a sharp engraved look for crews, shops, and blue-collar gifts.",
     image: "/images/products/gradeline-product-placeholder-leather-patch.png",
   },
   {
@@ -54,6 +55,7 @@ const featuredProducts = [
     collection: "Home & Kitchen",
     price: "From $64",
     material: "Walnut",
+    text: "A warm display board for recipes, family names, dates, kitchen gifts, and personalized keepsakes.",
     image: "/images/products/gradeline-product-placeholder-cutting-board.png",
   },
   {
@@ -61,6 +63,7 @@ const featuredProducts = [
     collection: "Business & Commercial",
     price: "From $85",
     material: "Acrylic",
+    text: "A clean counter or wall display piece for logos, brands, offices, shops, and event tables.",
     image: "/images/products/gradeline-product-placeholder-layered-sign.png",
   },
 ];
@@ -166,6 +169,12 @@ export default function Home() {
                 >
                   Start Custom Order
                 </Link>
+                <Link
+                  href="/gallery"
+                  className="rounded-xl border border-blue-300/30 bg-black/30 px-6 py-3 text-center font-bold text-blue-100 transition hover:border-blue-300/60 hover:bg-blue-400/10"
+                >
+                  View Gallery
+                </Link>
               </div>
             </div>
           </div>
@@ -178,18 +187,32 @@ export default function Home() {
           <div className="relative mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
-                Featured Collections
+                Featured Categories
               </p>
-              <h2 className="mt-2 text-3xl font-black md:text-4xl">
+              <h2 className="mt-2 max-w-2xl text-3xl font-black md:text-4xl">
                 Made for work, home, gifts, and brands.
               </h2>
             </div>
-            <Link
-              href="/collections"
-              className="w-fit rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-            >
-              View Collections
-            </Link>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap md:justify-end">
+              <Link
+                href="/shop"
+                className="rounded-xl bg-blue-400 px-5 py-3 text-center font-bold text-black transition hover:bg-blue-300"
+              >
+                Shop Collections
+              </Link>
+              <Link
+                href="/custom-order"
+                className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+              >
+                Start Custom Order
+              </Link>
+              <Link
+                href="/gallery"
+                className="rounded-xl border border-blue-300/30 bg-blue-400/10 px-5 py-3 text-center font-bold text-blue-100 transition hover:bg-blue-400/20"
+              >
+                View Gallery
+              </Link>
+            </div>
           </div>
 
           <div className="relative grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -209,17 +232,20 @@ export default function Home() {
                 <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.96),rgba(5,7,10,0.62)_52%,rgba(5,7,10,0.18))]" />
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/50 to-transparent opacity-0 transition group-hover:opacity-100" />
                 <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-blue-400/10 blur-3xl transition group-hover:bg-blue-400/15" />
-                <div className="relative mt-auto flex h-full flex-col justify-end">
+                <div className="relative mt-auto flex min-h-full flex-col justify-end">
                   <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
                   <h3 className="mt-5 text-xl font-black">
                     {collection.title}
                   </h3>
-                  <p className="mt-3 flex-1 leading-7 text-zinc-400">
+                  <p className="mt-3 leading-7 text-zinc-300">
                     {collection.text}
                   </p>
                   <p className="mt-6 border-t border-white/10 pt-4 text-xs font-bold uppercase tracking-widest text-blue-200">
                     {collection.examples}
                   </p>
+                  <span className="mt-5 inline-flex w-fit rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold text-white transition group-hover:border-blue-300/50 group-hover:bg-blue-400/15">
+                    View Products
+                  </span>
                 </div>
               </Link>
             ))}
@@ -240,7 +266,7 @@ export default function Home() {
               href="/shop"
               className="w-fit rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300"
             >
-              Shop Products
+              Shop Collections
             </Link>
           </div>
 
@@ -250,7 +276,7 @@ export default function Home() {
                 key={product.name}
                 className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
-                <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-white/10 bg-black">
+                <div className="relative aspect-[16/11] w-full overflow-hidden border-b border-white/10 bg-black">
                   <Image
                     src={product.image}
                     alt=""
@@ -267,6 +293,9 @@ export default function Home() {
                   <h3 className="mt-3 text-2xl font-black">{product.name}</h3>
                   <p className="mt-2 text-sm font-bold uppercase tracking-widest text-zinc-500">
                     {product.material}
+                  </p>
+                  <p className="mt-4 flex-1 leading-7 text-zinc-400">
+                    {product.text}
                   </p>
                   <p className="mt-4 text-xl font-black text-blue-200">
                     {product.price}
