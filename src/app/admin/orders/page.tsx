@@ -14,6 +14,13 @@ type OrderStatus =
   | "Finished"
   | "Delivered";
 
+type DesignStatus =
+  | "Not Started"
+  | "In Design"
+  | "Proof Sent"
+  | "Approved"
+  | "Revision Needed";
+
 type Customer = {
   id: string | number;
   name: string | null;
@@ -39,6 +46,10 @@ type Order = {
   qty: number | null;
   total_price: number | null;
   status: OrderStatus | string | null;
+  design_status?: DesignStatus | string | null;
+  proof_sent_date?: string | null;
+  approval_date?: string | null;
+  design_notes?: string | null;
   due_date: string | null;
   created_at?: string | null;
 };
@@ -52,6 +63,10 @@ type OrderFormState = {
   qty: string;
   total_price: string;
   status: OrderStatus;
+  design_status: DesignStatus;
+  proof_sent_date: string;
+  approval_date: string;
+  design_notes: string;
   due_date: string;
 };
 
@@ -64,6 +79,10 @@ const initialFormState: OrderFormState = {
   qty: "1",
   total_price: "",
   status: "New",
+  design_status: "Not Started",
+  proof_sent_date: "",
+  approval_date: "",
+  design_notes: "",
   due_date: "",
 };
 
@@ -75,6 +94,14 @@ const orderStatuses: OrderStatus[] = [
   "In Production",
   "Finished",
   "Delivered",
+];
+
+const designStatuses: DesignStatus[] = [
+  "Not Started",
+  "In Design",
+  "Proof Sent",
+  "Approved",
+  "Revision Needed",
 ];
 
 const inputClassName =
@@ -91,6 +118,14 @@ const statusClassNames: Record<OrderStatus, string> = {
   "In Production": "border-amber-300/50 bg-amber-400/10 text-amber-200",
   Finished: "border-zinc-300/50 bg-zinc-300/10 text-zinc-200",
   Delivered: "border-green-300/50 bg-green-400/10 text-green-200",
+};
+
+const designStatusClassNames: Record<DesignStatus, string> = {
+  "Not Started": "border-zinc-300/50 bg-zinc-300/10 text-zinc-200",
+  "In Design": "border-blue-300/50 bg-blue-400/10 text-blue-200",
+  "Proof Sent": "border-cyan-300/50 bg-cyan-400/10 text-cyan-200",
+  Approved: "border-emerald-300/50 bg-emerald-400/10 text-emerald-200",
+  "Revision Needed": "border-amber-300/50 bg-amber-400/10 text-amber-200",
 };
 
 function normalizeId(value: string) {
@@ -137,12 +172,31 @@ function getStatusClassName(status: string | null | undefined) {
     : "border-white/20 bg-white/10 text-zinc-200";
 }
 
+function getDesignStatusClassName(status: string | null | undefined) {
+  return status && status in designStatusClassNames
+    ? designStatusClassNames[status as DesignStatus]
+    : "border-white/20 bg-white/10 text-zinc-200";
+}
+
 function StatusBadge({ status }: { status: string | null | undefined }) {
   return (
     <span
       className={[
         "inline-flex w-fit rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-widest",
         getStatusClassName(status),
+      ].join(" ")}
+    >
+      {displayValue(status)}
+    </span>
+  );
+}
+
+function DesignStatusBadge({ status }: { status: string | null | undefined }) {
+  return (
+    <span
+      className={[
+        "inline-flex w-fit rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-widest",
+        getDesignStatusClassName(status),
       ].join(" ")}
     >
       {displayValue(status)}
@@ -349,6 +403,10 @@ export default function AdminOrdersPage() {
       qty: Number(formState.qty),
       total_price: Number(formState.total_price),
       status: formState.status,
+      design_status: formState.design_status,
+      proof_sent_date: formState.proof_sent_date || null,
+      approval_date: formState.approval_date || null,
+      design_notes: formState.design_notes.trim(),
       due_date: formState.due_date || null,
       ...(formState.inventory_item_id
         ? { inventory_item_id: normalizeId(formState.inventory_item_id) }
@@ -367,6 +425,40 @@ export default function AdminOrdersPage() {
     setFormState(initialFormState);
     await loadPageData();
     setIsSaving(false);
+  }
+
+  async function updateOrderDesignStatus(
+    order: Order,
+    nextDesignStatus: DesignStatus
+  ) {
+    if (!order.id) {
+      setErrorMessage("Cannot update design status without an order id.");
+      return;
+    }
+
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    const { error } = await supabase
+      .from("orders")
+      .update({ design_status: nextDesignStatus })
+      .eq("id", order.id);
+
+    if (error) {
+      setErrorMessage(error.message);
+      return;
+    }
+
+    setOrders((currentOrders) =>
+      currentOrders.map((currentOrder) =>
+        currentOrder.id === order.id
+          ? { ...currentOrder, design_status: nextDesignStatus }
+          : currentOrder
+      )
+    );
+    setSuccessMessage(
+      `${displayValue(order.order_number)} design status updated.`
+    );
   }
 
   return (
@@ -514,6 +606,40 @@ export default function AdminOrdersPage() {
               type="date"
               value={formState.due_date}
             />
+
+            <label className="block">
+              <span className={labelClassName}>Design Status</span>
+              <select
+                className={inputClassName}
+                name="design_status"
+                onChange={(event) =>
+                  updateFormField("design_status", event.target.value)
+                }
+                value={formState.design_status}
+              >
+                {designStatuses.map((status) => (
+                  <option key={status}>{status}</option>
+                ))}
+              </select>
+            </label>
+
+            <OrderField
+              label="Proof Sent Date"
+              name="proof_sent_date"
+              onChange={updateFormField}
+              placeholder="Select proof sent date"
+              type="date"
+              value={formState.proof_sent_date}
+            />
+
+            <OrderField
+              label="Approval Date"
+              name="approval_date"
+              onChange={updateFormField}
+              placeholder="Select approval date"
+              type="date"
+              value={formState.approval_date}
+            />
           </div>
 
           <label className="block">
@@ -526,6 +652,19 @@ export default function AdminOrdersPage() {
               }
               placeholder="Order details, product notes, design direction, material, finish, or customer requests"
               value={formState.description}
+            />
+          </label>
+
+          <label className="block">
+            <span className={labelClassName}>Design Notes</span>
+            <textarea
+              className={`${inputClassName} min-h-28 resize-y`}
+              name="design_notes"
+              onChange={(event) =>
+                updateFormField("design_notes", event.target.value)
+              }
+              placeholder="Artwork notes, proof feedback, revision requests, approval context"
+              value={formState.design_notes}
             />
           </label>
 
@@ -601,6 +740,7 @@ export default function AdminOrdersPage() {
                     <th className="px-5 py-4">Inventory Link</th>
                     <th className="px-5 py-4">Qty</th>
                     <th className="px-5 py-4">Status</th>
+                    <th className="px-5 py-4">Design</th>
                     <th className="px-5 py-4">Due</th>
                     <th className="px-5 py-4 text-right">Total</th>
                   </tr>
@@ -643,6 +783,38 @@ export default function AdminOrdersPage() {
                       </td>
                       <td className="px-5 py-4">
                         <StatusBadge status={order.status} />
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="grid gap-3">
+                          <DesignStatusBadge
+                            status={order.design_status || "Not Started"}
+                          />
+                          <select
+                            className={`${inputClassName} min-w-48 text-sm`}
+                            onChange={(event) =>
+                              updateOrderDesignStatus(
+                                order,
+                                event.target.value as DesignStatus
+                              )
+                            }
+                            value={order.design_status || "Not Started"}
+                          >
+                            {designStatuses.map((status) => (
+                              <option key={status} value={status}>
+                                {status}
+                              </option>
+                            ))}
+                          </select>
+                          <p className="text-xs leading-5 text-zinc-500">
+                            Proof: {formatDate(order.proof_sent_date)} /
+                            Approved: {formatDate(order.approval_date)}
+                          </p>
+                          {order.design_notes && (
+                            <p className="max-w-xs text-xs leading-5 text-zinc-400">
+                              {order.design_notes}
+                            </p>
+                          )}
+                        </div>
                       </td>
                       <td className="px-5 py-4 text-zinc-300">
                         {formatDate(order.due_date)}
@@ -705,6 +877,39 @@ export default function AdminOrdersPage() {
                       <span className="font-bold text-zinc-500">Due: </span>
                       {formatDate(order.due_date)}
                     </p>
+                    <div>
+                      <p className="font-bold text-zinc-500">Design:</p>
+                      <div className="mt-2 grid gap-2">
+                        <DesignStatusBadge
+                          status={order.design_status || "Not Started"}
+                        />
+                        <select
+                          className={`${inputClassName} text-sm`}
+                          onChange={(event) =>
+                            updateOrderDesignStatus(
+                              order,
+                              event.target.value as DesignStatus
+                            )
+                          }
+                          value={order.design_status || "Not Started"}
+                        >
+                          {designStatuses.map((status) => (
+                            <option key={status} value={status}>
+                              {status}
+                            </option>
+                          ))}
+                        </select>
+                        <p className="text-xs leading-5 text-zinc-500">
+                          Proof: {formatDate(order.proof_sent_date)} /
+                          Approved: {formatDate(order.approval_date)}
+                        </p>
+                        {order.design_notes && (
+                          <p className="text-xs leading-5 text-zinc-400">
+                            {order.design_notes}
+                          </p>
+                        )}
+                      </div>
+                    </div>
                     <p>
                       <span className="font-bold text-zinc-500">
                         Description:{" "}

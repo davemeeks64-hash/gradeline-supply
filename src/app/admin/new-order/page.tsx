@@ -14,6 +14,13 @@ type OrderStatus =
   | "finished"
   | "delivered";
 
+type DesignStatus =
+  | "Not Started"
+  | "In Design"
+  | "Proof Sent"
+  | "Approved"
+  | "Revision Needed";
+
 type Customer = {
   id: string | number;
   name: string | null;
@@ -49,6 +56,10 @@ type OrderFormState = {
   total_price: string;
   due_date: string;
   status: OrderStatus;
+  design_status: DesignStatus;
+  proof_sent_date: string;
+  approval_date: string;
+  design_notes: string;
 };
 
 const initialFormState: OrderFormState = {
@@ -62,6 +73,10 @@ const initialFormState: OrderFormState = {
   total_price: "",
   due_date: "",
   status: "new",
+  design_status: "Not Started",
+  proof_sent_date: "",
+  approval_date: "",
+  design_notes: "",
 };
 
 const orderStatuses: OrderStatus[] = [
@@ -72,6 +87,14 @@ const orderStatuses: OrderStatus[] = [
   "in production",
   "finished",
   "delivered",
+];
+
+const designStatuses: DesignStatus[] = [
+  "Not Started",
+  "In Design",
+  "Proof Sent",
+  "Approved",
+  "Revision Needed",
 ];
 
 const inputClassName =
@@ -289,6 +312,10 @@ export default function AdminNewOrderPage() {
       total_price: Number(formState.total_price),
       due_date: formState.due_date || null,
       status: formState.status,
+      design_status: formState.design_status,
+      proof_sent_date: formState.proof_sent_date || null,
+      approval_date: formState.approval_date || null,
+      design_notes: formState.design_notes.trim(),
       ...(formState.inventory_item_id
         ? { inventory_item_id: normalizeId(formState.inventory_item_id) }
         : {}),
@@ -487,6 +514,42 @@ export default function AdminNewOrderPage() {
                 ))}
               </select>
             </label>
+
+            <label className="block">
+              <span className={labelClassName}>Design Status</span>
+              <select
+                className={inputClassName}
+                name="design_status"
+                onChange={(event) =>
+                  updateFormField("design_status", event.target.value)
+                }
+                value={formState.design_status}
+              >
+                {designStatuses.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <OrderField
+              label="Proof Sent Date"
+              name="proof_sent_date"
+              onChange={updateFormField}
+              placeholder="Select proof sent date"
+              type="date"
+              value={formState.proof_sent_date}
+            />
+
+            <OrderField
+              label="Approval Date"
+              name="approval_date"
+              onChange={updateFormField}
+              placeholder="Select approval date"
+              type="date"
+              value={formState.approval_date}
+            />
           </div>
 
           <label className="block">
@@ -499,6 +562,19 @@ export default function AdminNewOrderPage() {
               }
               placeholder="Order details, product notes, design direction, material, finish, or customer requests"
               value={formState.description}
+            />
+          </label>
+
+          <label className="block">
+            <span className={labelClassName}>Design Notes</span>
+            <textarea
+              className={`${inputClassName} min-h-28 resize-y`}
+              name="design_notes"
+              onChange={(event) =>
+                updateFormField("design_notes", event.target.value)
+              }
+              placeholder="Proof notes, art direction, revision requests, customer approval details"
+              value={formState.design_notes}
             />
           </label>
 

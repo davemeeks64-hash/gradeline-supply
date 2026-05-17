@@ -7,6 +7,13 @@ import { supabase } from "@/lib/supabase";
 
 type WorkflowStatus = "New" | "Approved" | "Engraving" | "Assembly" | "Completed";
 
+type DesignStatus =
+  | "Not Started"
+  | "In Design"
+  | "Proof Sent"
+  | "Approved"
+  | "Revision Needed";
+
 type Customer = {
   id: string | number;
   name: string | null;
@@ -31,6 +38,10 @@ type Order = {
   qty?: number | null;
   due_date: string | null;
   status: string | null;
+  design_status?: DesignStatus | string | null;
+  proof_sent_date?: string | null;
+  approval_date?: string | null;
+  design_notes?: string | null;
 };
 
 const workflowColumns: WorkflowStatus[] = [
@@ -53,6 +64,14 @@ const statusClassNames: Record<WorkflowStatus, string> = {
   Engraving: "border-amber-300/50 bg-amber-400/10 text-amber-200",
   Assembly: "border-cyan-300/50 bg-cyan-400/10 text-cyan-200",
   Completed: "border-green-300/50 bg-green-400/10 text-green-200",
+};
+
+const designStatusClassNames: Record<DesignStatus, string> = {
+  "Not Started": "border-zinc-300/50 bg-zinc-300/10 text-zinc-200",
+  "In Design": "border-blue-300/50 bg-blue-400/10 text-blue-200",
+  "Proof Sent": "border-cyan-300/50 bg-cyan-400/10 text-cyan-200",
+  Approved: "border-emerald-300/50 bg-emerald-400/10 text-emerald-200",
+  "Revision Needed": "border-amber-300/50 bg-amber-400/10 text-amber-200",
 };
 
 function normalizeStatus(status: string | null | undefined): WorkflowStatus {
@@ -113,6 +132,25 @@ function StatusBadge({ status }: { status: WorkflowStatus }) {
       ].join(" ")}
     >
       {status}
+    </span>
+  );
+}
+
+function DesignStatusBadge({ status }: { status: string | null | undefined }) {
+  const statusLabel = status || "Not Started";
+  const className =
+    statusLabel in designStatusClassNames
+      ? designStatusClassNames[statusLabel as DesignStatus]
+      : "border-white/20 bg-white/10 text-zinc-200";
+
+  return (
+    <span
+      className={[
+        "inline-flex w-fit rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-widest",
+        className,
+      ].join(" ")}
+    >
+      {statusLabel}
     </span>
   );
 }
@@ -443,6 +481,25 @@ export default function AdminProductionPage() {
                           </span>
                           {formatDate(order.due_date)}
                         </p>
+                        <div>
+                          <span className="font-bold text-zinc-500">
+                            Design:{" "}
+                          </span>
+                          <div className="mt-2 grid gap-2">
+                            <DesignStatusBadge
+                              status={order.design_status || "Not Started"}
+                            />
+                            <p className="text-xs leading-5 text-zinc-500">
+                              Proof: {formatDate(order.proof_sent_date)} /
+                              Approved: {formatDate(order.approval_date)}
+                            </p>
+                            {order.design_notes && (
+                              <p className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs leading-5 text-zinc-400">
+                                {order.design_notes}
+                              </p>
+                            )}
+                          </div>
+                        </div>
                       </div>
 
                       <div className="mt-4">
