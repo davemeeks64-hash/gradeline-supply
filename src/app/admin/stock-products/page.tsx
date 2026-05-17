@@ -10,6 +10,7 @@ type Product = {
   sku: string | null;
   name: string | null;
   inventory_item_id?: string | number | null;
+  materials_used?: ProductMaterial[];
   category: string | null;
   material: string | null;
   base_price: number | null;
@@ -22,6 +23,11 @@ type InventoryItem = {
   sku: string | null;
   item_name: string | null;
   quantity_on_hand: number | null;
+};
+
+type ProductMaterial = {
+  inventory_item_id: string;
+  quantity_used: number;
 };
 
 type ProductFormState = {
@@ -70,6 +76,18 @@ function formatCurrency(value: number | null | undefined) {
 function normalizeId(value: string) {
   const numericValue = Number(value);
   return Number.isNaN(numericValue) ? value : numericValue;
+}
+
+function getProductKey(product: Product) {
+  return String(product.id ?? product.sku ?? product.name ?? "");
+}
+
+function formatInventoryItemLabel(item: InventoryItem | undefined) {
+  if (!item) {
+    return "Unknown inventory item";
+  }
+
+  return `${displayValue(item.sku)} / ${displayValue(item.item_name)}`;
 }
 
 function ProductField({
@@ -130,6 +148,9 @@ export default function AdminStockProductsPage() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [formState, setFormState] =
     useState<ProductFormState>(initialFormState);
+  const [materialsUsed, setMaterialsUsed] = useState<ProductMaterial[]>([]);
+  const [selectedMaterialItemId, setSelectedMaterialItemId] = useState("");
+  const [selectedMaterialQuantity, setSelectedMaterialQuantity] = useState("1");
   const [editingProductId, setEditingProductId] = useState<
     string | number | null
   >(null);
@@ -211,7 +232,19 @@ export default function AdminStockProductsPage() {
       setProducts([]);
       setInventoryItems([]);
     } else {
-      setProducts(data);
+      setProducts((currentProducts) => {
+        const materialsByProductKey = currentProducts.reduce<
+          Record<string, ProductMaterial[]>
+        >((lookup, product) => {
+          lookup[getProductKey(product)] = product.materials_used ?? [];
+          return lookup;
+        }, {});
+
+        return data.map((product) => ({
+          ...product,
+          materials_used: materialsByProductKey[getProductKey(product)] ?? [],
+        }));
+      });
       setInventoryItems(nextInventoryItems);
     }
 
@@ -255,6 +288,9 @@ export default function AdminStockProductsPage() {
 
   function resetForm() {
     setFormState(initialFormState);
+    setMaterialsUsed([]);
+    setSelectedMaterialItemId("");
+    setSelectedMaterialQuantity("1");
     setEditingProductId(null);
     setSuccessMessage("");
     setErrorMessage("");
@@ -276,8 +312,56 @@ export default function AdminStockProductsPage() {
           : String(product.base_price),
       active: product.active !== false,
     });
+    setMaterialsUsed(product.materials_used ?? []);
+    setSelectedMaterialItemId("");
+    setSelectedMaterialQuantity("1");
     setSuccessMessage("");
     setErrorMessage("");
+  }
+
+  function addMaterialUsed() {
+    const quantity = Number(selectedMaterialQuantity);
+
+    if (!selectedMaterialItemId || quantity <= 0) {
+      setErrorMessage("Select an inventory item and quantity used.");
+      return;
+    }
+
+    setMaterialsUsed((current) => {
+      const existingMaterial = current.find(
+        (material) => material.inventory_item_id === selectedMaterialItemId
+      );
+
+      if (existingMaterial) {
+        return current.map((material) =>
+          material.inventory_item_id === selectedMaterialItemId
+            ? {
+                ...material,
+                quantity_used: material.quantity_used + quantity,
+              }
+            : material
+        );
+      }
+
+      return [
+        ...current,
+        {
+          inventory_item_id: selectedMaterialItemId,
+          quantity_used: quantity,
+        },
+      ];
+    });
+
+    setSelectedMaterialItemId("");
+    setSelectedMaterialQuantity("1");
+    setSuccessMessage("");
+    setErrorMessage("");
+  }
+
+  function removeMaterialUsed(inventoryItemId: string) {
+    setMaterialsUsed((current) =>
+      current.filter((material) => material.inventory_item_id !== inventoryItemId)
+    );
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -303,7 +387,9 @@ export default function AdminStockProductsPage() {
           .from("products")
           .update(payload)
           .eq("id", editingProductId)
-      : await supabase.from("products").insert(payload);
+          .select()
+          .single()
+      : await supabase.from("products").insert(payload).select().single();
 
     if (response.error) {
       setErrorMessage(response.error.message);
@@ -311,14 +397,29 @@ export default function AdminStockProductsPage() {
       return;
     }
 
+    const savedProduct = {
+      ...((response.data ?? {}) as Product),
+      materials_used: materialsUsed,
+    };
+
+    setProducts((currentProducts) =>
+      editingProductId
+        ? currentProducts.map((product) =>
+            product.id === editingProductId ? savedProduct : product
+          )
+        : [savedProduct, ...currentProducts]
+    );
+
     setSuccessMessage(
       editingProductId
         ? "Product updated successfully."
         : "Product added successfully."
     );
     setFormState(initialFormState);
+    setMaterialsUsed([]);
+    setSelectedMaterialItemId("");
+    setSelectedMaterialQuantity("1");
     setEditingProductId(null);
-    await loadProducts();
     setIsSaving(false);
   }
 
@@ -478,6 +579,103 @@ export default function AdminStockProductsPage() {
             </label>
           </div>
 
+          <section className="rounded-2xl border border-white/10 bg-black/25 p-4">
+            <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className={labelClassName}>Materials / Blanks Used</p>
+                <h3 className="mt-2 text-xl font-black text-white">
+                  Product Bill of Materials
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-zinc-400">
+                  Local product structure only for now. These lines prepare
+                  future automatic inventory deduction.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 grid gap-3 md:grid-cols-[1fr_140px_auto] md:items-end">
+              <label className="block">
+                <span className={labelClassName}>Inventory Item</span>
+                <select
+                  className={inputClassName}
+                  onChange={(event) =>
+                    setSelectedMaterialItemId(event.target.value)
+                  }
+                  value={selectedMaterialItemId}
+                >
+                  <option value="">Select blank/material</option>
+                  {inventoryItems.map((item) => (
+                    <option key={item.id} value={String(item.id)}>
+                      {formatInventoryItemLabel(item)} /{" "}
+                      {displayValue(item.quantity_on_hand)} on hand
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block">
+                <span className={labelClassName}>Qty Used</span>
+                <input
+                  className={inputClassName}
+                  min="0.01"
+                  onChange={(event) =>
+                    setSelectedMaterialQuantity(event.target.value)
+                  }
+                  step="0.01"
+                  type="number"
+                  value={selectedMaterialQuantity}
+                />
+              </label>
+
+              <button
+                type="button"
+                onClick={addMaterialUsed}
+                className="rounded-xl border border-blue-300/40 bg-blue-400/10 px-5 py-3 font-bold text-blue-100 transition hover:bg-blue-400/20"
+              >
+                Add Material
+              </button>
+            </div>
+
+            <div className="mt-4 grid gap-3">
+              {materialsUsed.length === 0 && (
+                <p className="rounded-xl border border-dashed border-white/10 bg-black/20 p-4 text-sm text-zinc-500">
+                  No materials linked yet. Example lines: 1 blank tumbler, 1
+                  leather patch, 1 box.
+                </p>
+              )}
+
+              {materialsUsed.map((material) => {
+                const inventoryItem =
+                  inventoryItemById[material.inventory_item_id];
+
+                return (
+                  <div
+                    key={material.inventory_item_id}
+                    className="flex flex-col gap-3 rounded-xl border border-white/10 bg-black/30 p-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div>
+                      <p className="font-bold text-white">
+                        {formatInventoryItemLabel(inventoryItem)}
+                      </p>
+                      <p className="mt-1 text-sm text-zinc-500">
+                        Quantity used per product: {material.quantity_used}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        removeMaterialUsed(material.inventory_item_id)
+                      }
+                      className="rounded-lg border border-red-300/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-100 transition hover:bg-red-500/20"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <button
               type="submit"
@@ -598,6 +796,7 @@ export default function AdminStockProductsPage() {
                     <th className="px-5 py-4">SKU</th>
                     <th className="px-5 py-4">Product</th>
                     <th className="px-5 py-4">Inventory Link</th>
+                    <th className="px-5 py-4">Materials / Blanks</th>
                     <th className="px-5 py-4">Category</th>
                     <th className="px-5 py-4">Material</th>
                     <th className="px-5 py-4 text-right">Base Price</th>
@@ -630,6 +829,25 @@ export default function AdminStockProductsPage() {
                               ].quantity_on_hand
                             )} on hand`
                           : "No linked blank"}
+                      </td>
+                      <td className="px-5 py-4 text-sm text-zinc-300">
+                        {product.materials_used &&
+                        product.materials_used.length > 0 ? (
+                          <div className="grid gap-1">
+                            {product.materials_used.map((material) => (
+                              <p key={material.inventory_item_id}>
+                                {material.quantity_used} x{" "}
+                                {formatInventoryItemLabel(
+                                  inventoryItemById[
+                                    material.inventory_item_id
+                                  ]
+                                )}
+                              </p>
+                            ))}
+                          </div>
+                        ) : (
+                          "No BOM lines"
+                        )}
                       </td>
                       <td className="px-5 py-4 text-zinc-300">
                         {displayValue(product.category)}
