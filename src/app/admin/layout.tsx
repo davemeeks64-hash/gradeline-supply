@@ -8,6 +8,7 @@ const adminLinks = [
   { label: "Orders", href: "/admin/orders" },
   { label: "New Order", href: "/admin/new-order" },
   { label: "Production", href: "/admin/production" },
+  { label: "Inventory", href: "/admin/inventory" },
   { label: "Products", href: "/admin/stock-products" },
   { label: "Laser Settings", href: "/admin/laser-settings" },
   { label: "Reports", href: "/admin/reports" },
