@@ -868,23 +868,10 @@ export default function AdminStockProductsPage() {
                           : "No linked blank"}
                       </td>
                       <td className="px-5 py-4 text-sm text-zinc-300">
-                        {product.materials_used &&
-                        product.materials_used.length > 0 ? (
-                          <div className="grid gap-1">
-                            {product.materials_used.map((material) => (
-                              <p key={material.inventory_item_id}>
-                                {material.quantity_used} x{" "}
-                                {formatInventoryItemLabel(
-                                  inventoryItemById[
-                                    material.inventory_item_id
-                                  ]
-                                )}
-                              </p>
-                            ))}
-                          </div>
-                        ) : (
-                          "No BOM lines"
-                        )}
+                        <MaterialsUsedSummary
+                          inventoryItemById={inventoryItemById}
+                          materials={product.materials_used}
+                        />
                       </td>
                       <td className="px-5 py-4 text-zinc-300">
                         {displayValue(product.category)}
@@ -975,6 +962,17 @@ export default function AdminStockProductsPage() {
                       </span>
                       {formatCurrency(product.base_price)}
                     </p>
+                    <div className="sm:col-span-2">
+                      <p className="font-bold text-zinc-500">
+                        Materials / Blanks:
+                      </p>
+                      <div className="mt-1">
+                        <MaterialsUsedSummary
+                          inventoryItemById={inventoryItemById}
+                          materials={product.materials_used}
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="mt-5 flex flex-col gap-2 sm:flex-row">
