@@ -21,6 +21,12 @@ type DesignStatus =
   | "Approved"
   | "Revision Needed";
 
+type QuoteStatus = "Not Sent" | "Sent" | "Approved" | "Declined";
+
+type InvoiceStatus = "Not Created" | "Created" | "Sent";
+
+type PaymentStatus = "Unpaid" | "Deposit Paid" | "Paid" | "Refunded";
+
 type Customer = {
   id: string | number;
   name: string | null;
@@ -61,6 +67,13 @@ type OrderFormState = {
   discount_amount: string;
   total_price: string;
   profit_estimate: string;
+  quote_status: QuoteStatus;
+  quote_sent_date: string;
+  invoice_status: InvoiceStatus;
+  invoice_number: string;
+  payment_status: PaymentStatus;
+  amount_paid: string;
+  balance_due: string;
   due_date: string;
   status: OrderStatus;
   design_status: DesignStatus;
@@ -93,6 +106,13 @@ const initialFormState: OrderFormState = {
   discount_amount: "",
   total_price: "",
   profit_estimate: "",
+  quote_status: "Not Sent",
+  quote_sent_date: "",
+  invoice_status: "Not Created",
+  invoice_number: "",
+  payment_status: "Unpaid",
+  amount_paid: "",
+  balance_due: "",
   due_date: "",
   status: "new",
   design_status: "Not Started",
@@ -117,6 +137,22 @@ const designStatuses: DesignStatus[] = [
   "Proof Sent",
   "Approved",
   "Revision Needed",
+];
+
+const quoteStatuses: QuoteStatus[] = [
+  "Not Sent",
+  "Sent",
+  "Approved",
+  "Declined",
+];
+
+const invoiceStatuses: InvoiceStatus[] = ["Not Created", "Created", "Sent"];
+
+const paymentStatuses: PaymentStatus[] = [
+  "Unpaid",
+  "Deposit Paid",
+  "Paid",
+  "Refunded",
 ];
 
 const costingFields: {
@@ -169,6 +205,10 @@ function calculateProfitEstimate(state: OrderFormState) {
     parseMoneyInput(state.material_cost) -
     parseMoneyInput(state.labor_cost)
   );
+}
+
+function calculateBalanceDue(state: OrderFormState) {
+  return parseMoneyInput(state.total_price) - parseMoneyInput(state.amount_paid);
 }
 
 function formatStatusLabel(status: string) {
@@ -332,6 +372,14 @@ export default function AdminNewOrderPage() {
         return {
           ...nextState,
           profit_estimate: formatMoneyInput(calculateProfitEstimate(nextState)),
+          balance_due: formatMoneyInput(calculateBalanceDue(nextState)),
+        };
+      }
+
+      if (name === "amount_paid") {
+        return {
+          ...nextState,
+          balance_due: formatMoneyInput(calculateBalanceDue(nextState)),
         };
       }
 
@@ -349,6 +397,7 @@ export default function AdminNewOrderPage() {
           profit_estimate: formatMoneyInput(
             calculateProfitEstimate(stateWithTotal)
           ),
+          balance_due: formatMoneyInput(calculateBalanceDue(stateWithTotal)),
         };
       }
 
@@ -367,6 +416,7 @@ export default function AdminNewOrderPage() {
       return {
         ...nextState,
         profit_estimate: formatMoneyInput(calculateProfitEstimate(nextState)),
+        balance_due: formatMoneyInput(calculateBalanceDue(nextState)),
       };
     });
     setIsTotalPriceOverridden(false);
@@ -441,6 +491,13 @@ export default function AdminNewOrderPage() {
       discount_amount: Number(formState.discount_amount || 0),
       total_price: Number(formState.total_price),
       profit_estimate: Number(formState.profit_estimate || 0),
+      quote_status: formState.quote_status,
+      quote_sent_date: formState.quote_sent_date || null,
+      invoice_status: formState.invoice_status,
+      invoice_number: formState.invoice_number.trim(),
+      payment_status: formState.payment_status,
+      amount_paid: Number(formState.amount_paid || 0),
+      balance_due: Number(formState.balance_due || 0),
       due_date: formState.due_date || null,
       status: formState.status,
       design_status: formState.design_status,
@@ -726,6 +783,113 @@ export default function AdminNewOrderPage() {
                   readOnly
                   type="number"
                   value={formState.profit_estimate}
+                />
+              </label>
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-white/10 bg-black/25 p-4">
+            <div>
+              <p className={labelClassName}>Quote & Invoice Tracking</p>
+              <h3 className="mt-2 text-xl font-black text-white">
+                Billing Status
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-zinc-400">
+                Track quote status, invoice details, payments, and remaining
+                balance.
+              </p>
+            </div>
+
+            <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <label className="block">
+                <span className={labelClassName}>Quote Status</span>
+                <select
+                  className={inputClassName}
+                  name="quote_status"
+                  onChange={(event) =>
+                    updateFormField("quote_status", event.target.value)
+                  }
+                  value={formState.quote_status}
+                >
+                  {quoteStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <OrderField
+                label="Quote Sent Date"
+                name="quote_sent_date"
+                onChange={updateFormField}
+                placeholder="Select quote sent date"
+                type="date"
+                value={formState.quote_sent_date}
+              />
+
+              <label className="block">
+                <span className={labelClassName}>Invoice Status</span>
+                <select
+                  className={inputClassName}
+                  name="invoice_status"
+                  onChange={(event) =>
+                    updateFormField("invoice_status", event.target.value)
+                  }
+                  value={formState.invoice_status}
+                >
+                  {invoiceStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <OrderField
+                label="Invoice Number"
+                name="invoice_number"
+                onChange={updateFormField}
+                placeholder="INV-1001"
+                value={formState.invoice_number}
+              />
+
+              <label className="block">
+                <span className={labelClassName}>Payment Status</span>
+                <select
+                  className={inputClassName}
+                  name="payment_status"
+                  onChange={(event) =>
+                    updateFormField("payment_status", event.target.value)
+                  }
+                  value={formState.payment_status}
+                >
+                  {paymentStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <OrderField
+                label="Amount Paid"
+                name="amount_paid"
+                onChange={updateFormField}
+                placeholder="0.00"
+                step="0.01"
+                type="number"
+                value={formState.amount_paid}
+              />
+
+              <label className="block">
+                <span className={labelClassName}>Balance Due</span>
+                <input
+                  className={`${inputClassName} text-blue-100`}
+                  name="balance_due"
+                  readOnly
+                  type="number"
+                  value={formState.balance_due}
                 />
               </label>
             </div>

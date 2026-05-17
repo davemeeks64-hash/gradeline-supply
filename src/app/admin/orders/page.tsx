@@ -21,6 +21,12 @@ type DesignStatus =
   | "Approved"
   | "Revision Needed";
 
+type QuoteStatus = "Not Sent" | "Sent" | "Approved" | "Declined";
+
+type InvoiceStatus = "Not Created" | "Created" | "Sent";
+
+type PaymentStatus = "Unpaid" | "Deposit Paid" | "Paid" | "Refunded";
+
 type Customer = {
   id: string | number;
   name: string | null;
@@ -52,6 +58,13 @@ type Order = {
   discount_amount?: number | null;
   total_price: number | null;
   profit_estimate?: number | null;
+  quote_status?: QuoteStatus | string | null;
+  quote_sent_date?: string | null;
+  invoice_status?: InvoiceStatus | string | null;
+  invoice_number?: string | null;
+  payment_status?: PaymentStatus | string | null;
+  amount_paid?: number | null;
+  balance_due?: number | null;
   status: OrderStatus | string | null;
   design_status?: DesignStatus | string | null;
   proof_sent_date?: string | null;
@@ -80,6 +93,13 @@ type OrderFormState = {
   discount_amount: string;
   total_price: string;
   profit_estimate: string;
+  quote_status: QuoteStatus;
+  quote_sent_date: string;
+  invoice_status: InvoiceStatus;
+  invoice_number: string;
+  payment_status: PaymentStatus;
+  amount_paid: string;
+  balance_due: string;
   status: OrderStatus;
   design_status: DesignStatus;
   proof_sent_date: string;
@@ -123,6 +143,13 @@ const initialFormState: OrderFormState = {
   discount_amount: "",
   total_price: "",
   profit_estimate: "",
+  quote_status: "Not Sent",
+  quote_sent_date: "",
+  invoice_status: "Not Created",
+  invoice_number: "",
+  payment_status: "Unpaid",
+  amount_paid: "",
+  balance_due: "",
   status: "New",
   design_status: "Not Started",
   proof_sent_date: "",
@@ -151,6 +178,22 @@ const designStatuses: DesignStatus[] = [
   "Proof Sent",
   "Approved",
   "Revision Needed",
+];
+
+const quoteStatuses: QuoteStatus[] = [
+  "Not Sent",
+  "Sent",
+  "Approved",
+  "Declined",
+];
+
+const invoiceStatuses: InvoiceStatus[] = ["Not Created", "Created", "Sent"];
+
+const paymentStatuses: PaymentStatus[] = [
+  "Unpaid",
+  "Deposit Paid",
+  "Paid",
+  "Refunded",
 ];
 
 const fileLinkFields: { key: FileLinkField; label: string }[] = [
@@ -197,6 +240,26 @@ const designStatusClassNames: Record<DesignStatus, string> = {
   "Revision Needed": "border-amber-300/50 bg-amber-400/10 text-amber-200",
 };
 
+const quoteStatusClassNames: Record<QuoteStatus, string> = {
+  "Not Sent": "border-zinc-300/50 bg-zinc-300/10 text-zinc-200",
+  Sent: "border-cyan-300/50 bg-cyan-400/10 text-cyan-200",
+  Approved: "border-emerald-300/50 bg-emerald-400/10 text-emerald-200",
+  Declined: "border-red-300/50 bg-red-400/10 text-red-200",
+};
+
+const invoiceStatusClassNames: Record<InvoiceStatus, string> = {
+  "Not Created": "border-zinc-300/50 bg-zinc-300/10 text-zinc-200",
+  Created: "border-blue-300/50 bg-blue-400/10 text-blue-200",
+  Sent: "border-cyan-300/50 bg-cyan-400/10 text-cyan-200",
+};
+
+const paymentStatusClassNames: Record<PaymentStatus, string> = {
+  Unpaid: "border-amber-300/50 bg-amber-400/10 text-amber-200",
+  "Deposit Paid": "border-blue-300/50 bg-blue-400/10 text-blue-200",
+  Paid: "border-emerald-300/50 bg-emerald-400/10 text-emerald-200",
+  Refunded: "border-red-300/50 bg-red-400/10 text-red-200",
+};
+
 function normalizeId(value: string) {
   const numericValue = Number(value);
   return Number.isNaN(numericValue) ? value : numericValue;
@@ -232,6 +295,10 @@ function calculateProfitEstimate(state: OrderFormState) {
     parseMoneyInput(state.material_cost) -
     parseMoneyInput(state.labor_cost)
   );
+}
+
+function calculateBalanceDue(state: OrderFormState) {
+  return parseMoneyInput(state.total_price) - parseMoneyInput(state.amount_paid);
 }
 
 function getOrderKey(order: Order) {
@@ -295,6 +362,24 @@ function getDesignStatusClassName(status: string | null | undefined) {
     : "border-white/20 bg-white/10 text-zinc-200";
 }
 
+function getQuoteStatusClassName(status: string | null | undefined) {
+  return status && status in quoteStatusClassNames
+    ? quoteStatusClassNames[status as QuoteStatus]
+    : "border-white/20 bg-white/10 text-zinc-200";
+}
+
+function getInvoiceStatusClassName(status: string | null | undefined) {
+  return status && status in invoiceStatusClassNames
+    ? invoiceStatusClassNames[status as InvoiceStatus]
+    : "border-white/20 bg-white/10 text-zinc-200";
+}
+
+function getPaymentStatusClassName(status: string | null | undefined) {
+  return status && status in paymentStatusClassNames
+    ? paymentStatusClassNames[status as PaymentStatus]
+    : "border-white/20 bg-white/10 text-zinc-200";
+}
+
 function StatusBadge({ status }: { status: string | null | undefined }) {
   return (
     <span
@@ -314,6 +399,45 @@ function DesignStatusBadge({ status }: { status: string | null | undefined }) {
       className={[
         "inline-flex w-fit rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-widest",
         getDesignStatusClassName(status),
+      ].join(" ")}
+    >
+      {displayValue(status)}
+    </span>
+  );
+}
+
+function QuoteStatusBadge({ status }: { status: string | null | undefined }) {
+  return (
+    <span
+      className={[
+        "inline-flex w-fit rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-widest",
+        getQuoteStatusClassName(status),
+      ].join(" ")}
+    >
+      {displayValue(status)}
+    </span>
+  );
+}
+
+function InvoiceStatusBadge({ status }: { status: string | null | undefined }) {
+  return (
+    <span
+      className={[
+        "inline-flex w-fit rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-widest",
+        getInvoiceStatusClassName(status),
+      ].join(" ")}
+    >
+      {displayValue(status)}
+    </span>
+  );
+}
+
+function PaymentStatusBadge({ status }: { status: string | null | undefined }) {
+  return (
+    <span
+      className={[
+        "inline-flex w-fit rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-widest",
+        getPaymentStatusClassName(status),
       ].join(" ")}
     >
       {displayValue(status)}
@@ -431,6 +555,32 @@ function CostingSummary({ order }: { order: Order }) {
           <span>Est. Profit</span>
           <span>{formatCurrency(order.profit_estimate)}</span>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function QuotePaymentSummary({ order }: { order: Order }) {
+  return (
+    <div className="grid gap-3 rounded-2xl border border-white/10 bg-black/25 p-3 text-xs">
+      <div className="flex flex-wrap gap-2">
+        <QuoteStatusBadge status={order.quote_status || "Not Sent"} />
+        <InvoiceStatusBadge status={order.invoice_status || "Not Created"} />
+        <PaymentStatusBadge status={order.payment_status || "Unpaid"} />
+      </div>
+      <div className="grid gap-1 text-zinc-400">
+        <p>Quote Sent: {formatDate(order.quote_sent_date)}</p>
+        <p>Invoice: {displayValue(order.invoice_number)}</p>
+      </div>
+      <div className="grid grid-cols-2 gap-2 border-t border-white/10 pt-2">
+        <span className="text-zinc-400">Paid</span>
+        <span className="text-right font-bold text-zinc-100">
+          {formatCurrency(order.amount_paid)}
+        </span>
+        <span className="text-zinc-400">Balance</span>
+        <span className="text-right font-black text-blue-200">
+          {formatCurrency(order.balance_due)}
+        </span>
       </div>
     </div>
   );
@@ -640,6 +790,14 @@ export default function AdminOrdersPage() {
         return {
           ...nextState,
           profit_estimate: formatMoneyInput(calculateProfitEstimate(nextState)),
+          balance_due: formatMoneyInput(calculateBalanceDue(nextState)),
+        };
+      }
+
+      if (name === "amount_paid") {
+        return {
+          ...nextState,
+          balance_due: formatMoneyInput(calculateBalanceDue(nextState)),
         };
       }
 
@@ -657,6 +815,7 @@ export default function AdminOrdersPage() {
           profit_estimate: formatMoneyInput(
             calculateProfitEstimate(stateWithTotal)
           ),
+          balance_due: formatMoneyInput(calculateBalanceDue(stateWithTotal)),
         };
       }
 
@@ -675,6 +834,7 @@ export default function AdminOrdersPage() {
       return {
         ...nextState,
         profit_estimate: formatMoneyInput(calculateProfitEstimate(nextState)),
+        balance_due: formatMoneyInput(calculateBalanceDue(nextState)),
       };
     });
     setIsTotalPriceOverridden(false);
@@ -716,6 +876,13 @@ export default function AdminOrdersPage() {
       discount_amount: Number(formState.discount_amount || 0),
       total_price: Number(formState.total_price),
       profit_estimate: Number(formState.profit_estimate || 0),
+      quote_status: formState.quote_status,
+      quote_sent_date: formState.quote_sent_date || null,
+      invoice_status: formState.invoice_status,
+      invoice_number: formState.invoice_number.trim(),
+      payment_status: formState.payment_status,
+      amount_paid: Number(formState.amount_paid || 0),
+      balance_due: Number(formState.balance_due || 0),
       status: formState.status,
       design_status: formState.design_status,
       proof_sent_date: formState.proof_sent_date || null,
@@ -1056,6 +1223,112 @@ export default function AdminOrdersPage() {
             </div>
           </section>
 
+          <section className="rounded-2xl border border-white/10 bg-black/25 p-4">
+            <div>
+              <p className={labelClassName}>Quote & Invoice Tracking</p>
+              <h3 className="mt-2 text-xl font-black text-white">
+                Billing Status
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-zinc-400">
+                Track quotes, invoices, payments, and remaining balance.
+              </p>
+            </div>
+
+            <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <label className="block">
+                <span className={labelClassName}>Quote Status</span>
+                <select
+                  className={inputClassName}
+                  name="quote_status"
+                  onChange={(event) =>
+                    updateFormField("quote_status", event.target.value)
+                  }
+                  value={formState.quote_status}
+                >
+                  {quoteStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <OrderField
+                label="Quote Sent Date"
+                name="quote_sent_date"
+                onChange={updateFormField}
+                placeholder="Select quote sent date"
+                type="date"
+                value={formState.quote_sent_date}
+              />
+
+              <label className="block">
+                <span className={labelClassName}>Invoice Status</span>
+                <select
+                  className={inputClassName}
+                  name="invoice_status"
+                  onChange={(event) =>
+                    updateFormField("invoice_status", event.target.value)
+                  }
+                  value={formState.invoice_status}
+                >
+                  {invoiceStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <OrderField
+                label="Invoice Number"
+                name="invoice_number"
+                onChange={updateFormField}
+                placeholder="INV-1001"
+                value={formState.invoice_number}
+              />
+
+              <label className="block">
+                <span className={labelClassName}>Payment Status</span>
+                <select
+                  className={inputClassName}
+                  name="payment_status"
+                  onChange={(event) =>
+                    updateFormField("payment_status", event.target.value)
+                  }
+                  value={formState.payment_status}
+                >
+                  {paymentStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <OrderField
+                label="Amount Paid"
+                name="amount_paid"
+                onChange={updateFormField}
+                placeholder="0.00"
+                step="0.01"
+                type="number"
+                value={formState.amount_paid}
+              />
+
+              <label className="block">
+                <span className={labelClassName}>Balance Due</span>
+                <input
+                  className={`${inputClassName} text-blue-100`}
+                  name="balance_due"
+                  readOnly
+                  type="number"
+                  value={formState.balance_due}
+                />
+              </label>
+            </div>
+          </section>
+
           <label className="block">
             <span className={labelClassName}>Description</span>
             <textarea
@@ -1208,6 +1481,7 @@ export default function AdminOrdersPage() {
                     <th className="px-5 py-4">Inventory Link</th>
                     <th className="px-5 py-4">Qty</th>
                     <th className="px-5 py-4">Status</th>
+                    <th className="px-5 py-4">Quote / Payment</th>
                     <th className="px-5 py-4">Design</th>
                     <th className="px-5 py-4">Files</th>
                     <th className="px-5 py-4">Due</th>
@@ -1253,6 +1527,9 @@ export default function AdminOrdersPage() {
                       </td>
                       <td className="px-5 py-4">
                         <StatusBadge status={order.status} />
+                      </td>
+                      <td className="px-5 py-4">
+                        <QuotePaymentSummary order={order} />
                       </td>
                       <td className="px-5 py-4">
                         <div className="grid gap-3">
@@ -1366,6 +1643,14 @@ export default function AdminOrdersPage() {
                       <span className="font-bold text-zinc-500">Due: </span>
                       {formatDate(order.due_date)}
                     </p>
+                    <div>
+                      <p className="font-bold text-zinc-500">
+                        Quote / Payment:
+                      </p>
+                      <div className="mt-2">
+                        <QuotePaymentSummary order={order} />
+                      </div>
+                    </div>
                     <div>
                       <p className="font-bold text-zinc-500">Costing:</p>
                       <div className="mt-2">
