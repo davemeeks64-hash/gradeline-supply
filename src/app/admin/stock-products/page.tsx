@@ -9,6 +9,7 @@ type Product = {
   id?: string | number;
   sku: string | null;
   name: string | null;
+  inventory_item_id?: string | number | null;
   category: string | null;
   material: string | null;
   base_price: number | null;
@@ -16,9 +17,17 @@ type Product = {
   created_at?: string | null;
 };
 
+type InventoryItem = {
+  id: string | number;
+  sku: string | null;
+  item_name: string | null;
+  quantity_on_hand: number | null;
+};
+
 type ProductFormState = {
   sku: string;
   name: string;
+  inventory_item_id: string;
   category: string;
   material: string;
   base_price: string;
@@ -30,6 +39,7 @@ type ActiveFilter = "all" | "active" | "inactive";
 const initialFormState: ProductFormState = {
   sku: "",
   name: "",
+  inventory_item_id: "",
   category: "",
   material: "",
   base_price: "",

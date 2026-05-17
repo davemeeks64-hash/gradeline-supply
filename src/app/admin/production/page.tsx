@@ -117,6 +117,46 @@ function StatusBadge({ status }: { status: WorkflowStatus }) {
   );
 }
 
+function InventoryProductionSummary({
+  item,
+  quantity,
+}: {
+  item: InventoryItem | undefined;
+  quantity: number | null | undefined;
+}) {
+  if (!item) {
+    return (
+      <div className="rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-xs text-zinc-500">
+        No linked inventory item. Deduction preparation pending.
+      </div>
+    );
+  }
+
+  const onHand = Number(item.quantity_on_hand) || 0;
+  const orderQty = Number(quantity) || 0;
+  const reorderLevel = Number(item.reorder_level) || 0;
+  const warning = orderQty > onHand || onHand <= reorderLevel;
+
+  return (
+    <div
+      className={[
+        "rounded-xl border px-3 py-2 text-xs",
+        warning
+          ? "border-amber-300/40 bg-amber-400/10 text-amber-100"
+          : "border-blue-300/30 bg-blue-400/10 text-blue-100",
+      ].join(" ")}
+    >
+      <p className="font-bold uppercase tracking-widest">
+        Linked Blank / Deduction Pending
+      </p>
+      <p className="mt-1 leading-5">
+        {displayValue(item.sku)} / {displayValue(item.item_name)} / {onHand} on
+        hand
+      </p>
+    </div>
+  );
+}
+
 export default function AdminProductionPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
@@ -279,7 +319,11 @@ export default function AdminProductionPage() {
         )
       );
       setSuccessMessage(
-        `${displayValue(order.order_number)} moved to ${nextStatus}.`
+        nextStatus === "Completed"
+          ? `${displayValue(
+              order.order_number
+            )} moved to Completed. Inventory deduction is prepared but not automated yet.`
+          : `${displayValue(order.order_number)} moved to ${nextStatus}.`
       );
     }
 
@@ -399,6 +443,17 @@ export default function AdminProductionPage() {
                           </span>
                           {formatDate(order.due_date)}
                         </p>
+                      </div>
+
+                      <div className="mt-4">
+                        <InventoryProductionSummary
+                          item={
+                            order.inventory_item_id
+                              ? inventoryItemById[String(order.inventory_item_id)]
+                              : undefined
+                          }
+                          quantity={order.qty}
+                        />
                       </div>
 
                       <label className="mt-4 block">
