@@ -409,6 +409,9 @@ export default function AdminInventoryPage() {
   const [skuManuallyEdited, setSkuManuallyEdited] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [deletingItemId, setDeletingItemId] = useState<string | number | null>(
+    null
+  );
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -650,6 +653,18 @@ export default function AdminInventoryPage() {
     setSortDirection("asc");
   }
 
+  function adjustQuantity(delta: number) {
+    setSuccessMessage("");
+    setErrorMessage("");
+    setFormState((current) => ({
+      ...current,
+      quantity_on_hand: Math.max(
+        0,
+        (Number(current.quantity_on_hand) || 0) + delta
+      ),
+    }));
+  }
+
   function resetForm() {
     setFormState(emptyFormState);
     setEditingItemId(null);
@@ -710,6 +725,41 @@ export default function AdminInventoryPage() {
     setSkuManuallyEdited(false);
     setSuccessMessage("");
     setErrorMessage("");
+  }
+
+  async function deleteInventoryItem(item: InventoryItem) {
+    const confirmed = window.confirm(
+      `Delete ${item.sku} / ${item.item_name}? This cannot be undone.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDeletingItemId(item.id);
+    setSuccessMessage("");
+    setErrorMessage("");
+
+    const { error } = await supabase
+      .from("inventory_items")
+      .delete()
+      .eq("id", item.id);
+
+    if (error) {
+      setErrorMessage(error.message);
+    } else {
+      setItems((current) =>
+        current.filter((currentItem) => currentItem.id !== item.id)
+      );
+
+      if (editingItemId === item.id) {
+        resetForm();
+      }
+
+      setSuccessMessage("Inventory item deleted from Supabase.");
+    }
+
+    setDeletingItemId(null);
   }
 
   return (
@@ -903,15 +953,34 @@ export default function AdminInventoryPage() {
             ))}
 
             <div className="grid gap-4 sm:grid-cols-3">
-              <InventoryField
-                label="Quantity On Hand"
-                name="quantity_on_hand"
-                onChange={updateFormField}
-                placeholder="0"
-                required
-                type="number"
-                value={formState.quantity_on_hand}
-              />
+              <div>
+                <InventoryField
+                  label="Quantity On Hand"
+                  name="quantity_on_hand"
+                  onChange={updateFormField}
+                  placeholder="0"
+                  required
+                  type="number"
+                  value={formState.quantity_on_hand}
+                />
+                <div className="mt-2 grid grid-cols-4 gap-2">
+                  {[1, 5, -1, -5].map((delta) => (
+                    <button
+                      key={delta}
+                      type="button"
+                      onClick={() => adjustQuantity(delta)}
+                      className={[
+                        "rounded-lg border px-2 py-2 text-sm font-black transition",
+                        delta > 0
+                          ? "border-blue-300/35 bg-blue-400/10 text-blue-100 hover:bg-blue-400/20"
+                          : "border-amber-300/35 bg-amber-400/10 text-amber-100 hover:bg-amber-400/20",
+                      ].join(" ")}
+                    >
+                      {delta > 0 ? `+${delta}` : delta}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <InventoryField
                 label="Reorder Level"
                 name="reorder_level"
@@ -1133,13 +1202,25 @@ export default function AdminInventoryPage() {
                           <StockBadge item={item} />
                         </td>
                         <td className="px-5 py-4">
-                          <button
-                            type="button"
-                            onClick={() => startEditing(item)}
-                            className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-                          >
-                            Edit
-                          </button>
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => startEditing(item)}
+                              className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              disabled={deletingItemId === item.id}
+                              onClick={() => deleteInventoryItem(item)}
+                              className="rounded-lg border border-red-300/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-100 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                            >
+                              {deletingItemId === item.id
+                                ? "Deleting"
+                                : "Delete"}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -1242,13 +1323,25 @@ export default function AdminInventoryPage() {
                       </p>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => startEditing(item)}
-                      className="mt-5 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-                    >
-                      Edit Item
-                  </button>
+                    <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+                      <button
+                        type="button"
+                        onClick={() => startEditing(item)}
+                        className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                      >
+                        Edit Item
+                      </button>
+                      <button
+                        type="button"
+                        disabled={deletingItemId === item.id}
+                        onClick={() => deleteInventoryItem(item)}
+                        className="rounded-lg border border-red-300/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-100 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {deletingItemId === item.id
+                          ? "Deleting"
+                          : "Delete Item"}
+                      </button>
+                    </div>
                 </article>
                   );
                 })}
