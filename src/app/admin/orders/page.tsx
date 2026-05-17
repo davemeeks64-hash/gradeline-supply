@@ -27,6 +27,8 @@ type InvoiceStatus = "Not Created" | "Created" | "Sent";
 
 type PaymentStatus = "Unpaid" | "Deposit Paid" | "Paid" | "Refunded";
 
+type FulfillmentMethod = "Pickup" | "Local Delivery" | "Shipped";
+
 type Customer = {
   id: string | number;
   name: string | null;
@@ -65,6 +67,12 @@ type Order = {
   payment_status?: PaymentStatus | string | null;
   amount_paid?: number | null;
   balance_due?: number | null;
+  fulfillment_method?: FulfillmentMethod | string | null;
+  pickup_date?: string | null;
+  delivery_date?: string | null;
+  shipping_carrier?: string | null;
+  tracking_number?: string | null;
+  delivery_notes?: string | null;
   status: OrderStatus | string | null;
   design_status?: DesignStatus | string | null;
   proof_sent_date?: string | null;
@@ -100,6 +108,12 @@ type OrderFormState = {
   payment_status: PaymentStatus;
   amount_paid: string;
   balance_due: string;
+  fulfillment_method: FulfillmentMethod;
+  pickup_date: string;
+  delivery_date: string;
+  shipping_carrier: string;
+  tracking_number: string;
+  delivery_notes: string;
   status: OrderStatus;
   design_status: DesignStatus;
   proof_sent_date: string;
@@ -150,6 +164,12 @@ const initialFormState: OrderFormState = {
   payment_status: "Unpaid",
   amount_paid: "",
   balance_due: "",
+  fulfillment_method: "Pickup",
+  pickup_date: "",
+  delivery_date: "",
+  shipping_carrier: "",
+  tracking_number: "",
+  delivery_notes: "",
   status: "New",
   design_status: "Not Started",
   proof_sent_date: "",
