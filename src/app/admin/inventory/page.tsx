@@ -1262,7 +1262,7 @@ export default function AdminInventoryPage() {
             </div>
 
             <div className="hidden overflow-x-auto xl:block">
-              <table className="w-full border-collapse text-left">
+              <table className="min-w-[1180px] w-full border-separate border-spacing-0 text-left">
                 <thead className="border-b border-white/10 bg-black/30 text-xs font-bold uppercase tracking-widest text-blue-300">
                   <tr>
                     {sortableColumns.map((column) => (
@@ -1275,7 +1275,9 @@ export default function AdminInventoryPage() {
                         />
                       </th>
                     ))}
-                    <th className="px-5 py-4">Actions</th>
+                    <th className="sticky right-0 z-20 w-48 min-w-48 border-l border-white/10 bg-black/90 px-5 py-4 text-center shadow-[-18px_0_28px_rgba(5,7,10,0.72)]">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/10">
@@ -1337,12 +1339,18 @@ export default function AdminInventoryPage() {
                         <td className="px-5 py-4">
                           <StockBadge item={item} />
                         </td>
-                        <td className="px-5 py-4">
-                          <div className="flex gap-2">
+                        <td
+                          className={[
+                            "sticky right-0 z-10 w-48 min-w-48 border-l border-white/10 px-5 py-4 shadow-[-18px_0_28px_rgba(5,7,10,0.72)]",
+                            lowStock ? "bg-[#17130b]/95" : "bg-[#0b1014]/95",
+                          ].join(" ")}
+                        >
+                          <div className="grid gap-2">
                             <button
                               type="button"
                               onClick={() => startEditing(item)}
-                              className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                              aria-label={`Edit ${item.sku}`}
+                              className="w-full rounded-lg border border-blue-300/35 bg-blue-400/10 px-4 py-2 text-sm font-bold text-blue-50 transition hover:border-blue-300/70 hover:bg-blue-400/20"
                             >
                               Edit
                             </button>
@@ -1350,7 +1358,8 @@ export default function AdminInventoryPage() {
                               type="button"
                               disabled={deletingItemId === item.id}
                               onClick={() => deleteInventoryItem(item)}
-                              className="rounded-lg border border-red-300/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-100 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                              aria-label={`Delete ${item.sku}`}
+                              className="w-full rounded-lg border border-red-300/35 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-100 transition hover:border-red-300/60 hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
                             >
                               {deletingItemId === item.id
                                 ? "Deleting"
@@ -1459,24 +1468,31 @@ export default function AdminInventoryPage() {
                       </p>
                     </div>
 
-                    <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-                      <button
-                        type="button"
-                        onClick={() => startEditing(item)}
-                        className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        disabled={deletingItemId === item.id}
-                        onClick={() => deleteInventoryItem(item)}
-                        className="rounded-lg border border-red-300/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-100 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
-                      >
-                        {deletingItemId === item.id
-                          ? "Deleting"
-                          : "Delete"}
-                      </button>
+                    <div className="mt-5 border-t border-white/10 pt-4">
+                      <p className="text-xs font-bold uppercase tracking-[0.22em] text-blue-200">
+                        Actions
+                      </p>
+                      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                        <button
+                          type="button"
+                          onClick={() => startEditing(item)}
+                          aria-label={`Edit ${item.sku}`}
+                          className="w-full rounded-lg border border-blue-300/35 bg-blue-400/10 px-4 py-3 text-sm font-bold text-blue-50 transition hover:border-blue-300/70 hover:bg-blue-400/20"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          disabled={deletingItemId === item.id}
+                          onClick={() => deleteInventoryItem(item)}
+                          aria-label={`Delete ${item.sku}`}
+                          className="w-full rounded-lg border border-red-300/35 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-100 transition hover:border-red-300/60 hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          {deletingItemId === item.id
+                            ? "Deleting"
+                            : "Delete"}
+                        </button>
+                      </div>
                     </div>
                 </article>
                   );
