@@ -4,61 +4,61 @@ import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
 
 const categories = [
-  "Industrial & Blue Collar",
-  "Home & Kitchen",
-  "Custom Gifts",
-  "Business & Commercial",
-  "Custom Works",
+  "Tumblers",
+  "Leather",
+  "Cutting Boards",
+  "Signs",
+  "Custom Work",
 ];
 
 const galleryProjects = [
   {
-    projectName: "Union Pride Slate Awards",
-    category: "Industrial & Blue Collar",
-    material: "Black slate",
+    projectName: "Shop Tumbler Batch",
+    category: "Tumblers",
+    material: "Powder-coated drinkware",
     description:
-      "Steel-blue engraved award set with trade-inspired badge details.",
-    image: "/images/categories/gradeline-category-blue-collar-series.png",
+      "Ready-made drinkware direction for crews, business gifts, events, and everyday carry.",
+    image: "/images/products/gradeline-product-placeholder-tumbler.png",
+  },
+  {
+    projectName: "Branded Leather Patch Run",
+    category: "Leather",
+    material: "Leatherette",
+    description:
+      "Clean engraved patches for hats, jackets, shop gear, and blue-collar branded pieces.",
+    image: "/images/products/gradeline-product-placeholder-leather-patch.png",
   },
   {
     projectName: "Walnut Recipe Board",
-    category: "Home & Kitchen",
+    category: "Cutting Boards",
     material: "Walnut",
     description:
-      "Handwritten family recipe engraved into a warm kitchen display piece.",
+      "Warm kitchen display piece for handwritten recipes, family names, dates, and gifts.",
     image: "/images/products/gradeline-product-placeholder-cutting-board.png",
   },
   {
-    projectName: "Wedding Keepsake Sign",
-    category: "Custom Gifts",
-    material: "Birch plywood",
-    description:
-      "Personalized name and date sign with clean, gift-ready finishing.",
-    image: "/images/categories/gradeline-category-custom-orders.png",
-  },
-  {
     projectName: "Shop Counter Logo",
-    category: "Business & Commercial",
-    material: "Acrylic",
+    category: "Signs",
+    material: "Layered acrylic",
     description:
-      "Layered acrylic counter sign built for a small business front desk.",
+      "Layered business signage for front desks, shops, booths, offices, and branded displays.",
     image: "/images/products/gradeline-product-placeholder-layered-sign.png",
   },
   {
-    projectName: "Prototype Equipment Tags",
-    category: "Custom Works",
-    material: "Brushed aluminum",
+    projectName: "Blue Collar Series Tags",
+    category: "Custom Work",
+    material: "Industrial-inspired blanks",
     description:
-      "One-off serialized tags for a field-test equipment labeling run.",
-    image: "/images/categories/gradeline-category-custom-signs.png",
+      "Trade-inspired tags, serialized pieces, and rugged keepsakes built around a specific idea.",
+    image: "/images/categories/gradeline-category-blue-collar-series.png",
   },
   {
-    projectName: "Leather Patch Batch",
-    category: "Industrial & Blue Collar",
-    material: "Leatherette",
+    projectName: "Custom Order Concept",
+    category: "Custom Work",
+    material: "Mixed material",
     description:
-      "Branded patches prepared for hats, jackets, and crew gear.",
-    image: "/images/products/gradeline-product-placeholder-leather-patch.png",
+      "Upload-driven requests, prototypes, memorial gifts, special signage, and one-off builds.",
+    image: "/images/categories/gradeline-category-custom-orders.png",
   },
 ];
 
@@ -84,8 +84,8 @@ export default function GalleryPage() {
             </p>
             <h1 className="mt-4 text-4xl font-black md:text-6xl">Gallery</h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-zinc-300">
-              Demo showcase for finished engravings, shop-built goods,
-              leatherwork, slate, acrylic, and custom production runs.
+              A visual preview of Gradeline product directions, category
+              styles, and custom engraving possibilities.
             </p>
             <Link
               href="/"
@@ -111,13 +111,13 @@ export default function GalleryPage() {
             ))}
           </div>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-8 grid items-stretch gap-5 md:grid-cols-2 xl:grid-cols-3">
             {galleryProjects.map((project) => (
               <article
                 key={project.projectName}
-                className="h-full overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+                className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
               >
-                <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-white/10 bg-black">
+                <div className="relative aspect-[16/11] w-full overflow-hidden border-b border-white/10 bg-black">
                   <Image
                     src={project.image}
                     alt=""
@@ -127,7 +127,7 @@ export default function GalleryPage() {
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.28),transparent)]" />
                 </div>
-                <div className="p-6">
+                <div className="flex flex-1 flex-col p-6">
                   <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
                     {project.category}
                   </p>
@@ -140,10 +140,47 @@ export default function GalleryPage() {
                   <p className="mt-4 leading-7 text-zinc-400">
                     {project.description}
                   </p>
+                  <Link
+                    href="/custom-order"
+                    className="mt-auto rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                  >
+                    Request Similar
+                  </Link>
                 </div>
               </article>
             ))}
           </div>
+
+          <section className="relative mt-8 overflow-hidden rounded-3xl border border-blue-300/20 bg-[linear-gradient(135deg,rgba(12,19,26,1),rgba(7,9,12,1)_58%,rgba(20,43,61,0.72))] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.4)] md:p-10">
+            <Image
+              src="/images/workflow/gradeline-gallery-section-banner.png"
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover object-center opacity-[0.22]"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,10,0.92),rgba(5,7,10,0.72),rgba(5,7,10,0.36))]" />
+            <div className="relative grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div>
+                <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
+                  Custom Work
+                </p>
+                <h2 className="mt-3 text-3xl font-black md:text-5xl">
+                  Want something custom?
+                </h2>
+                <p className="mt-4 max-w-2xl leading-8 text-zinc-300">
+                  Send the idea, logo, sketch, product direction, or inspiration
+                  and Gradeline can help shape it into a finished piece.
+                </p>
+              </div>
+              <Link
+                href="/custom-order"
+                className="inline-flex w-fit rounded-xl bg-blue-400 px-6 py-3 font-bold text-black transition hover:bg-blue-300"
+              >
+                Start Custom Order
+              </Link>
+            </div>
+          </section>
         </div>
       </section>
       </main>
