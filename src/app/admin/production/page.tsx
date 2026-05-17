@@ -14,11 +14,21 @@ type Customer = {
   company: string | null;
 };
 
+type InventoryItem = {
+  id: string | number;
+  sku: string | null;
+  item_name: string | null;
+  quantity_on_hand: number | null;
+  reorder_level: number | null;
+};
+
 type Order = {
   id?: string | number;
   order_number: string | null;
   customer_id: string | number | null;
+  inventory_item_id?: string | number | null;
   product_type: string | null;
+  qty?: number | null;
   due_date: string | null;
   status: string | null;
 };
@@ -109,6 +119,7 @@ function StatusBadge({ status }: { status: WorkflowStatus }) {
 
 export default function AdminProductionPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [updatingOrderId, setUpdatingOrderId] = useState<string | number | null>(
@@ -124,6 +135,13 @@ export default function AdminProductionPage() {
       return lookup;
     }, {});
   }, [customers]);
+
+  const inventoryItemById = useMemo(() => {
+    return inventoryItems.reduce<Record<string, InventoryItem>>((lookup, item) => {
+      lookup[String(item.id)] = item;
+      return lookup;
+    }, {});
+  }, [inventoryItems]);
 
   const ordersByStatus = useMemo(() => {
     return workflowColumns.reduce<Record<WorkflowStatus, Order[]>>(
@@ -144,16 +162,19 @@ export default function AdminProductionPage() {
   }, [orders]);
 
   async function readPageData() {
-    const [customersResponse, ordersResponse] = await Promise.all([
+    const [customersResponse, ordersResponse, inventoryResponse] = await Promise.all([
       supabase.from("customers").select("id,name,email,company"),
+      supabase.from("orders").select("*"),
       supabase
-        .from("orders")
-        .select("id,order_number,customer_id,product_type,due_date,status"),
+        .from("inventory_items")
+        .select("id,sku,item_name,quantity_on_hand,reorder_level"),
     ]);
 
     return {
       customers: (customersResponse.data ?? []) as Customer[],
       customersError: customersResponse.error,
+      inventoryItems: (inventoryResponse.data ?? []) as InventoryItem[],
+      inventoryError: inventoryResponse.error,
       orders: (ordersResponse.data ?? []) as Order[],
       ordersError: ordersResponse.error,
     };
@@ -163,19 +184,28 @@ export default function AdminProductionPage() {
     setIsLoading(true);
     setErrorMessage("");
 
-    const { customers: nextCustomers, customersError, orders: nextOrders, ordersError } =
-      await readPageData();
+    const {
+      customers: nextCustomers,
+      customersError,
+      inventoryItems: nextInventoryItems,
+      inventoryError,
+      orders: nextOrders,
+      ordersError,
+    } = await readPageData();
 
-    if (customersError || ordersError) {
+    if (customersError || ordersError || inventoryError) {
       setErrorMessage(
         customersError?.message ||
           ordersError?.message ||
+          inventoryError?.message ||
           "Unable to load production orders."
       );
       setCustomers([]);
+      setInventoryItems([]);
       setOrders([]);
     } else {
       setCustomers(nextCustomers);
+      setInventoryItems(nextInventoryItems);
       setOrders(nextOrders);
     }
 
@@ -186,21 +216,31 @@ export default function AdminProductionPage() {
     let isMounted = true;
 
     readPageData().then(
-      ({ customers: nextCustomers, customersError, orders: nextOrders, ordersError }) => {
+      ({
+        customers: nextCustomers,
+        customersError,
+        inventoryItems: nextInventoryItems,
+        inventoryError,
+        orders: nextOrders,
+        ordersError,
+      }) => {
         if (!isMounted) {
           return;
         }
 
-        if (customersError || ordersError) {
+        if (customersError || ordersError || inventoryError) {
           setErrorMessage(
             customersError?.message ||
               ordersError?.message ||
+              inventoryError?.message ||
               "Unable to load production orders."
           );
           setCustomers([]);
+          setInventoryItems([]);
           setOrders([]);
         } else {
           setCustomers(nextCustomers);
+          setInventoryItems(nextInventoryItems);
           setOrders(nextOrders);
         }
 

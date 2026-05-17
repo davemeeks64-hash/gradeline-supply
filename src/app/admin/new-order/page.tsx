@@ -21,8 +21,16 @@ type Customer = {
   company: string | null;
 };
 
+type InventoryItem = {
+  id: string | number;
+  sku: string | null;
+  item_name: string | null;
+  quantity_on_hand: number | null;
+};
+
 type OrderFormState = {
   customer_id: string;
+  inventory_item_id: string;
   order_number: string;
   product_type: string;
   description: string;
@@ -34,6 +42,7 @@ type OrderFormState = {
 
 const initialFormState: OrderFormState = {
   customer_id: "",
+  inventory_item_id: "",
   order_number: "",
   product_type: "",
   description: "",
@@ -106,31 +115,51 @@ function OrderField({
 
 export default function AdminNewOrderPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [formState, setFormState] = useState<OrderFormState>(initialFormState);
   const [isLoadingCustomers, setIsLoadingCustomers] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  async function readCustomers() {
-    const { data, error } = await supabase
-      .from("customers")
-      .select("id,name,email,company");
+  async function readFormData() {
+    const [customersResponse, inventoryResponse] = await Promise.all([
+      supabase.from("customers").select("id,name,email,company"),
+      supabase
+        .from("inventory_items")
+        .select("id,sku,item_name,quantity_on_hand"),
+    ]);
 
-    return { data: (data ?? []) as Customer[], error };
+    return {
+      customers: (customersResponse.data ?? []) as Customer[],
+      customersError: customersResponse.error,
+      inventoryItems: (inventoryResponse.data ?? []) as InventoryItem[],
+      inventoryError: inventoryResponse.error,
+    };
   }
 
   async function loadCustomers() {
     setIsLoadingCustomers(true);
     setErrorMessage("");
 
-    const { data, error } = await readCustomers();
+    const {
+      customers: nextCustomers,
+      customersError,
+      inventoryItems: nextInventoryItems,
+      inventoryError,
+    } = await readFormData();
 
-    if (error) {
-      setErrorMessage(error.message);
+    if (customersError || inventoryError) {
+      setErrorMessage(
+        customersError?.message ||
+          inventoryError?.message ||
+          "Unable to load form data."
+      );
       setCustomers([]);
+      setInventoryItems([]);
     } else {
-      setCustomers(data);
+      setCustomers(nextCustomers);
+      setInventoryItems(nextInventoryItems);
     }
 
     setIsLoadingCustomers(false);
@@ -139,20 +168,33 @@ export default function AdminNewOrderPage() {
   useEffect(() => {
     let isMounted = true;
 
-    readCustomers().then(({ data, error }) => {
-      if (!isMounted) {
-        return;
-      }
+    readFormData().then(
+      ({
+        customers: nextCustomers,
+        customersError,
+        inventoryItems: nextInventoryItems,
+        inventoryError,
+      }) => {
+        if (!isMounted) {
+          return;
+        }
 
-      if (error) {
-        setErrorMessage(error.message);
-        setCustomers([]);
-      } else {
-        setCustomers(data);
-      }
+        if (customersError || inventoryError) {
+          setErrorMessage(
+            customersError?.message ||
+              inventoryError?.message ||
+              "Unable to load form data."
+          );
+          setCustomers([]);
+          setInventoryItems([]);
+        } else {
+          setCustomers(nextCustomers);
+          setInventoryItems(nextInventoryItems);
+        }
 
-      setIsLoadingCustomers(false);
-    });
+        setIsLoadingCustomers(false);
+      }
+    );
 
     return () => {
       isMounted = false;
@@ -181,6 +223,9 @@ export default function AdminNewOrderPage() {
       total_price: Number(formState.total_price),
       due_date: formState.due_date || null,
       status: formState.status,
+      ...(formState.inventory_item_id
+        ? { inventory_item_id: normalizeId(formState.inventory_item_id) }
+        : {}),
     };
 
     const { error } = await supabase.from("orders").insert(payload);
@@ -284,6 +329,28 @@ export default function AdminNewOrderPage() {
               required
               value={formState.product_type}
             />
+
+            <label className="block">
+              <span className={labelClassName}>Linked Inventory Item</span>
+              <select
+                className={inputClassName}
+                disabled={isLoadingCustomers}
+                name="inventory_item_id"
+                onChange={(event) =>
+                  updateFormField("inventory_item_id", event.target.value)
+                }
+                value={formState.inventory_item_id}
+              >
+                <option value="">No linked blank yet</option>
+                {inventoryItems.map((item) => (
+                  <option key={item.id} value={String(item.id)}>
+                    {item.sku || `Inventory ${item.id}`} /{" "}
+                    {item.item_name || "Unnamed blank"} /{" "}
+                    {item.quantity_on_hand ?? 0} on hand
+                  </option>
+                ))}
+              </select>
+            </label>
 
             <OrderField
               label="Quantity"
