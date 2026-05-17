@@ -597,6 +597,7 @@ export default function AdminStockProductsPage() {
                   <tr>
                     <th className="px-5 py-4">SKU</th>
                     <th className="px-5 py-4">Product</th>
+                    <th className="px-5 py-4">Inventory Link</th>
                     <th className="px-5 py-4">Category</th>
                     <th className="px-5 py-4">Material</th>
                     <th className="px-5 py-4 text-right">Base Price</th>
@@ -615,6 +616,20 @@ export default function AdminStockProductsPage() {
                       </td>
                       <td className="px-5 py-4 text-zinc-200">
                         {displayValue(product.name)}
+                      </td>
+                      <td className="px-5 py-4 text-sm text-zinc-300">
+                        {product.inventory_item_id &&
+                        inventoryItemById[String(product.inventory_item_id)]
+                          ? `${displayValue(
+                              inventoryItemById[
+                                String(product.inventory_item_id)
+                              ].sku
+                            )} / ${displayValue(
+                              inventoryItemById[
+                                String(product.inventory_item_id)
+                              ].quantity_on_hand
+                            )} on hand`
+                          : "No linked blank"}
                       </td>
                       <td className="px-5 py-4 text-zinc-300">
                         {displayValue(product.category)}
@@ -677,6 +692,21 @@ export default function AdminStockProductsPage() {
                         Category:{" "}
                       </span>
                       {displayValue(product.category)}
+                    </p>
+                    <p>
+                      <span className="font-bold text-zinc-500">
+                        Inventory:{" "}
+                      </span>
+                      {product.inventory_item_id &&
+                      inventoryItemById[String(product.inventory_item_id)]
+                        ? `${displayValue(
+                            inventoryItemById[String(product.inventory_item_id)]
+                              .sku
+                          )} / ${displayValue(
+                            inventoryItemById[String(product.inventory_item_id)]
+                              .quantity_on_hand
+                          )} on hand`
+                        : "No linked blank"}
                     </p>
                     <p>
                       <span className="font-bold text-zinc-500">
