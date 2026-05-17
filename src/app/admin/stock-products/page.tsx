@@ -416,6 +416,28 @@ export default function AdminStockProductsPage() {
               required
               value={formState.name}
             />
+            <label className="block">
+              <span className={labelClassName}>Linked Inventory Item</span>
+              <select
+                className={inputClassName}
+                name="inventory_item_id"
+                onChange={(event) =>
+                  setFormState((current) => ({
+                    ...current,
+                    inventory_item_id: event.target.value,
+                  }))
+                }
+                value={formState.inventory_item_id}
+              >
+                <option value="">No linked blank yet</option>
+                {inventoryItems.map((item) => (
+                  <option key={item.id} value={String(item.id)}>
+                    {displayValue(item.sku)} / {displayValue(item.item_name)} /{" "}
+                    {displayValue(item.quantity_on_hand)} on hand
+                  </option>
+                ))}
+              </select>
+            </label>
             <ProductField
               label="Category"
               name="category"
