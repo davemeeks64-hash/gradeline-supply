@@ -3,8 +3,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
-const ADMIN_AUTH_KEY = "gradeline-admin-auth";
+import { supabase } from "@/lib/supabase";
 
 type AdminAuthGateProps = {
   children: ReactNode;
@@ -16,19 +15,48 @@ export function AdminAuthGate({ children }: AdminAuthGateProps) {
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem(ADMIN_AUTH_KEY) === "true";
+    let isMounted = true;
 
-    if (!isLoggedIn) {
-      router.replace("/admin-login");
-      return;
-    }
+    async function checkSession() {
+      const { data, error } = await supabase.auth.getSession();
 
-    const timeoutId = window.setTimeout(() => {
+      if (!isMounted) {
+        return;
+      }
+
+      if (error || !data.session) {
+        router.replace("/login");
+        setIsChecking(false);
+        return;
+      }
+
       setIsAuthorized(true);
       setIsChecking(false);
-    }, 0);
+    }
 
-    return () => window.clearTimeout(timeoutId);
+    void checkSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!isMounted) {
+        return;
+      }
+
+      if (!session) {
+        setIsAuthorized(false);
+        router.replace("/login");
+        return;
+      }
+
+      setIsAuthorized(true);
+      setIsChecking(false);
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, [router]);
 
   if (isChecking || !isAuthorized) {

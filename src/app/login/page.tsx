@@ -10,7 +10,6 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [redirectTo, setRedirectTo] = useState("/admin");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -18,16 +17,15 @@ export default function LoginPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const requestedRedirect = params.get("redirectTo");
-
-    if (requestedRedirect?.startsWith("/admin")) {
-      setRedirectTo(requestedRedirect);
-    }
+    const safeRedirect = requestedRedirect?.startsWith("/admin")
+      ? requestedRedirect
+      : "/admin";
 
     async function redirectIfLoggedIn() {
       const { data } = await supabase.auth.getSession();
 
       if (data.session) {
-        router.replace(requestedRedirect?.startsWith("/admin") ? requestedRedirect : "/admin");
+        router.replace(safeRedirect);
       }
     }
 
@@ -51,7 +49,13 @@ export default function LoginPage() {
       return;
     }
 
-    router.replace(redirectTo);
+    const params = new URLSearchParams(window.location.search);
+    const requestedRedirect = params.get("redirectTo");
+    const safeRedirect = requestedRedirect?.startsWith("/admin")
+      ? requestedRedirect
+      : "/admin";
+
+    router.replace(safeRedirect);
     router.refresh();
   }
 

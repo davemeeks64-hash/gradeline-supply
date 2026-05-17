@@ -5,8 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import AdminSidebar from "@/components/AdminSidebar";
-
-const ADMIN_AUTH_KEY = "gradeline-admin-auth";
+import { supabase } from "@/lib/supabase";
 
 const routeLabels: Record<string, string> = {
   "/admin": "Dashboard",
@@ -15,6 +14,8 @@ const routeLabels: Record<string, string> = {
   "/admin/production": "Production",
   "/admin/inventory": "Inventory",
   "/admin/inventory-receiving": "Inventory Receiving",
+  "/admin/receiving": "Receiving",
+  "/admin/vendors": "Vendors",
   "/admin/stock-products": "Stock Products",
   "/admin/sales": "Sales",
   "/admin/laser-settings": "Laser Settings",
@@ -33,9 +34,9 @@ export function AdminAppShell({ children }: AdminAppShellProps) {
   const router = useRouter();
   const pageLabel = routeLabels[pathname] ?? "Admin";
 
-  function handleLogout() {
-    localStorage.removeItem(ADMIN_AUTH_KEY);
-    router.replace("/admin-login");
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    router.replace("/login");
   }
 
   return (
