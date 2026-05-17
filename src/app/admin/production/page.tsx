@@ -42,6 +42,10 @@ type Order = {
   proof_sent_date?: string | null;
   approval_date?: string | null;
   design_notes?: string | null;
+  proof_file_url?: string | null;
+  customer_artwork_url?: string | null;
+  final_design_file_url?: string | null;
+  lightburn_file_url?: string | null;
 };
 
 const workflowColumns: WorkflowStatus[] = [
@@ -152,6 +156,41 @@ function DesignStatusBadge({ status }: { status: string | null | undefined }) {
     >
       {statusLabel}
     </span>
+  );
+}
+
+function FileLinkButtons({ order }: { order: Order }) {
+  const fileLinks = [
+    { label: "Proof", url: order.proof_file_url },
+    { label: "Customer Art", url: order.customer_artwork_url },
+    { label: "Final Design", url: order.final_design_file_url },
+    { label: "LightBurn", url: order.lightburn_file_url },
+  ].filter((fileLink): fileLink is { label: string; url: string } =>
+    Boolean(fileLink.url)
+  );
+
+  if (fileLinks.length === 0) {
+    return (
+      <span className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-zinc-500">
+        No file links yet.
+      </span>
+    );
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {fileLinks.map((fileLink) => (
+        <a
+          key={fileLink.label}
+          href={fileLink.url}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex rounded-lg border border-blue-300/30 bg-blue-400/10 px-3 py-2 text-xs font-bold uppercase tracking-widest text-blue-100 transition hover:bg-blue-400/20"
+        >
+          {fileLink.label}
+        </a>
+      ))}
+    </div>
   );
 }
 
@@ -498,6 +537,12 @@ export default function AdminProductionPage() {
                                 {order.design_notes}
                               </p>
                             )}
+                            <div className="grid gap-2">
+                              <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
+                                Files
+                              </p>
+                              <FileLinkButtons order={order} />
+                            </div>
                           </div>
                         </div>
                       </div>

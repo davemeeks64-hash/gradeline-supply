@@ -50,6 +50,10 @@ type Order = {
   proof_sent_date?: string | null;
   approval_date?: string | null;
   design_notes?: string | null;
+  proof_file_url?: string | null;
+  customer_artwork_url?: string | null;
+  final_design_file_url?: string | null;
+  lightburn_file_url?: string | null;
   due_date: string | null;
   created_at?: string | null;
 };
@@ -67,8 +71,20 @@ type OrderFormState = {
   proof_sent_date: string;
   approval_date: string;
   design_notes: string;
+  proof_file_url: string;
+  customer_artwork_url: string;
+  final_design_file_url: string;
+  lightburn_file_url: string;
   due_date: string;
 };
+
+type FileLinkField =
+  | "proof_file_url"
+  | "customer_artwork_url"
+  | "final_design_file_url"
+  | "lightburn_file_url";
+
+type FileLinkDraft = Record<FileLinkField, string>;
 
 const initialFormState: OrderFormState = {
   order_number: "",
@@ -83,6 +99,10 @@ const initialFormState: OrderFormState = {
   proof_sent_date: "",
   approval_date: "",
   design_notes: "",
+  proof_file_url: "",
+  customer_artwork_url: "",
+  final_design_file_url: "",
+  lightburn_file_url: "",
   due_date: "",
 };
 
@@ -102,6 +122,13 @@ const designStatuses: DesignStatus[] = [
   "Proof Sent",
   "Approved",
   "Revision Needed",
+];
+
+const fileLinkFields: { key: FileLinkField; label: string }[] = [
+  { key: "proof_file_url", label: "Proof" },
+  { key: "customer_artwork_url", label: "Customer Art" },
+  { key: "final_design_file_url", label: "Final Design" },
+  { key: "lightburn_file_url", label: "LightBurn" },
 ];
 
 const inputClassName =
@@ -135,6 +162,26 @@ function normalizeId(value: string) {
 
 function displayValue(value: string | number | null | undefined) {
   return value === null || value === undefined || value === "" ? "-" : value;
+}
+
+function getOrderKey(order: Order) {
+  return String(order.id ?? order.order_number ?? "");
+}
+
+function getFileLinkDraftFromOrder(order: Order): FileLinkDraft {
+  return {
+    proof_file_url: order.proof_file_url ?? "",
+    customer_artwork_url: order.customer_artwork_url ?? "",
+    final_design_file_url: order.final_design_file_url ?? "",
+    lightburn_file_url: order.lightburn_file_url ?? "",
+  };
+}
+
+function buildFileLinkDrafts(orders: Order[]) {
+  return orders.reduce<Record<string, FileLinkDraft>>((drafts, order) => {
+    drafts[getOrderKey(order)] = getFileLinkDraftFromOrder(order);
+    return drafts;
+  }, {});
 }
 
 function formatCurrency(value: number | null | undefined) {
@@ -204,6 +251,78 @@ function DesignStatusBadge({ status }: { status: string | null | undefined }) {
   );
 }
 
+function FileLinkButtons({ order }: { order: Order }) {
+  const fileLinks = [
+    { label: "Proof", url: order.proof_file_url },
+    { label: "Customer Art", url: order.customer_artwork_url },
+    { label: "Final Design", url: order.final_design_file_url },
+    { label: "LightBurn", url: order.lightburn_file_url },
+  ].filter((fileLink): fileLink is { label: string; url: string } =>
+    Boolean(fileLink.url)
+  );
+
+  if (fileLinks.length === 0) {
+    return <span className="text-xs text-zinc-500">No file links yet</span>;
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {fileLinks.map((fileLink) => (
+        <a
+          key={fileLink.label}
+          href={fileLink.url}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex rounded-lg border border-blue-300/30 bg-blue-400/10 px-3 py-2 text-xs font-bold uppercase tracking-widest text-blue-100 transition hover:bg-blue-400/20"
+        >
+          {fileLink.label}
+        </a>
+      ))}
+    </div>
+  );
+}
+
+function FileLinkEditor({
+  draft,
+  isSaving,
+  onChange,
+  onSave,
+}: {
+  draft: FileLinkDraft;
+  isSaving: boolean;
+  onChange: (field: FileLinkField, value: string) => void;
+  onSave: () => void;
+}) {
+  return (
+    <div className="grid gap-3">
+      <div className="grid gap-2">
+        {fileLinkFields.map((field) => (
+          <label key={field.key} className="block">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+              {field.label}
+            </span>
+            <input
+              className={`${inputClassName} py-2 text-xs`}
+              onChange={(event) => onChange(field.key, event.target.value)}
+              placeholder="https://..."
+              type="url"
+              value={draft[field.key]}
+            />
+          </label>
+        ))}
+      </div>
+      <button
+        type="button"
+        onClick={onSave}
+        disabled={isSaving}
+        className="w-fit rounded-lg border border-blue-300/30 bg-blue-400/10 px-3 py-2 text-xs font-bold uppercase tracking-widest text-blue-100 transition hover:bg-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {isSaving ? "Saving..." : "Save Links"}
+      </button>
+    </div>
+  );
+}
+
 function InventoryLinkSummary({
   item,
   quantity,
@@ -270,8 +389,14 @@ export default function AdminOrdersPage() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [formState, setFormState] = useState<OrderFormState>(initialFormState);
+  const [fileLinkDrafts, setFileLinkDrafts] = useState<
+    Record<string, FileLinkDraft>
+  >({});
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [savingFileLinksOrderId, setSavingFileLinksOrderId] = useState<
+    string | number | null
+  >(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -332,10 +457,12 @@ export default function AdminOrdersPage() {
       setCustomers([]);
       setInventoryItems([]);
       setOrders([]);
+      setFileLinkDrafts({});
     } else {
       setCustomers(nextCustomers);
       setInventoryItems(nextInventoryItems);
       setOrders(nextOrders);
+      setFileLinkDrafts(buildFileLinkDrafts(nextOrders));
     }
 
     setIsLoading(false);
@@ -367,10 +494,12 @@ export default function AdminOrdersPage() {
           setCustomers([]);
           setInventoryItems([]);
           setOrders([]);
+          setFileLinkDrafts({});
         } else {
           setCustomers(nextCustomers);
           setInventoryItems(nextInventoryItems);
           setOrders(nextOrders);
+          setFileLinkDrafts(buildFileLinkDrafts(nextOrders));
         }
 
         setIsLoading(false);
@@ -386,6 +515,22 @@ export default function AdminOrdersPage() {
     setFormState((current) => ({
       ...current,
       [name]: value,
+    }));
+  }
+
+  function updateFileLinkDraft(
+    order: Order,
+    field: FileLinkField,
+    value: string
+  ) {
+    const orderKey = getOrderKey(order);
+
+    setFileLinkDrafts((currentDrafts) => ({
+      ...currentDrafts,
+      [orderKey]: {
+        ...(currentDrafts[orderKey] ?? getFileLinkDraftFromOrder(order)),
+        [field]: value,
+      },
     }));
   }
 
@@ -407,6 +552,10 @@ export default function AdminOrdersPage() {
       proof_sent_date: formState.proof_sent_date || null,
       approval_date: formState.approval_date || null,
       design_notes: formState.design_notes.trim(),
+      proof_file_url: formState.proof_file_url.trim() || null,
+      customer_artwork_url: formState.customer_artwork_url.trim() || null,
+      final_design_file_url: formState.final_design_file_url.trim() || null,
+      lightburn_file_url: formState.lightburn_file_url.trim() || null,
       due_date: formState.due_date || null,
       ...(formState.inventory_item_id
         ? { inventory_item_id: normalizeId(formState.inventory_item_id) }
@@ -459,6 +608,54 @@ export default function AdminOrdersPage() {
     setSuccessMessage(
       `${displayValue(order.order_number)} design status updated.`
     );
+  }
+
+  async function saveOrderFileLinks(order: Order) {
+    if (!order.id) {
+      setErrorMessage("Cannot save file links without an order id.");
+      return;
+    }
+
+    const orderKey = getOrderKey(order);
+    const draft = fileLinkDrafts[orderKey] ?? getFileLinkDraftFromOrder(order);
+    const payload = {
+      proof_file_url: draft.proof_file_url.trim() || null,
+      customer_artwork_url: draft.customer_artwork_url.trim() || null,
+      final_design_file_url: draft.final_design_file_url.trim() || null,
+      lightburn_file_url: draft.lightburn_file_url.trim() || null,
+    };
+
+    setSavingFileLinksOrderId(order.id);
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    const { error } = await supabase
+      .from("orders")
+      .update(payload)
+      .eq("id", order.id);
+
+    if (error) {
+      setErrorMessage(error.message);
+      setSavingFileLinksOrderId(null);
+      return;
+    }
+
+    setOrders((currentOrders) =>
+      currentOrders.map((currentOrder) =>
+        currentOrder.id === order.id ? { ...currentOrder, ...payload } : currentOrder
+      )
+    );
+    setFileLinkDrafts((currentDrafts) => ({
+      ...currentDrafts,
+      [orderKey]: {
+        proof_file_url: payload.proof_file_url ?? "",
+        customer_artwork_url: payload.customer_artwork_url ?? "",
+        final_design_file_url: payload.final_design_file_url ?? "",
+        lightburn_file_url: payload.lightburn_file_url ?? "",
+      },
+    }));
+    setSuccessMessage(`${displayValue(order.order_number)} file links saved.`);
+    setSavingFileLinksOrderId(null);
   }
 
   return (
@@ -668,6 +865,57 @@ export default function AdminOrdersPage() {
             />
           </label>
 
+          <section className="rounded-2xl border border-white/10 bg-black/25 p-4">
+            <div>
+              <p className={labelClassName}>Proof & File Tracking</p>
+              <h3 className="mt-2 text-xl font-black text-white">
+                File Links
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-zinc-400">
+                Paste shared links for now. Upload/storage automation can come
+                later.
+              </p>
+            </div>
+
+            <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <OrderField
+                label="Proof File URL"
+                name="proof_file_url"
+                onChange={updateFormField}
+                placeholder="https://..."
+                type="url"
+                value={formState.proof_file_url}
+              />
+
+              <OrderField
+                label="Customer Artwork URL"
+                name="customer_artwork_url"
+                onChange={updateFormField}
+                placeholder="https://..."
+                type="url"
+                value={formState.customer_artwork_url}
+              />
+
+              <OrderField
+                label="Final Design File URL"
+                name="final_design_file_url"
+                onChange={updateFormField}
+                placeholder="https://..."
+                type="url"
+                value={formState.final_design_file_url}
+              />
+
+              <OrderField
+                label="LightBurn File URL"
+                name="lightburn_file_url"
+                onChange={updateFormField}
+                placeholder="https://..."
+                type="url"
+                value={formState.lightburn_file_url}
+              />
+            </div>
+          </section>
+
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <button
               type="submit"
@@ -741,6 +989,7 @@ export default function AdminOrdersPage() {
                     <th className="px-5 py-4">Qty</th>
                     <th className="px-5 py-4">Status</th>
                     <th className="px-5 py-4">Design</th>
+                    <th className="px-5 py-4">Files</th>
                     <th className="px-5 py-4">Due</th>
                     <th className="px-5 py-4 text-right">Total</th>
                   </tr>
@@ -814,6 +1063,22 @@ export default function AdminOrdersPage() {
                               {order.design_notes}
                             </p>
                           )}
+                        </div>
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="grid min-w-64 gap-3">
+                          <FileLinkButtons order={order} />
+                          <FileLinkEditor
+                            draft={
+                              fileLinkDrafts[getOrderKey(order)] ??
+                              getFileLinkDraftFromOrder(order)
+                            }
+                            isSaving={savingFileLinksOrderId === order.id}
+                            onChange={(field, value) =>
+                              updateFileLinkDraft(order, field, value)
+                            }
+                            onSave={() => saveOrderFileLinks(order)}
+                          />
                         </div>
                       </td>
                       <td className="px-5 py-4 text-zinc-300">
@@ -908,6 +1173,23 @@ export default function AdminOrdersPage() {
                             {order.design_notes}
                           </p>
                         )}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="font-bold text-zinc-500">Files:</p>
+                      <div className="mt-2 grid gap-3">
+                        <FileLinkButtons order={order} />
+                        <FileLinkEditor
+                          draft={
+                            fileLinkDrafts[getOrderKey(order)] ??
+                            getFileLinkDraftFromOrder(order)
+                          }
+                          isSaving={savingFileLinksOrderId === order.id}
+                          onChange={(field, value) =>
+                            updateFileLinkDraft(order, field, value)
+                          }
+                          onSave={() => saveOrderFileLinks(order)}
+                        />
                       </div>
                     </div>
                     <p>
