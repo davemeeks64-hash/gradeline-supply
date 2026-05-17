@@ -23,7 +23,6 @@ type GradelineHeroImageProps = {
   preset?: GradelineImagePreset;
   sizes?: string;
   priority?: boolean;
-  preload?: boolean;
   objectFit?: "cover" | "contain";
   objectPosition?: string;
   mobileObjectPosition?: string;
@@ -39,7 +38,6 @@ export default function GradelineHeroImage({
   preset = "banner",
   sizes = "100vw",
   priority = false,
-  preload = false,
   objectFit = "cover",
   objectPosition = "center",
   mobileObjectPosition,
@@ -59,8 +57,8 @@ export default function GradelineHeroImage({
         src={src}
         alt={alt}
         fill
-        priority={priority}
-        preload={preload}
+        preload={priority && !mobileSrc}
+        fetchPriority={priority && mobileSrc ? "high" : undefined}
         sizes={sizes}
         className={mobileSrc ? `hidden md:block ${sharedClassName}` : sharedClassName}
         style={{ objectFit, objectPosition }}
@@ -71,8 +69,7 @@ export default function GradelineHeroImage({
           src={mobileSrc}
           alt={alt}
           fill
-          priority={priority}
-          preload={preload}
+          fetchPriority={priority ? "high" : undefined}
           sizes={sizes}
           className={`md:hidden ${sharedClassName}`}
           style={{

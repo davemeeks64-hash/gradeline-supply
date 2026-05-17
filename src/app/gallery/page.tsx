@@ -100,7 +100,7 @@ export default function GalleryPage() {
       <section className="relative overflow-hidden px-4 py-10 sm:px-6 md:py-16">
         <Image
           src="/images/workflow/gradeline-gallery-section-banner.png"
-          alt=""
+          alt="Gradeline gallery banner showing custom laser engraved product work"
           fill
           sizes="100vw"
           className="object-cover object-center opacity-[0.35]"
@@ -148,6 +148,7 @@ export default function GalleryPage() {
               <GradelineImageCard
                 key={project.projectName}
                 imageSrc={project.image}
+                imageAlt={`${project.projectName} gallery image from Gradeline Supply Co.`}
                 aspect="product"
                 sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
                 overlayClassName="bg-[linear-gradient(to_top,rgba(5,7,10,0.28),transparent)]"
@@ -177,7 +178,7 @@ export default function GalleryPage() {
           <section className="relative mt-8 overflow-hidden rounded-3xl border border-blue-300/20 bg-[linear-gradient(135deg,rgba(12,19,26,1),rgba(7,9,12,1)_58%,rgba(20,43,61,0.72))] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.4)] md:p-10">
             <Image
               src="/images/workflow/gradeline-gallery-section-banner.png"
-              alt=""
+              alt="Gradeline custom gallery call-to-action banner"
               fill
               sizes="100vw"
               className="object-cover object-center opacity-[0.22]"

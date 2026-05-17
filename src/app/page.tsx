@@ -124,8 +124,9 @@ export default function Home() {
           <GradelineHeroImage
             src="/images/hero/gradeline-homepage-hero-banner-v2.png"
             mobileSrc="/images/hero/gradeline-mobile-homepage-banner.png"
+            alt="Gradeline Supply Co. laser engraved products hero banner"
             preset="hero"
-            preload
+            priority
             sizes="100vw"
             objectPosition="center"
             mobileObjectPosition="center"
@@ -217,6 +218,7 @@ export default function Home() {
                 key={collection.title}
                 href={collection.href}
                 imageSrc={collection.image}
+                imageAlt={`${collection.title} collection preview for Gradeline Supply Co.`}
                 aspect="category"
                 sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                 className="hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(0,0,0,0.36)]"
@@ -263,6 +265,7 @@ export default function Home() {
               <GradelineImageCard
                 key={product.name}
                 imageSrc={product.image}
+                imageAlt={`${product.name} product preview from Gradeline Supply Co.`}
                 aspect="product"
                 sizes="(min-width: 768px) 33vw, 100vw"
                 overlayClassName="bg-[linear-gradient(to_top,rgba(5,7,10,0.22),transparent)]"
@@ -312,7 +315,7 @@ export default function Home() {
                 <div className="relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 md:min-h-[280px]">
                   <Image
                     src="/images/workflow/gradeline-custom-order-workflow.png"
-                    alt=""
+                    alt="Gradeline custom order workflow with shop-built product details"
                     fill
                     sizes="(min-width: 1024px) 58vw, 100vw"
                     className="object-cover object-center"
@@ -361,6 +364,7 @@ export default function Home() {
               <GradelineImageCard
                 key={item.name}
                 imageSrc={item.image}
+                imageAlt={`${item.name} gallery preview from Gradeline Supply Co.`}
                 aspect="product"
                 sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                 contentClassName="p-5"
@@ -381,7 +385,7 @@ export default function Home() {
           <div className="relative overflow-hidden rounded-3xl border border-blue-300/20 bg-[linear-gradient(135deg,rgba(12,19,26,1),rgba(7,9,12,1)_58%,rgba(20,43,61,0.72))] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.4)] md:p-10">
             <Image
               src="/images/workflow/gradeline-footer-cta-banner.png"
-              alt=""
+              alt="Gradeline custom order call-to-action banner with industrial shop styling"
               fill
               sizes="100vw"
               className="object-cover object-center opacity-[0.34]"

@@ -27,7 +27,7 @@ export function PublicFooter() {
     <footer className="relative overflow-hidden border-t border-white/10 bg-[#05070a] text-white">
       <Image
         src="/images/backgrounds/gradeline-footer-workshop-texture-bg.png"
-        alt=""
+        alt="Gradeline industrial workshop footer background"
         fill
         sizes="100vw"
         className="object-cover object-center opacity-[0.2]"

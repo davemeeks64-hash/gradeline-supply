@@ -90,7 +90,7 @@ export default function ContactPage() {
       <section className="relative overflow-hidden px-4 py-10 sm:px-6 md:py-16">
         <Image
           src="/images/hero/gradeline-contact-page-hero-banner.png"
-          alt=""
+          alt="Gradeline contact page hero banner"
           fill
           sizes="100vw"
           className="object-cover object-center opacity-[0.35]"
@@ -136,7 +136,7 @@ export default function ContactPage() {
               <div className="relative min-h-[260px] overflow-hidden border-t border-white/10 lg:border-l lg:border-t-0">
                 <Image
                   src="/images/hero/gradeline-contact-page-hero-banner.png"
-                  alt=""
+                  alt="Gradeline contact and custom engraving inquiry banner"
                   fill
                   sizes="(min-width: 1024px) 48vw, 100vw"
                   className="object-cover object-center"
@@ -218,7 +218,7 @@ export default function ContactPage() {
           <section className="relative mt-8 overflow-hidden rounded-3xl border border-blue-300/20 bg-[linear-gradient(135deg,rgba(12,19,26,1),rgba(7,9,12,1)_58%,rgba(20,43,61,0.72))] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.4)] md:p-10">
             <Image
               src="/images/workflow/gradeline-footer-cta-banner.png"
-              alt=""
+              alt="Gradeline custom order contact call-to-action banner"
               fill
               sizes="100vw"
               className="object-cover object-center opacity-[0.28]"
@@ -247,7 +247,7 @@ export default function ContactPage() {
           <section className="relative mt-8 overflow-hidden rounded-3xl border border-white/10 bg-black/35 p-6 shadow-[0_18px_45px_rgba(0,0,0,0.28)] md:p-8">
             <Image
               src="/images/social/gradeline-facebook-cover-banner.png"
-              alt=""
+              alt="Gradeline social media preview banner"
               fill
               sizes="100vw"
               className="object-cover object-center opacity-[0.22]"

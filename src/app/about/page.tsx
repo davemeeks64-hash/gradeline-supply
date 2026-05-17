@@ -47,7 +47,7 @@ export default function AboutPage() {
         <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
           <Image
             src="/images/backgrounds/gradeline-about-workshop-background.png"
-            alt=""
+            alt="Gradeline Supply Co. workshop background"
             fill
             sizes="100vw"
             className="object-cover object-center opacity-30"
@@ -79,7 +79,7 @@ export default function AboutPage() {
               <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.28)] md:p-8">
                 <Image
                   src="/images/hero/gradeline-blue-collar-series-banner.png"
-                  alt=""
+                  alt="Gradeline blue-collar series banner"
                   fill
                   sizes="(min-width: 1024px) 45vw, 100vw"
                   className="object-cover object-center opacity-20"

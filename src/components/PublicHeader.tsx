@@ -23,6 +23,7 @@ export function PublicHeader() {
             alt="Gradeline Supply Co. logo"
             width={1730}
             height={1870}
+            sizes="(min-width: 768px) 48px, 40px"
             className="h-10 w-auto object-contain transition group-hover:drop-shadow-[0_0_14px_rgba(96,165,250,0.35)] sm:h-11 md:h-12"
           />
           <div>

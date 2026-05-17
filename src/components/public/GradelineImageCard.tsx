@@ -28,7 +28,7 @@ type GradelineImageCardProps = {
 
 export default function GradelineImageCard({
   imageSrc,
-  imageAlt = "",
+  imageAlt = "Gradeline Supply Co. product image",
   href,
   aspect = "product",
   sizes = "100vw",

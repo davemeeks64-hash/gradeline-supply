@@ -92,7 +92,7 @@ export default function CollectionsPage() {
       <section className="relative overflow-hidden px-4 py-10 sm:px-6 md:py-16">
         <Image
           src="/images/backgrounds/gradeline-about-workshop-background.png"
-          alt=""
+          alt="Gradeline workshop background for the collections page"
           fill
           sizes="100vw"
           className="object-cover object-center opacity-25"
@@ -125,6 +125,7 @@ export default function CollectionsPage() {
               <GradelineImageCard
                 key={collection.title}
                 imageSrc={collection.image}
+                imageAlt={`${collection.title} collection image for Gradeline Supply Co.`}
                 aspect="category"
                 sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                 overlayClassName="bg-[linear-gradient(to_top,rgba(5,7,10,0.34),transparent)]"

@@ -5,9 +5,8 @@ export default function Loading() {
     <main className="relative grid min-h-[100svh] place-items-center overflow-hidden bg-[#05070a] px-4 py-16 text-white sm:px-6">
       <Image
         src="/images/backgrounds/gradeline-loading-screen-background.png"
-        alt=""
+        alt="Gradeline loading screen industrial workshop background"
         fill
-        priority
         sizes="100vw"
         className="object-cover object-center opacity-[0.35]"
       />

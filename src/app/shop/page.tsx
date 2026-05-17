@@ -105,7 +105,7 @@ export default function ShopPage() {
       <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
         <Image
           src="/images/hero/gradeline-products-page-hero-banner.png"
-          alt=""
+          alt="Shop Gradeline Supply Co. product hero banner"
           fill
           sizes="100vw"
           className="object-cover object-center opacity-[0.38]"
@@ -158,7 +158,7 @@ export default function ShopPage() {
                 <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-white/10 bg-black">
                   <Image
                     src={product.image}
-                    alt=""
+                    alt={`${product.productName} product image from Gradeline Supply Co.`}
                     fill
                     sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
                     className="object-cover object-center transition duration-500 hover:scale-105"
