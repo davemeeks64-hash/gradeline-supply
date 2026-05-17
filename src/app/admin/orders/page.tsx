@@ -216,6 +216,12 @@ const paymentStatuses: PaymentStatus[] = [
   "Refunded",
 ];
 
+const fulfillmentMethods: FulfillmentMethod[] = [
+  "Pickup",
+  "Local Delivery",
+  "Shipped",
+];
+
 const fileLinkFields: { key: FileLinkField; label: string }[] = [
   { key: "proof_file_url", label: "Proof" },
   { key: "customer_artwork_url", label: "Customer Art" },
@@ -278,6 +284,12 @@ const paymentStatusClassNames: Record<PaymentStatus, string> = {
   "Deposit Paid": "border-blue-300/50 bg-blue-400/10 text-blue-200",
   Paid: "border-emerald-300/50 bg-emerald-400/10 text-emerald-200",
   Refunded: "border-red-300/50 bg-red-400/10 text-red-200",
+};
+
+const fulfillmentMethodClassNames: Record<FulfillmentMethod, string> = {
+  Pickup: "border-blue-300/50 bg-blue-400/10 text-blue-200",
+  "Local Delivery": "border-cyan-300/50 bg-cyan-400/10 text-cyan-200",
+  Shipped: "border-emerald-300/50 bg-emerald-400/10 text-emerald-200",
 };
 
 function normalizeId(value: string) {
