@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
+import GradelineImageCard from "@/components/public/GradelineImageCard";
 
 const collections = [
   {
@@ -92,38 +93,28 @@ export default function CollectionsPage() {
 
           <div className="mt-8 grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
             {collections.map((collection) => (
-              <article
+              <GradelineImageCard
                 key={collection.title}
-                className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+                imageSrc={collection.image}
+                aspect="category"
+                sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                overlayClassName="bg-[linear-gradient(to_top,rgba(5,7,10,0.34),transparent)]"
               >
-                <div className="relative aspect-[16/11] w-full overflow-hidden border-b border-white/10 bg-black">
-                  <Image
-                    src={collection.image}
-                    alt=""
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                    className="object-cover object-center transition duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.34),transparent)]" />
-                </div>
+                <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
+                <h2 className="mt-5 text-2xl font-black">
+                  {collection.title}
+                </h2>
+                <p className="mt-3 flex-1 leading-7 text-zinc-400">
+                  {collection.description}
+                </p>
 
-                <div className="flex flex-1 flex-col p-6">
-                  <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
-                  <h2 className="mt-5 text-2xl font-black">
-                    {collection.title}
-                  </h2>
-                  <p className="mt-3 flex-1 leading-7 text-zinc-400">
-                    {collection.description}
-                  </p>
-
-                  <Link
-                    href={collection.href}
-                    className="mt-auto rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300"
-                  >
-                    {collection.cta}
-                  </Link>
-                </div>
-              </article>
+                <Link
+                  href={collection.href}
+                  className="mt-auto rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black transition hover:bg-blue-300"
+                >
+                  {collection.cta}
+                </Link>
+              </GradelineImageCard>
             ))}
           </div>
         </div>

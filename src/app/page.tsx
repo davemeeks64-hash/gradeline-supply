@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
+import GradelineHeroImage from "@/components/public/GradelineHeroImage";
+import GradelineImageCard from "@/components/public/GradelineImageCard";
 
 const collections = [
   {
@@ -119,65 +121,59 @@ export default function Home() {
           aria-label="Hero Banner"
           className="relative overflow-hidden border-b border-white/10"
         >
-          <Image
+          <GradelineHeroImage
             src="/images/hero/gradeline-homepage-hero-banner-v2.png"
-            alt=""
-            fill
+            mobileSrc="/images/hero/gradeline-mobile-homepage-banner.png"
+            preset="hero"
             preload
             sizes="100vw"
-            className="hidden object-cover object-center md:block"
-          />
-          <Image
-            src="/images/hero/gradeline-mobile-homepage-banner.png"
-            alt=""
-            fill
-            preload
-            sizes="100vw"
-            className="object-cover object-center md:hidden"
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,10,0.82)_0%,rgba(5,7,10,0.54)_44%,rgba(5,7,10,0.14)_100%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(5,7,10,0.2),rgba(5,7,10,0.03)_42%,rgba(5,7,10,0.66)_100%)]" />
-          <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(to_bottom,rgba(96,165,250,0.2),transparent)]" />
-          <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-blue-300/25 to-transparent" />
+            objectPosition="center"
+            mobileObjectPosition="center"
+          >
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,10,0.82)_0%,rgba(5,7,10,0.54)_44%,rgba(5,7,10,0.14)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(5,7,10,0.2),rgba(5,7,10,0.03)_42%,rgba(5,7,10,0.66)_100%)]" />
+            <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(to_bottom,rgba(96,165,250,0.2),transparent)]" />
+            <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-blue-300/25 to-transparent" />
 
-          <div className="relative mx-auto flex min-h-[460px] max-w-7xl items-center px-6 py-10 sm:min-h-[500px] md:min-h-[680px] md:py-16 lg:min-h-[720px] lg:py-20">
-            <div className="max-w-2xl rounded-3xl border border-white/10 bg-black/25 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.26)] backdrop-blur-[2px] md:p-6 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none">
-              <p className="mb-4 inline-flex rounded-full border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-blue-200">
-                Custom Laser Engraving / Shop Built Goods
-              </p>
+            <div className="relative mx-auto flex min-h-[460px] max-w-7xl items-center px-6 py-10 sm:min-h-[500px] md:min-h-[680px] md:py-16 lg:min-h-[720px] lg:py-20">
+              <div className="max-w-2xl rounded-3xl border border-white/10 bg-black/25 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.26)] backdrop-blur-[2px] md:p-6 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none">
+                <p className="mb-4 inline-flex rounded-full border border-blue-300/30 bg-blue-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-blue-200">
+                  Custom Laser Engraving / Shop Built Goods
+                </p>
 
-              <h1 className="max-w-xl text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
-                Built To Be Different.
-              </h1>
+                <h1 className="max-w-xl text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
+                  Built To Be Different.
+                </h1>
 
-              <p className="mt-5 max-w-xl text-base leading-8 text-zinc-200 md:text-lg">
-                Premium laser engraving and small-batch shop-built products
-                with industrial roots, clean finishes, and work-ready
-                character.
-              </p>
+                <p className="mt-5 max-w-xl text-base leading-8 text-zinc-200 md:text-lg">
+                  Premium laser engraving and small-batch shop-built products
+                  with industrial roots, clean finishes, and work-ready
+                  character.
+                </p>
 
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <Link
-                  href="/shop"
-                  className="rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black shadow-[0_0_28px_rgba(96,165,250,0.22)] transition hover:bg-blue-300"
-                >
-                  Shop Collections
-                </Link>
-                <Link
-                  href="/custom-order"
-                  className="rounded-xl border border-white/15 bg-white/10 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-                >
-                  Start Custom Order
-                </Link>
-                <Link
-                  href="/gallery"
-                  className="rounded-xl border border-blue-300/30 bg-black/30 px-6 py-3 text-center font-bold text-blue-100 transition hover:border-blue-300/60 hover:bg-blue-400/10"
-                >
-                  View Gallery
-                </Link>
+                <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  <Link
+                    href="/shop"
+                    className="rounded-xl bg-blue-400 px-6 py-3 text-center font-bold text-black shadow-[0_0_28px_rgba(96,165,250,0.22)] transition hover:bg-blue-300"
+                  >
+                    Shop Collections
+                  </Link>
+                  <Link
+                    href="/custom-order"
+                    className="rounded-xl border border-white/15 bg-white/10 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                  >
+                    Start Custom Order
+                  </Link>
+                  <Link
+                    href="/gallery"
+                    className="rounded-xl border border-blue-300/30 bg-black/30 px-6 py-3 text-center font-bold text-blue-100 transition hover:border-blue-300/60 hover:bg-blue-400/10"
+                  >
+                    View Gallery
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
+          </GradelineHeroImage>
         </section>
 
         <section className="relative mx-auto max-w-7xl px-6 pt-10 pb-10 md:pt-14 md:pb-14">
@@ -217,38 +213,29 @@ export default function Home() {
 
           <div className="relative grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
             {collections.map((collection) => (
-              <Link
+              <GradelineImageCard
                 key={collection.title}
                 href={collection.href}
-                className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:-translate-y-1 hover:border-blue-300/40 hover:bg-white/[0.07] hover:shadow-[0_24px_60px_rgba(0,0,0,0.36)]"
+                imageSrc={collection.image}
+                aspect="category"
+                sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                className="hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(0,0,0,0.36)]"
+                overlayClassName="bg-[linear-gradient(to_top,rgba(5,7,10,0.34),transparent)]"
               >
-                <div className="relative aspect-[16/11] w-full overflow-hidden border-b border-white/10 bg-black">
-                  <Image
-                    src={collection.image}
-                    alt=""
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                    className="object-cover object-center transition duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.34),transparent)]" />
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/50 to-transparent opacity-0 transition group-hover:opacity-100" />
-                </div>
-                <div className="flex flex-1 flex-col p-6">
-                  <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
-                  <h3 className="mt-5 text-xl font-black">
-                    {collection.title}
-                  </h3>
-                  <p className="mt-3 flex-1 leading-7 text-zinc-300">
-                    {collection.text}
-                  </p>
-                  <p className="mt-6 border-t border-white/10 pt-4 text-xs font-bold uppercase tracking-widest text-blue-200">
-                    {collection.examples}
-                  </p>
-                  <span className="mt-5 inline-flex w-fit rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold text-white transition group-hover:border-blue-300/50 group-hover:bg-blue-400/15">
-                    View Products
-                  </span>
-                </div>
-              </Link>
+                <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
+                <h3 className="mt-5 text-xl font-black">
+                  {collection.title}
+                </h3>
+                <p className="mt-3 flex-1 leading-7 text-zinc-300">
+                  {collection.text}
+                </p>
+                <p className="mt-6 border-t border-white/10 pt-4 text-xs font-bold uppercase tracking-widest text-blue-200">
+                  {collection.examples}
+                </p>
+                <span className="mt-5 inline-flex w-fit rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold text-white transition group-hover:border-blue-300/50 group-hover:bg-blue-400/15">
+                  View Products
+                </span>
+              </GradelineImageCard>
             ))}
           </div>
         </section>
@@ -273,42 +260,33 @@ export default function Home() {
 
           <div className="grid items-stretch gap-5 md:grid-cols-3">
             {featuredProducts.map((product) => (
-              <article
+              <GradelineImageCard
                 key={product.name}
-                className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+                imageSrc={product.image}
+                aspect="product"
+                sizes="(min-width: 768px) 33vw, 100vw"
+                overlayClassName="bg-[linear-gradient(to_top,rgba(5,7,10,0.22),transparent)]"
               >
-                <div className="relative aspect-[16/11] w-full overflow-hidden border-b border-white/10 bg-black">
-                  <Image
-                    src={product.image}
-                    alt=""
-                    fill
-                    sizes="(min-width: 768px) 33vw, 100vw"
-                    className="object-cover object-center transition duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.22),transparent)]" />
-                </div>
-                <div className="flex flex-1 flex-col p-6">
-                  <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
-                    {product.collection}
-                  </p>
-                  <h3 className="mt-3 text-2xl font-black">{product.name}</h3>
-                  <p className="mt-2 text-sm font-bold uppercase tracking-widest text-zinc-500">
-                    {product.material}
-                  </p>
-                  <p className="mt-4 flex-1 leading-7 text-zinc-400">
-                    {product.text}
-                  </p>
-                  <p className="mt-4 text-xl font-black text-blue-200">
-                    {product.price}
-                  </p>
-                  <Link
-                    href="/shop"
-                    className="mt-auto rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-                  >
-                    Request This
-                  </Link>
-                </div>
-              </article>
+                <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
+                  {product.collection}
+                </p>
+                <h3 className="mt-3 text-2xl font-black">{product.name}</h3>
+                <p className="mt-2 text-sm font-bold uppercase tracking-widest text-zinc-500">
+                  {product.material}
+                </p>
+                <p className="mt-4 flex-1 leading-7 text-zinc-400">
+                  {product.text}
+                </p>
+                <p className="mt-4 text-xl font-black text-blue-200">
+                  {product.price}
+                </p>
+                <Link
+                  href="/shop"
+                  className="mt-auto rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-center font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                >
+                  Request This
+                </Link>
+              </GradelineImageCard>
             ))}
           </div>
         </section>
@@ -380,30 +358,21 @@ export default function Home() {
 
           <div className="grid items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {galleryPreview.map((item) => (
-              <article
+              <GradelineImageCard
                 key={item.name}
-                className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+                imageSrc={item.image}
+                aspect="product"
+                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                contentClassName="p-5"
               >
-                <div className="relative aspect-[16/11] w-full overflow-hidden border-b border-white/10 bg-black">
-                  <Image
-                    src={item.image}
-                    alt=""
-                    fill
-                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover object-center transition duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.3),transparent)]" />
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
-                    {item.category}
-                  </p>
-                  <h3 className="mt-3 text-lg font-black">{item.name}</h3>
-                  <p className="mt-2 text-sm font-bold uppercase tracking-widest text-zinc-500">
-                    {item.material}
-                  </p>
-                </div>
-              </article>
+                <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
+                  {item.category}
+                </p>
+                <h3 className="mt-3 text-lg font-black">{item.name}</h3>
+                <p className="mt-2 text-sm font-bold uppercase tracking-widest text-zinc-500">
+                  {item.material}
+                </p>
+              </GradelineImageCard>
             ))}
           </div>
         </section>
