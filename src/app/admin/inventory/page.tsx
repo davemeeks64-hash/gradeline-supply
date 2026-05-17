@@ -25,7 +25,7 @@ type InventoryFormState = Omit<InventoryItem, "id">;
 const initialInventoryItems: InventoryItem[] = [
   {
     id: 1,
-    sku: "BLK-SLT-004",
+    sku: "BLK-SLT-BLK-4IN-001",
     item_name: "Round slate coaster blanks",
     category: "Slate",
     vendor: "StoneCraft Supply",
@@ -40,12 +40,12 @@ const initialInventoryItems: InventoryItem[] = [
   },
   {
     id: 2,
-    sku: "BLK-WAL-CB12",
+    sku: "BLK-CB-WAL-12X16-001",
     item_name: "Walnut cutting board blanks",
-    category: "Wood",
+    category: "Cutting Boards",
     vendor: "North Mill Goods",
     material: "Walnut",
-    color: "Natural",
+    color: "Walnut",
     size: "12 x 16 in",
     quantity_on_hand: 12,
     reorder_level: 8,
@@ -55,9 +55,9 @@ const initialInventoryItems: InventoryItem[] = [
   },
   {
     id: 3,
-    sku: "BLK-TUM-20-BLK",
+    sku: "BLK-TMB-BLK-20OZ-001",
     item_name: "Powder coated tumbler blanks",
-    category: "Drinkware",
+    category: "Tumblers",
     vendor: "SteelCup Wholesale",
     material: "Stainless steel",
     color: "Matte black",
@@ -70,7 +70,7 @@ const initialInventoryItems: InventoryItem[] = [
   },
   {
     id: 4,
-    sku: "BLK-ACR-CLR-12",
+    sku: "BLK-ACR-CLR-12X12-001",
     item_name: "Clear acrylic sheet blanks",
     category: "Acrylic",
     vendor: "Acrylic Depot",
@@ -111,28 +111,86 @@ const panelClassName =
 
 const categories = [
   "Acrylic",
-  "Drinkware",
+  "Cutting Boards",
   "Hardware",
   "Leather",
   "Packaging",
   "Slate",
   "Supplies",
+  "Tumblers",
   "Wood",
+];
+
+const materials = [
+  "Acrylic",
+  "Cast acrylic",
+  "Leatherette",
+  "Slate",
+  "Stainless steel",
+  "Walnut",
+  "Wood",
+];
+
+const colors = [
+  "Black",
+  "Clear",
+  "Matte black",
+  "Natural",
+  "Raw",
+  "Walnut",
+  "White",
+];
+
+const sizes = [
+  "4 in round",
+  "10 oz",
+  "12 oz",
+  "12 x 12 in",
+  "12 x 16 in",
+  "12 x 18 in",
+  "16 oz",
+  "20 oz",
+  "24 oz",
 ];
 
 const textFieldNames: Array<keyof Omit<
   InventoryFormState,
-  "quantity_on_hand" | "reorder_level" | "unit_cost" | "notes"
+  | "category"
+  | "color"
+  | "material"
+  | "notes"
+  | "quantity_on_hand"
+  | "reorder_level"
+  | "size"
+  | "sku"
+  | "unit_cost"
 >> = [
-  "sku",
   "item_name",
-  "category",
   "vendor",
-  "material",
-  "color",
-  "size",
   "storage_location",
 ];
+
+const categorySkuCodes: Record<string, string> = {
+  Acrylic: "ACR",
+  "Cutting Boards": "CB",
+  Hardware: "HDW",
+  Leather: "LTH",
+  Packaging: "PKG",
+  Slate: "SLT",
+  Supplies: "SUP",
+  Tumblers: "TMB",
+  Wood: "WD",
+};
+
+const colorSkuCodes: Record<string, string> = {
+  Black: "BLK",
+  Clear: "CLR",
+  "Matte black": "BLK",
+  Natural: "NAT",
+  Raw: "RAW",
+  Walnut: "WAL",
+  White: "WHT",
+};
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-US", {
@@ -154,6 +212,54 @@ function fieldLabel(field: string) {
     .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+}
+
+function toSkuSegment(value: string) {
+  return value
+    .replace(/\bin\b/gi, "")
+    .replace(/[^a-z0-9]+/gi, "")
+    .toUpperCase();
+}
+
+function getCategoryCode(category: string) {
+  return categorySkuCodes[category] || toSkuSegment(category).slice(0, 3) || "CAT";
+}
+
+function getColorCode(color: string) {
+  return colorSkuCodes[color] || toSkuSegment(color).slice(0, 3) || "CLR";
+}
+
+function getSizeCode(size: string) {
+  return toSkuSegment(size) || "SIZE";
+}
+
+function nextSkuNumber(
+  items: InventoryItem[],
+  prefix: string,
+  editingItemId: number | null
+) {
+  const matchingNumbers = items
+    .filter((item) => item.id !== editingItemId && item.sku.startsWith(prefix))
+    .map((item) => Number(item.sku.replace(`${prefix}-`, "")))
+    .filter((value) => !Number.isNaN(value));
+
+  const nextNumber = Math.max(0, ...matchingNumbers) + 1;
+  return String(nextNumber).padStart(3, "0");
+}
+
+function generateSkuPreview(
+  formState: InventoryFormState,
+  items: InventoryItem[],
+  editingItemId: number | null
+) {
+  const prefix = [
+    "BLK",
+    getCategoryCode(formState.category),
+    getColorCode(formState.color),
+    getSizeCode(formState.size),
+  ].join("-");
+
+  return `${prefix}-${nextSkuNumber(items, prefix, editingItemId)}`;
 }
 
 function StockBadge({ item }: { item: InventoryItem }) {
@@ -209,6 +315,39 @@ function InventoryField({
   );
 }
 
+function InventorySelectField({
+  label,
+  name,
+  onChange,
+  options,
+  value,
+}: {
+  label: string;
+  name: keyof InventoryFormState;
+  onChange: (name: keyof InventoryFormState, value: string) => void;
+  options: string[];
+  value: string;
+}) {
+  return (
+    <label className="block">
+      <span className={labelClassName}>{label}</span>
+      <select
+        className={inputClassName}
+        name={name}
+        onChange={(event) => onChange(name, event.target.value)}
+        value={value}
+      >
+        <option value="">Select {label.toLowerCase()}</option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
 export default function AdminInventoryPage() {
   const [items, setItems] = useState<InventoryItem[]>(initialInventoryItems);
   const [formState, setFormState] =
@@ -219,6 +358,7 @@ export default function AdminInventoryPage() {
   const [stockFilter, setStockFilter] = useState<"all" | "low" | "healthy">(
     "all"
   );
+  const [skuManuallyEdited, setSkuManuallyEdited] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
   const filteredItems = useMemo(() => {
@@ -288,8 +428,21 @@ export default function AdminInventoryPage() {
     ];
   }, [items]);
 
+  const generatedSkuPreview = useMemo(() => {
+    return generateSkuPreview(formState, items, editingItemId);
+  }, [editingItemId, formState, items]);
+
   function updateFormField(name: keyof InventoryFormState, value: string) {
     setSuccessMessage("");
+
+    if (name === "sku") {
+      setSkuManuallyEdited(true);
+      setFormState((current) => ({
+        ...current,
+        sku: value.toUpperCase(),
+      }));
+      return;
+    }
 
     if (
       name === "quantity_on_hand" ||
@@ -306,21 +459,38 @@ export default function AdminInventoryPage() {
     setFormState((current) => ({
       ...current,
       [name]: value,
+      sku:
+        !skuManuallyEdited &&
+        (name === "category" || name === "color" || name === "size")
+          ? generateSkuPreview(
+              {
+                ...current,
+                [name]: value,
+              },
+              items,
+              editingItemId
+            )
+          : current.sku,
     }));
   }
 
   function resetForm() {
     setFormState(emptyFormState);
     setEditingItemId(null);
+    setSkuManuallyEdited(false);
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const nextItemState = {
+      ...formState,
+      sku: formState.sku || generatedSkuPreview,
+    };
 
     if (editingItemId) {
       setItems((current) =>
         current.map((item) =>
-          item.id === editingItemId ? { ...item, ...formState } : item
+          item.id === editingItemId ? { ...item, ...nextItemState } : item
         )
       );
       setSuccessMessage("Inventory item updated locally.");
@@ -330,7 +500,7 @@ export default function AdminInventoryPage() {
 
     setItems((current) => [
       {
-        ...formState,
+        ...nextItemState,
         id: Date.now(),
       },
       ...current,
@@ -343,6 +513,7 @@ export default function AdminInventoryPage() {
     const { id, ...nextFormState } = item;
     setEditingItemId(id);
     setFormState(nextFormState);
+    setSkuManuallyEdited(false);
     setSuccessMessage("");
   }
 
@@ -420,6 +591,74 @@ export default function AdminInventoryPage() {
           </div>
 
           <div className="mt-5 grid gap-4">
+            <div className="rounded-2xl border border-blue-300/25 bg-blue-400/10 p-4">
+              <p className="text-xs font-bold uppercase tracking-widest text-blue-200">
+                SKU Preview
+              </p>
+              <p className="mt-2 break-all font-mono text-2xl font-black text-white">
+                {generatedSkuPreview}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-zinc-400">
+                Format: BLK-[CATEGORY]-[COLOR]-[SIZE]-[NUMBER]. The SKU field
+                auto-updates until you manually edit it.
+              </p>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <InventorySelectField
+                label="Category"
+                name="category"
+                onChange={updateFormField}
+                options={categories}
+                value={formState.category}
+              />
+              <InventorySelectField
+                label="Material"
+                name="material"
+                onChange={updateFormField}
+                options={materials}
+                value={formState.material}
+              />
+              <InventorySelectField
+                label="Color"
+                name="color"
+                onChange={updateFormField}
+                options={colors}
+                value={formState.color}
+              />
+              <InventorySelectField
+                label="Size"
+                name="size"
+                onChange={updateFormField}
+                options={sizes}
+                value={formState.size}
+              />
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
+              <InventoryField
+                label="SKU"
+                name="sku"
+                onChange={updateFormField}
+                placeholder={generatedSkuPreview}
+                value={formState.sku}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setFormState((current) => ({
+                    ...current,
+                    sku: generatedSkuPreview,
+                  }));
+                  setSkuManuallyEdited(false);
+                  setSuccessMessage("");
+                }}
+                className="rounded-xl border border-blue-300/40 bg-blue-400/10 px-5 py-3 font-bold text-blue-100 transition hover:bg-blue-400/20"
+              >
+                Use Generated
+              </button>
+            </div>
+
             {textFieldNames.map((field) => (
               <InventoryField
                 key={field}
@@ -427,7 +666,7 @@ export default function AdminInventoryPage() {
                 name={field}
                 onChange={updateFormField}
                 placeholder={fieldLabel(field)}
-                required={field === "sku" || field === "item_name"}
+                required={field === "item_name"}
                 value={formState[field]}
               />
             ))}
