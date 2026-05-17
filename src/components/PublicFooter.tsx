@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const footerLinks = [
@@ -11,8 +12,16 @@ const footerLinks = [
 
 export function PublicFooter() {
   return (
-    <footer className="border-t border-white/10 bg-[#05070a] px-4 py-8 text-white sm:px-6">
-      <div className="mx-auto grid max-w-7xl gap-6 text-sm text-zinc-500 lg:grid-cols-[1fr_auto] lg:items-center">
+    <footer className="relative overflow-hidden border-t border-white/10 bg-[#05070a] px-4 py-8 text-white sm:px-6">
+      <Image
+        src="/images/backgrounds/gradeline-footer-workshop-texture-bg.png"
+        alt=""
+        fill
+        sizes="100vw"
+        className="object-cover opacity-[0.16]"
+      />
+      <div className="absolute inset-0 bg-[#05070a]/80" />
+      <div className="relative mx-auto grid max-w-7xl gap-6 text-sm text-zinc-500 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
           <p className="font-black uppercase tracking-[0.18em] text-zinc-300">
             Gradeline Supply Co.

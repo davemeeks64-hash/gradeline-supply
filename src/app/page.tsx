@@ -204,7 +204,7 @@ export default function Home() {
                   alt=""
                   fill
                   sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  className="object-cover opacity-48 transition duration-500 group-hover:scale-105 group-hover:opacity-62"
+                  className="object-cover opacity-[0.48] transition duration-500 group-hover:scale-105 group-hover:opacity-[0.62]"
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.96),rgba(5,7,10,0.62)_52%,rgba(5,7,10,0.18))]" />
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/50 to-transparent opacity-0 transition group-hover:opacity-100" />
@@ -385,7 +385,7 @@ export default function Home() {
               alt=""
               fill
               sizes="100vw"
-              className="object-cover opacity-34"
+              className="object-cover opacity-[0.34]"
             />
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,10,0.92),rgba(5,7,10,0.72),rgba(5,7,10,0.36))]" />
             <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/70 to-transparent" />

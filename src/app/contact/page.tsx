@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
@@ -54,7 +55,14 @@ export default function ContactPage() {
       <PublicHeader />
       <main className="min-h-screen overflow-hidden bg-[#05070a] text-white">
       <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
+        <Image
+          src="/images/hero/gradeline-contact-page-hero-banner.png"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover opacity-[0.35]"
+        />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.24),_transparent_35%),linear-gradient(to_bottom,rgba(5,7,10,0.64),rgba(5,7,10,0.96))]" />
 
         <div className="relative mx-auto max-w-7xl">
           <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-10">
@@ -89,14 +97,28 @@ export default function ContactPage() {
               {infoBlocks.map((block) => (
                 <article
                   key={block.title}
-                  className="rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.28)]"
+                  className="relative overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.28)]"
                 >
+                  {block.title === "Social Media" && (
+                    <>
+                      <Image
+                        src="/images/social/gradeline-facebook-cover-banner.png"
+                        alt=""
+                        fill
+                        sizes="(min-width: 1024px) 38vw, 100vw"
+                        className="object-cover opacity-[0.18]"
+                      />
+                      <div className="absolute inset-0 bg-black/55" />
+                    </>
+                  )}
+                  <div className="relative">
                   <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
                   <h2 className="mt-5 text-2xl font-black">{block.title}</h2>
                   <div className="mt-4 grid gap-3 text-zinc-300">
                     {block.lines.map((line) => (
                       <p key={line}>{line}</p>
                     ))}
+                  </div>
                   </div>
                 </article>
               ))}

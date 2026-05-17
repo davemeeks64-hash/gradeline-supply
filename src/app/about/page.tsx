@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
@@ -15,7 +16,14 @@ export default function AboutPage() {
       <PublicHeader />
       <main className="min-h-screen overflow-hidden bg-[#05070a] text-white">
         <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
+          <Image
+            src="/images/backgrounds/gradeline-about-workshop-background.png"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover opacity-30"
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),linear-gradient(to_bottom,rgba(5,7,10,0.62),rgba(5,7,10,0.96))]" />
 
           <div className="relative mx-auto max-w-7xl">
             <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-10">
@@ -39,7 +47,16 @@ export default function AboutPage() {
             </div>
 
             <div className="mt-8 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-              <section className="rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.28)] md:p-8">
+              <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,31,38,0.72),rgba(7,9,12,0.96))] p-6 shadow-[0_18px_45px_rgba(0,0,0,0.28)] md:p-8">
+                <Image
+                  src="/images/hero/gradeline-blue-collar-series-banner.png"
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 45vw, 100vw"
+                  className="object-cover opacity-20"
+                />
+                <div className="absolute inset-0 bg-black/55" />
+                <div className="relative">
                 <div className="h-2 w-14 bg-blue-400 shadow-[0_0_18px_rgba(96,165,250,0.65)]" />
                 <h2 className="mt-5 text-3xl font-black">
                   Industrial Roots, Custom Reach.
@@ -55,6 +72,7 @@ export default function AboutPage() {
                   branding and one-off ideas, the goal is simple: make useful,
                   memorable work that looks sharp and lasts.
                 </p>
+                </div>
               </section>
 
               <section className="grid gap-4 sm:grid-cols-2">

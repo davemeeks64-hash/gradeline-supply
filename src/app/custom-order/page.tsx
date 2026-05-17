@@ -1,6 +1,7 @@
 "use client";
 
 import { type FormEvent, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
@@ -97,26 +98,48 @@ export default function CustomOrderPage() {
       <PublicHeader />
       <main className="min-h-screen overflow-hidden bg-[#05070a] text-white">
       <section className="relative overflow-hidden px-4 py-12 sm:px-6 md:py-16">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(80,80,80,0.28),_transparent_35%)]" />
+        <Image
+          src="/images/backgrounds/gradeline-order-form-section-bg.png"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover opacity-30"
+        />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.26),_transparent_35%),linear-gradient(to_bottom,rgba(5,7,10,0.72),rgba(5,7,10,0.96))]" />
 
         <div className="relative mx-auto max-w-7xl">
-          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 p-6 shadow-2xl md:p-10">
-            <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
-              Gradeline Supply Co.
-            </p>
-            <h1 className="mt-4 text-4xl font-black md:text-6xl">
-              Custom Order
-            </h1>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-zinc-300">
-              Tell us what you want built, engraved, cut, marked, or mocked up.
-              This static form is a preview for future custom order intake.
-            </p>
-            <Link
-              href="/"
-              className="mt-8 inline-flex rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-            >
-              Back to Home
-            </Link>
+          <div className="overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950/40 shadow-2xl">
+            <div className="grid gap-0 lg:grid-cols-[1.02fr_0.98fr]">
+              <div className="p-6 md:p-10">
+                <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
+                  Gradeline Supply Co.
+                </p>
+                <h1 className="mt-4 text-4xl font-black md:text-6xl">
+                  Custom Order
+                </h1>
+                <p className="mt-5 max-w-2xl text-lg leading-8 text-zinc-300">
+                  Tell us what you want built, engraved, cut, marked, or mocked
+                  up. This static form is a preview for future custom order
+                  intake.
+                </p>
+                <Link
+                  href="/"
+                  className="mt-8 inline-flex rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                >
+                  Back to Home
+                </Link>
+              </div>
+              <div className="relative min-h-72 border-t border-white/10 lg:border-l lg:border-t-0">
+                <Image
+                  src="/images/workflow/gradeline-custom-order-workflow.png"
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 48vw, 100vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,10,0.45),transparent)]" />
+              </div>
+            </div>
           </div>
 
           <form className="mt-8 grid gap-6" onSubmit={handleSubmit}>
@@ -210,14 +233,24 @@ export default function CustomOrderPage() {
                   placeholder="Names, dates, phrases, logo placement, inspiration, finish preferences, or anything else that matters"
                   required
                 />
-                <div className="rounded-2xl border border-dashed border-blue-300/40 bg-black/30 p-6 text-center">
-                  <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
-                    Upload Placeholder
-                  </p>
-                  <p className="mt-3 text-sm leading-6 text-zinc-400">
-                    Future spot for logos, photos, sketches, reference images,
-                    or artwork files.
-                  </p>
+                <div className="relative overflow-hidden rounded-2xl border border-dashed border-blue-300/40 bg-black/30 p-6 text-center">
+                  <Image
+                    src="/images/workflow/gradeline-newsletter-signup-banner.png"
+                    alt=""
+                    fill
+                    sizes="340px"
+                    className="object-cover opacity-25"
+                  />
+                  <div className="absolute inset-0 bg-black/45" />
+                  <div className="relative">
+                    <p className="text-sm font-bold uppercase tracking-widest text-blue-300">
+                      Upload Placeholder
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-zinc-300">
+                      Future spot for logos, photos, sketches, reference
+                      images, or artwork files.
+                    </p>
+                  </div>
                 </div>
               </div>
             </section>

@@ -73,7 +73,7 @@ export default function GalleryPage() {
           alt=""
           fill
           sizes="100vw"
-          className="object-cover opacity-35"
+          className="object-cover opacity-[0.35]"
         />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,139,196,0.24),_transparent_35%),linear-gradient(to_bottom,rgba(5,7,10,0.66),rgba(5,7,10,0.96))]" />
 
