@@ -300,6 +300,44 @@ function InventoryProductionSummary({
   );
 }
 
+function FulfillmentSummary({ order }: { order: Order }) {
+  const trackingHref = getTrackingHref(
+    order.shipping_carrier,
+    order.tracking_number
+  );
+
+  return (
+    <div className="rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-xs">
+      <div className="flex flex-wrap items-center gap-2">
+        <FulfillmentMethodBadge method={order.fulfillment_method || "Pickup"} />
+        {order.tracking_number && (
+          <a
+            href={trackingHref}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex rounded-lg border border-blue-300/30 bg-blue-400/10 px-3 py-1 font-bold uppercase tracking-widest text-blue-100 transition hover:bg-blue-400/20"
+          >
+            Track
+          </a>
+        )}
+      </div>
+      <div className="mt-2 grid gap-1 leading-5 text-zinc-400">
+        <p>Pickup: {formatDate(order.pickup_date)}</p>
+        <p>Delivery: {formatDate(order.delivery_date)}</p>
+        <p>
+          Carrier: {displayValue(order.shipping_carrier)} / Tracking:{" "}
+          {displayValue(order.tracking_number)}
+        </p>
+      </div>
+      {order.delivery_notes && (
+        <p className="mt-2 rounded-xl border border-white/10 bg-black/20 px-3 py-2 leading-5 text-zinc-400">
+          {order.delivery_notes}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function AdminProductionPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
@@ -586,6 +624,14 @@ export default function AdminProductionPage() {
                           </span>
                           {formatDate(order.due_date)}
                         </p>
+                        <div>
+                          <span className="font-bold text-zinc-500">
+                            Fulfillment:{" "}
+                          </span>
+                          <div className="mt-2">
+                            <FulfillmentSummary order={order} />
+                          </div>
+                        </div>
                         <div>
                           <span className="font-bold text-zinc-500">
                             Design:{" "}
