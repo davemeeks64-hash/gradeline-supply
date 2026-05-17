@@ -67,6 +67,11 @@ function formatCurrency(value: number | null | undefined) {
   }).format(value);
 }
 
+function normalizeId(value: string) {
+  const numericValue = Number(value);
+  return Number.isNaN(numericValue) ? value : numericValue;
+}
+
 function ProductField({
   label,
   name,
@@ -122,6 +127,7 @@ function ActiveBadge({ active }: { active: boolean | null }) {
 
 export default function AdminStockProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [formState, setFormState] =
     useState<ProductFormState>(initialFormState);
   const [editingProductId, setEditingProductId] = useState<
@@ -148,6 +154,13 @@ export default function AdminStockProductsPage() {
     ).sort();
   }, [products]);
 
+  const inventoryItemById = useMemo(() => {
+    return inventoryItems.reduce<Record<string, InventoryItem>>((lookup, item) => {
+      lookup[String(item.id)] = item;
+      return lookup;
+    }, {});
+  }, [inventoryItems]);
+
   const filteredProducts = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
 
@@ -173,21 +186,33 @@ export default function AdminStockProductsPage() {
   }, [activeFilter, categoryFilter, products, searchTerm]);
 
   async function readProducts() {
-    const { data, error } = await supabase.from("products").select("*");
-    return { data: (data ?? []) as Product[], error };
+    const [productsResponse, inventoryResponse] = await Promise.all([
+      supabase.from("products").select("*"),
+      supabase
+        .from("inventory_items")
+        .select("id,sku,item_name,quantity_on_hand"),
+    ]);
+
+    return {
+      data: (productsResponse.data ?? []) as Product[],
+      error: productsResponse.error || inventoryResponse.error,
+      inventoryItems: (inventoryResponse.data ?? []) as InventoryItem[],
+    };
   }
 
   async function loadProducts() {
     setIsLoading(true);
     setErrorMessage("");
 
-    const { data, error } = await readProducts();
+    const { data, error, inventoryItems: nextInventoryItems } = await readProducts();
 
     if (error) {
       setErrorMessage(error.message);
       setProducts([]);
+      setInventoryItems([]);
     } else {
       setProducts(data);
+      setInventoryItems(nextInventoryItems);
     }
 
     setIsLoading(false);
@@ -196,7 +221,7 @@ export default function AdminStockProductsPage() {
   useEffect(() => {
     let isMounted = true;
 
-    readProducts().then(({ data, error }) => {
+    readProducts().then(({ data, error, inventoryItems: nextInventoryItems }) => {
       if (!isMounted) {
         return;
       }
@@ -204,8 +229,10 @@ export default function AdminStockProductsPage() {
       if (error) {
         setErrorMessage(error.message);
         setProducts([]);
+        setInventoryItems([]);
       } else {
         setProducts(data);
+        setInventoryItems(nextInventoryItems);
       }
 
       setIsLoading(false);
@@ -238,6 +265,9 @@ export default function AdminStockProductsPage() {
     setFormState({
       sku: product.sku ?? "",
       name: product.name ?? "",
+      inventory_item_id: product.inventory_item_id
+        ? String(product.inventory_item_id)
+        : "",
       category: product.category ?? "",
       material: product.material ?? "",
       base_price:
@@ -259,6 +289,9 @@ export default function AdminStockProductsPage() {
     const payload = {
       sku: formState.sku.trim(),
       name: formState.name.trim(),
+      ...(formState.inventory_item_id
+        ? { inventory_item_id: normalizeId(formState.inventory_item_id) }
+        : {}),
       category: formState.category.trim(),
       material: formState.material.trim(),
       base_price: Number(formState.base_price),
