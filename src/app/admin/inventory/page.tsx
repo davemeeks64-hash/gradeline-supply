@@ -113,9 +113,12 @@ const colors = [
   "Cream",
   "Gray",
   "Green",
+  "Heather Gray",
+  "Loden",
   "Matte black",
   "Natural",
   "Navy",
+  "Neon Orange",
   "Orange",
   "Raw",
   "Red",
@@ -182,9 +185,12 @@ const colorSkuCodes: Record<string, string> = {
   Cream: "CRM",
   Gray: "GRY",
   Green: "GRN",
+  "Heather Gray": "HGRY",
+  Loden: "LDN",
   "Matte black": "BLK",
   Natural: "NAT",
   Navy: "NVY",
+  "Neon Orange": "NORG",
   Orange: "ORG",
   Raw: "RAW",
   Red: "RED",
@@ -275,7 +281,15 @@ function getCategoryCode(category: string) {
 }
 
 function getColorCode(color: string) {
-  return colorSkuCodes[color] || toSkuSegment(color).slice(0, 3) || "CLR";
+  const matchingColorKey = Object.keys(colorSkuCodes).find(
+    (colorName) => colorName.toLowerCase() === color.trim().toLowerCase()
+  );
+
+  return (
+    (matchingColorKey ? colorSkuCodes[matchingColorKey] : undefined) ||
+    toSkuSegment(color).slice(0, 3) ||
+    "CLR"
+  );
 }
 
 function getColorSkuSegment(primaryColor: string, secondaryColor: string) {
@@ -441,6 +455,46 @@ function InventorySelectField({
   );
 }
 
+function InventoryComboField({
+  listId,
+  label,
+  name,
+  onChange,
+  options,
+  placeholder,
+  value,
+}: {
+  listId: string;
+  label: string;
+  name: keyof InventoryFormState;
+  onChange: (name: keyof InventoryFormState, value: string) => void;
+  options: string[];
+  placeholder: string;
+  value: string;
+}) {
+  return (
+    <label className="block">
+      <span className={labelClassName}>{label}</span>
+      <input
+        className={inputClassName}
+        list={listId}
+        name={name}
+        onChange={(event) => onChange(name, event.target.value)}
+        placeholder={placeholder}
+        value={value}
+      />
+      <datalist id={listId}>
+        {options.map((option) => (
+          <option key={option} value={option} />
+        ))}
+      </datalist>
+      <p className="mt-2 text-xs leading-5 text-zinc-500">
+        Start typing to search saved colors or enter a custom color.
+      </p>
+    </label>
+  );
+}
+
 export default function AdminInventoryPage() {
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [formState, setFormState] =
@@ -464,6 +518,17 @@ export default function AdminInventoryPage() {
   );
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const colorOptions = useMemo(() => {
+    const savedColors = items.flatMap((item) => {
+      const { primaryColor, secondaryColor } = splitStoredColor(item.color);
+      return [primaryColor, secondaryColor];
+    });
+
+    return Array.from(
+      new Set([...colors, ...savedColors].filter(Boolean))
+    ).sort((a, b) => a.localeCompare(b));
+  }, [items]);
 
   const filteredItems = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
@@ -958,18 +1023,22 @@ export default function AdminInventoryPage() {
                 options={materials}
                 value={formState.material}
               />
-              <InventorySelectField
+              <InventoryComboField
+                listId="inventory-primary-color-options"
                 label="Primary Color"
                 name="primary_color"
                 onChange={updateFormField}
-                options={colors}
+                options={colorOptions}
+                placeholder="Black, Heather Gray, Loden"
                 value={formState.primary_color}
               />
-              <InventorySelectField
+              <InventoryComboField
+                listId="inventory-secondary-color-options"
                 label="Secondary Color"
                 name="secondary_color"
                 onChange={updateFormField}
-                options={colors}
+                options={colorOptions}
+                placeholder="Gray, Black, Neon Orange"
                 value={formState.secondary_color}
               />
               <InventorySelectField
