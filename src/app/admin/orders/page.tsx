@@ -21,10 +21,19 @@ type Customer = {
   company: string | null;
 };
 
+type InventoryItem = {
+  id: string | number;
+  sku: string | null;
+  item_name: string | null;
+  quantity_on_hand: number | null;
+  reorder_level: number | null;
+};
+
 type Order = {
   id?: string | number;
   order_number: string | null;
   customer_id: string | number | null;
+  inventory_item_id?: string | number | null;
   product_type: string | null;
   description: string | null;
   qty: number | null;
@@ -37,6 +46,7 @@ type Order = {
 type OrderFormState = {
   order_number: string;
   customer_id: string;
+  inventory_item_id: string;
   product_type: string;
   description: string;
   qty: string;
@@ -48,6 +58,7 @@ type OrderFormState = {
 const initialFormState: OrderFormState = {
   order_number: "",
   customer_id: "",
+  inventory_item_id: "",
   product_type: "",
   description: "",
   qty: "1",
@@ -139,6 +150,31 @@ function StatusBadge({ status }: { status: string | null | undefined }) {
   );
 }
 
+function InventoryLinkSummary({
+  item,
+  quantity,
+}: {
+  item: InventoryItem | undefined;
+  quantity: number | null | undefined;
+}) {
+  if (!item) {
+    return <span className="text-zinc-500">No linked blank</span>;
+  }
+
+  const onHand = Number(item.quantity_on_hand) || 0;
+  const orderQty = Number(quantity) || 0;
+  const willNeedReview = orderQty > onHand;
+
+  return (
+    <span
+      className={willNeedReview ? "font-bold text-amber-200" : "text-zinc-300"}
+    >
+      {displayValue(item.sku)} / {displayValue(item.item_name)} / {onHand} on
+      hand
+    </span>
+  );
+}
+
 function OrderField({
   label,
   name,
@@ -177,6 +213,7 @@ function OrderField({
 
 export default function AdminOrdersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [formState, setFormState] = useState<OrderFormState>(initialFormState);
   const [isLoading, setIsLoading] = useState(true);
@@ -192,15 +229,27 @@ export default function AdminOrdersPage() {
     }, {});
   }, [customers]);
 
+  const inventoryItemById = useMemo(() => {
+    return inventoryItems.reduce<Record<string, InventoryItem>>((lookup, item) => {
+      lookup[String(item.id)] = item;
+      return lookup;
+    }, {});
+  }, [inventoryItems]);
+
   async function readPageData() {
-    const [customersResponse, ordersResponse] = await Promise.all([
+    const [customersResponse, ordersResponse, inventoryResponse] = await Promise.all([
       supabase.from("customers").select("id,name,email,company"),
       supabase.from("orders").select("*"),
+      supabase
+        .from("inventory_items")
+        .select("id,sku,item_name,quantity_on_hand,reorder_level"),
     ]);
 
     return {
       customers: (customersResponse.data ?? []) as Customer[],
       customersError: customersResponse.error,
+      inventoryItems: (inventoryResponse.data ?? []) as InventoryItem[],
+      inventoryError: inventoryResponse.error,
       orders: (ordersResponse.data ?? []) as Order[],
       ordersError: ordersResponse.error,
     };
@@ -210,17 +259,28 @@ export default function AdminOrdersPage() {
     setIsLoading(true);
     setErrorMessage("");
 
-    const { customers: nextCustomers, customersError, orders: nextOrders, ordersError } =
-      await readPageData();
+    const {
+      customers: nextCustomers,
+      customersError,
+      inventoryItems: nextInventoryItems,
+      inventoryError,
+      orders: nextOrders,
+      ordersError,
+    } = await readPageData();
 
-    if (customersError || ordersError) {
+    if (customersError || ordersError || inventoryError) {
       setErrorMessage(
-        customersError?.message || ordersError?.message || "Unable to load orders."
+        customersError?.message ||
+          ordersError?.message ||
+          inventoryError?.message ||
+          "Unable to load orders."
       );
       setCustomers([]);
+      setInventoryItems([]);
       setOrders([]);
     } else {
       setCustomers(nextCustomers);
+      setInventoryItems(nextInventoryItems);
       setOrders(nextOrders);
     }
 
@@ -231,21 +291,31 @@ export default function AdminOrdersPage() {
     let isMounted = true;
 
     readPageData().then(
-      ({ customers: nextCustomers, customersError, orders: nextOrders, ordersError }) => {
+      ({
+        customers: nextCustomers,
+        customersError,
+        inventoryItems: nextInventoryItems,
+        inventoryError,
+        orders: nextOrders,
+        ordersError,
+      }) => {
         if (!isMounted) {
           return;
         }
 
-        if (customersError || ordersError) {
+        if (customersError || ordersError || inventoryError) {
           setErrorMessage(
             customersError?.message ||
               ordersError?.message ||
+              inventoryError?.message ||
               "Unable to load orders."
           );
           setCustomers([]);
+          setInventoryItems([]);
           setOrders([]);
         } else {
           setCustomers(nextCustomers);
+          setInventoryItems(nextInventoryItems);
           setOrders(nextOrders);
         }
 
@@ -280,6 +350,9 @@ export default function AdminOrdersPage() {
       total_price: Number(formState.total_price),
       status: formState.status,
       due_date: formState.due_date || null,
+      ...(formState.inventory_item_id
+        ? { inventory_item_id: normalizeId(formState.inventory_item_id) }
+        : {}),
     };
 
     const { error } = await supabase.from("orders").insert(payload);
@@ -375,6 +448,26 @@ export default function AdminOrdersPage() {
               required
               value={formState.product_type}
             />
+
+            <label className="block">
+              <span className={labelClassName}>Linked Inventory Item</span>
+              <select
+                className={inputClassName}
+                name="inventory_item_id"
+                onChange={(event) =>
+                  updateFormField("inventory_item_id", event.target.value)
+                }
+                value={formState.inventory_item_id}
+              >
+                <option value="">No linked blank yet</option>
+                {inventoryItems.map((item) => (
+                  <option key={item.id} value={String(item.id)}>
+                    {displayValue(item.sku)} / {displayValue(item.item_name)} /{" "}
+                    {displayValue(item.quantity_on_hand)} on hand
+                  </option>
+                ))}
+              </select>
+            </label>
 
             <OrderField
               label="Quantity"
@@ -505,6 +598,7 @@ export default function AdminOrdersPage() {
                     <th className="px-5 py-4">Order</th>
                     <th className="px-5 py-4">Customer</th>
                     <th className="px-5 py-4">Product</th>
+                    <th className="px-5 py-4">Inventory Link</th>
                     <th className="px-5 py-4">Qty</th>
                     <th className="px-5 py-4">Status</th>
                     <th className="px-5 py-4">Due</th>
@@ -533,6 +627,16 @@ export default function AdminOrdersPage() {
                         <p className="mt-1 max-w-md text-sm leading-6 text-zinc-500">
                           {displayValue(order.description)}
                         </p>
+                      </td>
+                      <td className="px-5 py-4 text-sm">
+                        <InventoryLinkSummary
+                          item={
+                            order.inventory_item_id
+                              ? inventoryItemById[String(order.inventory_item_id)]
+                              : undefined
+                          }
+                          quantity={order.qty}
+                        />
                       </td>
                       <td className="px-5 py-4 font-black text-white">
                         {displayValue(order.qty)}
@@ -583,6 +687,19 @@ export default function AdminOrdersPage() {
                     <p>
                       <span className="font-bold text-zinc-500">Qty: </span>
                       {displayValue(order.qty)}
+                    </p>
+                    <p>
+                      <span className="font-bold text-zinc-500">
+                        Inventory:{" "}
+                      </span>
+                      <InventoryLinkSummary
+                        item={
+                          order.inventory_item_id
+                            ? inventoryItemById[String(order.inventory_item_id)]
+                            : undefined
+                        }
+                        quantity={order.qty}
+                      />
                     </p>
                     <p>
                       <span className="font-bold text-zinc-500">Due: </span>
