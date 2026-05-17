@@ -1,11 +1,26 @@
 "use client";
 
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import AdminLayout from "@/components/AdminLayout";
+import { supabase } from "@/lib/supabase";
 
 type Vendor = {
-  id: number;
+  id: string | number;
+  vendor_name: string;
+  website: string | null;
+  contact_name: string | null;
+  email: string | null;
+  phone: string | null;
+  product_categories: string | null;
+  notes: string | null;
+  preferred_vendor: boolean;
+  created_at?: string | null;
+};
+
+type VendorPayload = Omit<Vendor, "created_at" | "id">;
+
+type VendorFormState = {
   vendor_name: string;
   website: string;
   contact_name: string;
@@ -16,46 +31,8 @@ type Vendor = {
   preferred_vendor: boolean;
 };
 
-type VendorFormState = Omit<Vendor, "id">;
-
 type VendorFieldName = keyof Omit<VendorFormState, "preferred_vendor" | "notes">;
 type VendorFilter = "all" | "preferred" | "standard";
-
-const initialVendors: Vendor[] = [
-  {
-    id: 1,
-    vendor_name: "SteelCup Wholesale",
-    website: "https://example.com/steelcup",
-    contact_name: "Account Desk",
-    email: "orders@steelcup.example",
-    phone: "(555) 014-1001",
-    product_categories: "Tumblers, Drinkware",
-    notes: "Good availability on matte black 20 oz blanks.",
-    preferred_vendor: true,
-  },
-  {
-    id: 2,
-    vendor_name: "North Mill Goods",
-    website: "https://example.com/northmill",
-    contact_name: "Jamie Miller",
-    email: "sales@northmill.example",
-    phone: "(555) 014-2030",
-    product_categories: "Wood, Cutting Boards",
-    notes: "Check boards for knots before scheduling engraving runs.",
-    preferred_vendor: true,
-  },
-  {
-    id: 3,
-    vendor_name: "Acrylic Depot",
-    website: "https://example.com/acrylic",
-    contact_name: "Support Team",
-    email: "support@acrylicdepot.example",
-    phone: "(555) 014-4410",
-    product_categories: "Acrylic, Supplies",
-    notes: "Ships clear cast acrylic quickly. Watch protective film condition.",
-    preferred_vendor: false,
-  },
-];
 
 const emptyFormState: VendorFormState = {
   vendor_name: "",
@@ -173,11 +150,19 @@ function VendorField({
 }
 
 export default function AdminVendorsPage() {
-  const [vendors, setVendors] = useState<Vendor[]>(initialVendors);
+  const [vendors, setVendors] = useState<Vendor[]>([]);
   const [formState, setFormState] = useState<VendorFormState>(emptyFormState);
-  const [editingVendorId, setEditingVendorId] = useState<number | null>(null);
+  const [editingVendorId, setEditingVendorId] = useState<
+    string | number | null
+  >(null);
+  const [deletingVendorId, setDeletingVendorId] = useState<
+    string | number | null
+  >(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [vendorFilter, setVendorFilter] = useState<VendorFilter>("all");
+  const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
   const filteredVendors = useMemo(() => {
@@ -194,7 +179,9 @@ export default function AdminVendorsPage() {
           vendor.phone,
           vendor.product_categories,
           vendor.notes,
-        ].some((value) => value.toLowerCase().includes(normalizedSearch));
+        ].some((value) =>
+          String(value ?? "").toLowerCase().includes(normalizedSearch)
+        );
 
       const matchesFilter =
         vendorFilter === "all" ||
@@ -211,7 +198,7 @@ export default function AdminVendorsPage() {
     ).length;
     const categoryCount = new Set(
       vendors
-        .flatMap((vendor) => vendor.product_categories.split(","))
+        .flatMap((vendor) => String(vendor.product_categories ?? "").split(","))
         .map((category) => category.trim())
         .filter(Boolean)
     ).size;
@@ -220,7 +207,7 @@ export default function AdminVendorsPage() {
       {
         label: "Tracked Vendors",
         value: String(vendors.length),
-        detail: "Local vendor records",
+        detail: "Supabase vendor records",
       },
       {
         label: "Preferred Vendors",
@@ -235,12 +222,90 @@ export default function AdminVendorsPage() {
     ];
   }, [vendors]);
 
+  async function readVendors() {
+    const { data, error } = await supabase
+      .from("vendors")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    return {
+      data: (data ?? []) as Vendor[],
+      error,
+    };
+  }
+
+  async function loadVendors() {
+    setIsLoading(true);
+    setErrorMessage("");
+
+    const { data, error } = await readVendors();
+
+    if (error) {
+      setVendors([]);
+      setErrorMessage(error.message);
+    } else {
+      setVendors(data);
+    }
+
+    setIsLoading(false);
+  }
+
+  function toVendorPayload(state: VendorFormState): VendorPayload {
+    return {
+      vendor_name: state.vendor_name.trim(),
+      website: state.website.trim() || null,
+      contact_name: state.contact_name.trim() || null,
+      email: state.email.trim() || null,
+      phone: state.phone.trim() || null,
+      product_categories: state.product_categories.trim() || null,
+      notes: state.notes.trim() || null,
+      preferred_vendor: state.preferred_vendor,
+    };
+  }
+
+  function toFormState(vendor: Vendor): VendorFormState {
+    return {
+      vendor_name: vendor.vendor_name,
+      website: vendor.website ?? "",
+      contact_name: vendor.contact_name ?? "",
+      email: vendor.email ?? "",
+      phone: vendor.phone ?? "",
+      product_categories: vendor.product_categories ?? "",
+      notes: vendor.notes ?? "",
+      preferred_vendor: vendor.preferred_vendor,
+    };
+  }
+
+  useEffect(() => {
+    let isMounted = true;
+
+    readVendors().then(({ data, error }) => {
+      if (!isMounted) {
+        return;
+      }
+
+      if (error) {
+        setVendors([]);
+        setErrorMessage(error.message);
+      } else {
+        setVendors(data);
+      }
+
+      setIsLoading(false);
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   function updateFormField(name: VendorFieldName, value: string) {
     setFormState((current) => ({
       ...current,
       [name]: value,
     }));
     setSuccessMessage("");
+    setErrorMessage("");
   }
 
   function resetForm() {
@@ -249,29 +314,91 @@ export default function AdminVendorsPage() {
   }
 
   function startEditing(vendor: Vendor) {
-    const { id, ...nextFormState } = vendor;
-    setEditingVendorId(id);
-    setFormState(nextFormState);
+    setEditingVendorId(vendor.id);
+    setFormState(toFormState(vendor));
     setSuccessMessage("");
+    setErrorMessage("");
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setIsSaving(true);
+    setSuccessMessage("");
+    setErrorMessage("");
+
+    const payload = toVendorPayload(formState);
 
     if (editingVendorId) {
-      setVendors((current) =>
-        current.map((vendor) =>
-          vendor.id === editingVendorId ? { ...vendor, ...formState } : vendor
-        )
-      );
-      setSuccessMessage("Vendor updated locally.");
-      resetForm();
+      const { data, error } = await supabase
+        .from("vendors")
+        .update(payload)
+        .eq("id", editingVendorId)
+        .select()
+        .single();
+
+      if (error) {
+        setErrorMessage(error.message);
+      } else {
+        setVendors((current) =>
+          current.map((vendor) =>
+            vendor.id === editingVendorId ? ((data as Vendor) ?? vendor) : vendor
+          )
+        );
+        setSuccessMessage("Vendor updated in Supabase.");
+        resetForm();
+      }
+
+      setIsSaving(false);
       return;
     }
 
-    setVendors((current) => [{ ...formState, id: Date.now() }, ...current]);
-    setSuccessMessage("Vendor added locally.");
-    resetForm();
+    const { data, error } = await supabase
+      .from("vendors")
+      .insert(payload)
+      .select()
+      .single();
+
+    if (error) {
+      setErrorMessage(error.message);
+    } else {
+      setVendors((current) => [(data as Vendor), ...current]);
+      setSuccessMessage("Vendor added to Supabase.");
+      resetForm();
+    }
+
+    setIsSaving(false);
+  }
+
+  async function deleteVendor(vendor: Vendor) {
+    const confirmed = window.confirm(
+      `Delete ${vendor.vendor_name}? This removes the vendor record from Supabase.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDeletingVendorId(vendor.id);
+    setSuccessMessage("");
+    setErrorMessage("");
+
+    const { error } = await supabase.from("vendors").delete().eq("id", vendor.id);
+
+    if (error) {
+      setErrorMessage(error.message);
+    } else {
+      setVendors((current) =>
+        current.filter((currentVendor) => currentVendor.id !== vendor.id)
+      );
+
+      if (editingVendorId === vendor.id) {
+        resetForm();
+      }
+
+      setSuccessMessage("Vendor deleted from Supabase.");
+    }
+
+    setDeletingVendorId(null);
   }
 
   return (
@@ -293,12 +420,21 @@ export default function AdminVendorsPage() {
             </p>
           </div>
 
-          <Link
-            href="/admin/inventory"
-            className="inline-flex w-fit rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-          >
-            Back to Inventory
-          </Link>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={loadVendors}
+              className="rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300"
+            >
+              Refresh Vendors
+            </button>
+            <Link
+              href="/admin/inventory"
+              className="inline-flex w-fit rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+            >
+              Back to Inventory
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -314,7 +450,7 @@ export default function AdminVendorsPage() {
               {card.label}
             </p>
             <p className="relative mt-3 text-4xl font-black text-white">
-              {card.value}
+              {isLoading ? "..." : card.value}
             </p>
             <p className="relative mt-3 text-sm leading-6 text-zinc-400">
               {card.detail}
@@ -323,10 +459,26 @@ export default function AdminVendorsPage() {
         ))}
       </section>
 
-      {successMessage && (
-        <p className="mt-6 rounded-2xl border border-blue-300/40 bg-blue-400/10 px-5 py-4 font-bold text-blue-100">
-          {successMessage}
-        </p>
+      {(successMessage || errorMessage) && (
+        <div className="mt-6 grid gap-3">
+          {successMessage && (
+            <p
+              role="status"
+              className="rounded-2xl border border-blue-300/40 bg-blue-400/10 px-5 py-4 font-bold text-blue-100"
+            >
+              {successMessage}
+            </p>
+          )}
+
+          {errorMessage && (
+            <p
+              role="alert"
+              className="rounded-2xl border border-red-400/40 bg-red-500/10 px-5 py-4 font-bold text-red-100"
+            >
+              {errorMessage}
+            </p>
+          )}
+        </div>
       )}
 
       <section className="mt-6 grid gap-6 xl:grid-cols-[420px_1fr]">
@@ -342,7 +494,7 @@ export default function AdminVendorsPage() {
               Vendor Details
             </h2>
             <p className="mt-2 text-sm leading-6 text-zinc-400">
-              Local UI state is shaped for a future Supabase vendors table.
+              Add and update live records in the Supabase vendors table.
             </p>
           </div>
 
@@ -365,12 +517,14 @@ export default function AdminVendorsPage() {
               <textarea
                 className={`${inputClassName} min-h-28 resize-y`}
                 name="notes"
-                onChange={(event) =>
+                onChange={(event) => {
                   setFormState((current) => ({
                     ...current,
                     notes: event.target.value,
-                  }))
-                }
+                  }));
+                  setSuccessMessage("");
+                  setErrorMessage("");
+                }}
                 placeholder="Ordering notes, lead times, minimum quantities, quality notes, or shipping details"
                 value={formState.notes}
               />
@@ -383,12 +537,14 @@ export default function AdminVendorsPage() {
               <input
                 checked={formState.preferred_vendor}
                 className="size-4 accent-blue-400"
-                onChange={(event) =>
+                onChange={(event) => {
                   setFormState((current) => ({
                     ...current,
                     preferred_vendor: event.target.checked,
-                  }))
-                }
+                  }));
+                  setSuccessMessage("");
+                  setErrorMessage("");
+                }}
                 type="checkbox"
               />
             </label>
@@ -397,9 +553,14 @@ export default function AdminVendorsPage() {
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <button
               type="submit"
-              className="rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300"
+              disabled={isSaving}
+              className="rounded-xl bg-blue-400 px-5 py-3 font-bold text-black transition hover:bg-blue-300 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {editingVendorId ? "Save Vendor" : "Add Vendor"}
+              {isSaving
+                ? "Saving..."
+                : editingVendorId
+                  ? "Save Vendor"
+                  : "Add Vendor"}
             </button>
             {editingVendorId && (
               <button
@@ -467,50 +628,71 @@ export default function AdminVendorsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/10">
-                  {filteredVendors.map((vendor) => (
-                    <tr
-                      key={vendor.id}
-                      className="bg-white/[0.02] transition hover:bg-white/[0.06]"
-                    >
-                      <td className="px-5 py-4">
-                        <p className="font-black text-white">
-                          {vendor.vendor_name}
-                        </p>
-                        <p className="mt-1 text-sm text-blue-200">
-                          {displayValue(vendor.website)}
-                        </p>
-                      </td>
-                      <td className="px-5 py-4 text-zinc-300">
-                        <p>{displayValue(vendor.contact_name)}</p>
-                        <p className="mt-1 text-sm text-zinc-500">
-                          {displayValue(vendor.email)}
-                        </p>
-                        <p className="mt-1 text-sm text-zinc-500">
-                          {displayValue(vendor.phone)}
-                        </p>
-                      </td>
-                      <td className="px-5 py-4 text-zinc-300">
-                        {vendor.product_categories}
-                      </td>
-                      <td className="px-5 py-4">
-                        <PreferredBadge preferred={vendor.preferred_vendor} />
-                      </td>
-                      <td className="max-w-sm px-5 py-4 text-sm leading-6 text-zinc-400">
-                        {displayValue(vendor.notes)}
-                      </td>
-                      <td className="px-5 py-4">
-                        <button
-                          type="button"
-                          onClick={() => startEditing(vendor)}
-                          className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-                        >
-                          Edit
-                        </button>
+                  {isLoading && (
+                    <tr>
+                      <td className="px-5 py-6 text-zinc-400" colSpan={6}>
+                        Loading vendors from Supabase...
                       </td>
                     </tr>
-                  ))}
+                  )}
 
-                  {filteredVendors.length === 0 && (
+                  {!isLoading &&
+                    filteredVendors.map((vendor) => (
+                      <tr
+                        key={vendor.id}
+                        className="bg-white/[0.02] transition hover:bg-white/[0.06]"
+                      >
+                        <td className="px-5 py-4">
+                          <p className="font-black text-white">
+                            {vendor.vendor_name}
+                          </p>
+                          <p className="mt-1 text-sm text-blue-200">
+                            {displayValue(vendor.website)}
+                          </p>
+                        </td>
+                        <td className="px-5 py-4 text-zinc-300">
+                          <p>{displayValue(vendor.contact_name)}</p>
+                          <p className="mt-1 text-sm text-zinc-500">
+                            {displayValue(vendor.email)}
+                          </p>
+                          <p className="mt-1 text-sm text-zinc-500">
+                            {displayValue(vendor.phone)}
+                          </p>
+                        </td>
+                        <td className="px-5 py-4 text-zinc-300">
+                          {displayValue(vendor.product_categories)}
+                        </td>
+                        <td className="px-5 py-4">
+                          <PreferredBadge preferred={vendor.preferred_vendor} />
+                        </td>
+                        <td className="max-w-sm px-5 py-4 text-sm leading-6 text-zinc-400">
+                          {displayValue(vendor.notes)}
+                        </td>
+                        <td className="px-5 py-4">
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => startEditing(vendor)}
+                              className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              disabled={deletingVendorId === vendor.id}
+                              onClick={() => deleteVendor(vendor)}
+                              className="rounded-lg border border-red-300/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-100 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                            >
+                              {deletingVendorId === vendor.id
+                                ? "Deleting"
+                                : "Delete"}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+
+                  {!isLoading && filteredVendors.length === 0 && (
                     <tr>
                       <td className="px-5 py-6 text-zinc-400" colSpan={6}>
                         No vendors match the current filters.
@@ -522,58 +704,83 @@ export default function AdminVendorsPage() {
             </div>
 
             <div className="grid gap-4 p-4 xl:hidden">
-              {filteredVendors.map((vendor) => (
-                <article
-                  key={vendor.id}
-                  className="rounded-2xl border border-white/10 bg-black/30 p-5"
-                >
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <p className={labelClassName}>
-                        {vendor.product_categories}
+              {isLoading && (
+                <p className="rounded-2xl border border-white/10 bg-black/30 p-5 text-zinc-400">
+                  Loading vendors from Supabase...
+                </p>
+              )}
+
+              {!isLoading &&
+                filteredVendors.map((vendor) => (
+                  <article
+                    key={vendor.id}
+                    className="rounded-2xl border border-white/10 bg-black/30 p-5"
+                  >
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <p className={labelClassName}>
+                          {displayValue(vendor.product_categories)}
+                        </p>
+                        <h3 className="mt-2 text-xl font-black text-white">
+                          {vendor.vendor_name}
+                        </h3>
+                        <p className="mt-2 text-blue-200">
+                          {displayValue(vendor.website)}
+                        </p>
+                      </div>
+                      <PreferredBadge preferred={vendor.preferred_vendor} />
+                    </div>
+
+                    <div className="mt-5 grid gap-3 text-sm text-zinc-300 sm:grid-cols-2">
+                      <p>
+                        <span className="font-bold text-zinc-500">
+                          Contact:{" "}
+                        </span>
+                        {displayValue(vendor.contact_name)}
                       </p>
-                      <h3 className="mt-2 text-xl font-black text-white">
-                        {vendor.vendor_name}
-                      </h3>
-                      <p className="mt-2 text-blue-200">
-                        {displayValue(vendor.website)}
+                      <p>
+                        <span className="font-bold text-zinc-500">
+                          Email:{" "}
+                        </span>
+                        {displayValue(vendor.email)}
+                      </p>
+                      <p>
+                        <span className="font-bold text-zinc-500">
+                          Phone:{" "}
+                        </span>
+                        {displayValue(vendor.phone)}
+                      </p>
+                      <p>
+                        <span className="font-bold text-zinc-500">
+                          Notes:{" "}
+                        </span>
+                        {displayValue(vendor.notes)}
                       </p>
                     </div>
-                    <PreferredBadge preferred={vendor.preferred_vendor} />
-                  </div>
 
-                  <div className="mt-5 grid gap-3 text-sm text-zinc-300 sm:grid-cols-2">
-                    <p>
-                      <span className="font-bold text-zinc-500">
-                        Contact:{" "}
-                      </span>
-                      {displayValue(vendor.contact_name)}
-                    </p>
-                    <p>
-                      <span className="font-bold text-zinc-500">Email: </span>
-                      {displayValue(vendor.email)}
-                    </p>
-                    <p>
-                      <span className="font-bold text-zinc-500">Phone: </span>
-                      {displayValue(vendor.phone)}
-                    </p>
-                    <p>
-                      <span className="font-bold text-zinc-500">Notes: </span>
-                      {displayValue(vendor.notes)}
-                    </p>
-                  </div>
+                    <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+                      <button
+                        type="button"
+                        onClick={() => startEditing(vendor)}
+                        className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
+                      >
+                        Edit Vendor
+                      </button>
+                      <button
+                        type="button"
+                        disabled={deletingVendorId === vendor.id}
+                        onClick={() => deleteVendor(vendor)}
+                        className="rounded-lg border border-red-300/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-100 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {deletingVendorId === vendor.id
+                          ? "Deleting"
+                          : "Delete Vendor"}
+                      </button>
+                    </div>
+                  </article>
+                ))}
 
-                  <button
-                    type="button"
-                    onClick={() => startEditing(vendor)}
-                    className="mt-5 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
-                  >
-                    Edit Vendor
-                  </button>
-                </article>
-              ))}
-
-              {filteredVendors.length === 0 && (
+              {!isLoading && filteredVendors.length === 0 && (
                 <p className="rounded-2xl border border-white/10 bg-black/30 p-5 text-zinc-400">
                   No vendors match the current filters.
                 </p>
