@@ -1159,7 +1159,7 @@ export default function AdminInventoryPage() {
               {isSaving
                 ? "Saving..."
                 : editingItemId
-                  ? "Update Inventory"
+                  ? "Update Inventory Item"
                   : "Add Inventory Item"}
             </button>
             {editingItemId && (
@@ -1344,7 +1344,7 @@ export default function AdminInventoryPage() {
                               onClick={() => startEditing(item)}
                               className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
                             >
-                              Edit Item
+                              Edit
                             </button>
                             <button
                               type="button"
@@ -1354,7 +1354,7 @@ export default function AdminInventoryPage() {
                             >
                               {deletingItemId === item.id
                                 ? "Deleting"
-                                : "Delete Item"}
+                                : "Delete"}
                             </button>
                           </div>
                         </td>
@@ -1465,7 +1465,7 @@ export default function AdminInventoryPage() {
                         onClick={() => startEditing(item)}
                         className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-blue-300/40 hover:bg-blue-400/10"
                       >
-                        Edit Item
+                        Edit
                       </button>
                       <button
                         type="button"
@@ -1475,7 +1475,7 @@ export default function AdminInventoryPage() {
                       >
                         {deletingItemId === item.id
                           ? "Deleting"
-                          : "Delete Item"}
+                          : "Delete"}
                       </button>
                     </div>
                 </article>
