@@ -1,8 +1,37 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
 import GradelineImageCard from "@/components/public/GradelineImageCard";
+
+export const metadata: Metadata = {
+  title: "Collections",
+  description:
+    "Browse Gradeline Supply Co. collections including tumblers, leather goods, cutting boards, custom signs, blue-collar series, and custom orders.",
+  alternates: {
+    canonical: "/collections",
+  },
+  openGraph: {
+    title: "Collections | Gradeline Supply Co.",
+    description:
+      "Browse Gradeline Supply Co. collections including tumblers, leather goods, cutting boards, custom signs, blue-collar series, and custom orders.",
+    url: "/collections",
+    images: [
+      {
+        url: "/images/categories/gradeline-category-blue-collar-series.png",
+        alt: "Gradeline Supply Co. industrial and blue-collar collection",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Collections | Gradeline Supply Co.",
+    description:
+      "Browse Gradeline Supply Co. collections including tumblers, leather goods, cutting boards, custom signs, blue-collar series, and custom orders.",
+    images: ["/images/categories/gradeline-category-blue-collar-series.png"],
+  },
+};
 
 const collections = [
   {

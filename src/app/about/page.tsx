@@ -1,7 +1,36 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Learn about Gradeline Supply Co., a custom laser engraving and small-batch shop-built products brand with industrial and blue-collar roots.",
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: "About | Gradeline Supply Co.",
+    description:
+      "Learn about Gradeline Supply Co., a custom laser engraving and small-batch shop-built products brand with industrial and blue-collar roots.",
+    url: "/about",
+    images: [
+      {
+        url: "/images/backgrounds/gradeline-about-workshop-background.png",
+        alt: "About Gradeline Supply Co.",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About | Gradeline Supply Co.",
+    description:
+      "Learn about Gradeline Supply Co., a custom laser engraving and small-batch shop-built products brand with industrial and blue-collar roots.",
+    images: ["/images/backgrounds/gradeline-about-workshop-background.png"],
+  },
+};
 
 const aboutHighlights = [
   "Custom laser engraving",

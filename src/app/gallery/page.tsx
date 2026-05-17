@@ -1,8 +1,37 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
 import GradelineImageCard from "@/components/public/GradelineImageCard";
+
+export const metadata: Metadata = {
+  title: "Gallery",
+  description:
+    "View Gradeline Supply Co. gallery examples for tumblers, leather goods, cutting boards, signs, and custom laser engraving work.",
+  alternates: {
+    canonical: "/gallery",
+  },
+  openGraph: {
+    title: "Gallery | Gradeline Supply Co.",
+    description:
+      "View Gradeline Supply Co. gallery examples for tumblers, leather goods, cutting boards, signs, and custom laser engraving work.",
+    url: "/gallery",
+    images: [
+      {
+        url: "/images/workflow/gradeline-gallery-section-banner.png",
+        alt: "Gradeline Supply Co. gallery preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Gallery | Gradeline Supply Co.",
+    description:
+      "View Gradeline Supply Co. gallery examples for tumblers, leather goods, cutting boards, signs, and custom laser engraving work.",
+    images: ["/images/workflow/gradeline-gallery-section-banner.png"],
+  },
+};
 
 const categories = [
   "Tumblers",

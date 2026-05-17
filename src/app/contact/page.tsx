@@ -1,7 +1,36 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description:
+    "Contact Gradeline Supply Co. for custom laser engraving, business branding, gifts, signs, tumblers, leather goods, and shop-built products.",
+  alternates: {
+    canonical: "/contact",
+  },
+  openGraph: {
+    title: "Contact | Gradeline Supply Co.",
+    description:
+      "Contact Gradeline Supply Co. for custom laser engraving, business branding, gifts, signs, tumblers, leather goods, and shop-built products.",
+    url: "/contact",
+    images: [
+      {
+        url: "/images/hero/gradeline-contact-page-hero-banner.png",
+        alt: "Contact Gradeline Supply Co.",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact | Gradeline Supply Co.",
+    description:
+      "Contact Gradeline Supply Co. for custom laser engraving, business branding, gifts, signs, tumblers, leather goods, and shop-built products.",
+    images: ["/images/hero/gradeline-contact-page-hero-banner.png"],
+  },
+};
 
 const infoBlocks = [
   {

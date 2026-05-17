@@ -1,7 +1,36 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PublicFooter from "@/components/PublicFooter";
 import PublicHeader from "@/components/PublicHeader";
+
+export const metadata: Metadata = {
+  title: "Shop Gradeline",
+  description:
+    "Shop Gradeline Supply Co. ready-made products and custom-ready pieces including industrial gifts, tumblers, cutting boards, signs, and leather goods.",
+  alternates: {
+    canonical: "/shop",
+  },
+  openGraph: {
+    title: "Shop Gradeline | Gradeline Supply Co.",
+    description:
+      "Shop Gradeline Supply Co. ready-made products and custom-ready pieces including industrial gifts, tumblers, cutting boards, signs, and leather goods.",
+    url: "/shop",
+    images: [
+      {
+        url: "/images/hero/gradeline-products-page-hero-banner.png",
+        alt: "Shop Gradeline Supply Co. products",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shop Gradeline | Gradeline Supply Co.",
+    description:
+      "Shop Gradeline Supply Co. ready-made products and custom-ready pieces including industrial gifts, tumblers, cutting boards, signs, and leather goods.",
+    images: ["/images/hero/gradeline-products-page-hero-banner.png"],
+  },
+};
 
 const collections = [
   "Industrial & Blue Collar",
